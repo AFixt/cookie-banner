@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Cookie Banner Example</title>
+  <link rel="stylesheet" href="../css/banner.css">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      line-height: 1.5;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    header, main, footer {
+      margin-bottom: 2rem;
+    }
+    h1 {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+    .demo-controls {
+      margin: 2rem 0;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .demo-section {
+      margin-bottom: 3rem;
+    }
+    code {
+      background: #f5f5f5;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-right: 0.5rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Complete Cookie Banner Example</h1>
+    <p>This example demonstrates a fully functional cookie consent banner that follows accessibility best practices.</p>
+  </header>
+  
+  <main>
+    <section class="demo-section">
+      <h2>Features</h2>
+      <ul>
+        <li>Banner appears at the bottom of the page</li>
+        <li>Clear explanation of cookie usage</li>
+        <li>"Accept", "Reject", and "Customize" options</li>
+        <li>Detailed preferences modal with cookie categories</li>
+        <li>Fully keyboard accessible</li>
+        <li>Screen reader friendly</li>
+        <li>Stores consent in localStorage or cookies</li>
+        <li>Doesn't show banner again once consent is given</li>
+      </ul>
+    </section>
+    
+    <section class="demo-section">
+      <h2>Current Consent Status</h2>
+      <pre id="consent-status">Loading consent status...</pre>
+      
+      <div class="demo-controls">
+        <h3>Demo Controls</h3>
+        <button id="reset-consent">Reset Consent (Show Banner Again)</button>
+        <button id="check-consent">Check Current Consent</button>
+      </div>
+    </section>
+    
+    <section class="demo-section">
+      <h2>How To Use</h2>
+      <p>Add the banner to your website with these three simple steps:</p>
+      
+      <h3>1. Include the CSS</h3>
+      <pre><code>&lt;link rel="stylesheet" href="path/to/banner.css"&gt;</code></pre>
+      
+      <h3>2. Include the JavaScript</h3>
+      <pre><code>&lt;script src="path/to/consent-manager.js"&gt;&lt;/script&gt;
+&lt;script src="path/to/banner.js"&gt;&lt;/script&gt;</code></pre>
+      
+      <h3>3. Initialize the Banner</h3>
+      <pre><code>&lt;script&gt;
+  window.initCookieBanner({
+    locale: 'en',
+    theme: 'light',
+    showModal: true,
+    onConsentChange: (consent) => {
+      console.log('Consent changed:', consent);
+      // Your code to handle consent changes
+    }
+  });
+&lt;/script&gt;</code></pre>
+    </section>
+  </main>
+  
+  <footer>
+    <p>This is part of the Accessible Cookie Banner project.</p>
+  </footer>
+  
+  <!-- Include the scripts -->
+  <script src="../js/consent-manager.js"></script>
+  <script src="../js/banner.js"></script>
+  <script>
+    // Initialize the cookie banner
+    window.initCookieBanner({
+      locale: 'en',
+      theme: 'light',
+      showModal: true,
+      onConsentChange: (consent) => {
+        console.log('Consent changed:', consent);
+        updateConsentStatus();
+      }
+    });
+    
+    // Update the consent status display
+    function updateConsentStatus() {
+      const consent = window.CookieConsent.getConsent();
+      const statusEl = document.getElementById('consent-status');
+      
+      if (consent) {
+        statusEl.textContent = JSON.stringify(consent, null, 2);
+      } else {
+        statusEl.textContent = 'No consent data found';
+      }
+    }
+    
+    // Initial update
+    updateConsentStatus();
+    
+    // Reset consent button
+    document.getElementById('reset-consent').addEventListener('click', () => {
+      const manager = new ConsentManager();
+      manager.clearConsent();
+      location.reload();
+    });
+    
+    // Check consent button
+    document.getElementById('check-consent').addEventListener('click', () => {
+      updateConsentStatus();
+      alert('Consent status updated in the display above.');
+    });
+  </script>
+</body>
+</html>

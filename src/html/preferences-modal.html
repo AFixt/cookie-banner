@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie Preferences Modal Example</title>
+  <link rel="stylesheet" href="../css/banner.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      line-height: 1.5;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .modal-container {
+      position: relative;
+      margin-top: 2rem;
+      border: 1px dashed #ccc;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    
+    .modal-container::before {
+      content: "Modal Preview (Not functional in standalone page)";
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      background: #fff;
+      padding: 0 10px;
+      font-size: 0.8rem;
+      color: #666;
+    }
+    
+    /* Override fixed positioning for this demo */
+    #cookie-modal {
+      position: static;
+      transform: none;
+      top: auto;
+      left: auto;
+      display: block;
+      margin: 0 auto;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cookie Preferences Modal</h1>
+  </header>
+  
+  <main>
+    <p>This is a static example of the cookie preferences modal that appears when users click "Customize" in the cookie banner.</p>
+    
+    <h2>Features</h2>
+    <ul>
+      <li>Accessible dialog with proper ARIA attributes</li>
+      <li>Focus management and keyboard trapping</li>
+      <li>Category-based consent options</li>
+      <li>Clear visual hierarchy</li>
+    </ul>
+    
+    <div class="modal-container">
+      <div id="cookie-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h2 id="modal-title">Cookie Preferences</h2>
+        <form id="cookie-form">
+          <fieldset>
+            <legend>Functional Cookies</legend>
+            <label><input type="checkbox" name="functional" checked disabled /> Required (Always On)</label>
+            <p class="cookie-description">Required for the website to function properly. These cannot be disabled.</p>
+          </fieldset>
+          <fieldset>
+            <legend>Analytics Cookies</legend>
+            <label><input type="checkbox" name="analytics" /> Allow analytics</label>
+            <p class="cookie-description">Help us understand how visitors interact with our website. This data is anonymized.</p>
+          </fieldset>
+          <fieldset>
+            <legend>Marketing Cookies</legend>
+            <label><input type="checkbox" name="marketing" /> Allow marketing</label>
+            <p class="cookie-description">Allow us to provide personalized content and ads based on your browsing behavior.</p>
+          </fieldset>
+          <div class="cookie-modal-actions">
+            <button type="submit">Save Preferences</button>
+            <button type="button" id="close-modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <p>
+      <em>Note: This is just a visual demonstration. For the functional version, see the 
+      <a href="banner.html">main example page</a>.</em>
+    </p>
+  </main>
+  
+  <script>
+    // This is just for demonstration - the buttons don't actually work in this standalone page
+    document.getElementById('cookie-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('In the actual implementation, this would save your preferences and close the modal.');
+    });
+    
+    document.getElementById('close-modal').addEventListener('click', () => {
+      alert('In the actual implementation, this would close the modal without saving changes.');
+    });
+  </script>
+</body>
+</html>

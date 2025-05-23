@@ -1,0 +1,61 @@
+/**
+ * Rollup configuration file
+ */
+
+import { terser } from 'rollup-plugin-terser';
+import babel from '@rollup/plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import copy from 'rollup-plugin-copy';
+
+const production = !process.env.ROLLUP_WATCH;
+const outputDir = 'dist';
+
+export default {
+  input: 'src/js/index.js',
+  output: [
+    {
+      file: `${outputDir}/cookie-banner.js`,
+      format: 'umd',
+      name: 'CookieBanner',
+      sourcemap: !production
+    },
+    {
+      file: `${outputDir}/cookie-banner.min.js`,
+      format: 'umd',
+      name: 'CookieBanner',
+      plugins: [terser()],
+      sourcemap: !production
+    },
+    {
+      file: `${outputDir}/cookie-banner.esm.js`,
+      format: 'es',
+      sourcemap: !production
+    }
+  ],
+  plugins: [
+    resolve({
+      browser: true
+    }),
+    commonjs(),
+    json(),
+    babel({
+      babelHelpers: 'bundled',
+      exclude: 'node_modules/**'
+    }),
+    copy({
+      targets: [
+        { src: 'src/css/banner.css', dest: outputDir },
+        { src: 'src/locales/*', dest: `${outputDir}/locales` },
+        { src: 'src/html/banner.html', dest: `${outputDir}/examples` },
+        { src: 'src/html/preferences-modal.html', dest: `${outputDir}/examples` },
+        { src: 'src/examples/*', dest: `${outputDir}/examples` },
+        { src: 'src/types', dest: `${outputDir}` }
+      ]
+    })
+  ],
+  watch: {
+    clearScreen: false
+  }
+};

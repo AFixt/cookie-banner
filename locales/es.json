@@ -1,0 +1,17 @@
+{
+  "description": "Utilizamos cookies para mejorar su experiencia. Puede gestionar sus preferencias a continuación.",
+  "acceptAll": "Aceptar todo",
+  "rejectAll": "Rechazar todo",
+  "customize": "Personalizar",
+  "modal": {
+    "title": "Preferencias de cookies",
+    "functional": "Cookies funcionales (Requeridas)",
+    "functionalDescription": "Necesarias para el correcto funcionamiento del sitio web. No se pueden desactivar.",
+    "analytics": "Permitir cookies analíticas",
+    "analyticsDescription": "Nos ayudan a entender cómo los visitantes interactúan con nuestro sitio web. Estos datos son anónimos.",
+    "marketing": "Permitir cookies de marketing",
+    "marketingDescription": "Permiten ofrecer contenido y anuncios personalizados basados en su comportamiento de navegación.",
+    "save": "Guardar preferencias",
+    "cancel": "Cancelar"
+  }
+}

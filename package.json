@@ -1,0 +1,67 @@
+{
+  "name": "accessible-cookie-banner",
+  "version": "1.0.0",
+  "description": "A customizable, WCAG-conformant cookie consent banner with GDPR, CCPA compliance",
+  "type": "module",
+  "main": "dist/cookie-banner.js",
+  "module": "dist/cookie-banner.esm.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "clean": "rimraf dist",
+    "dev": "rollup -c -w",
+    "build": "npm run clean && rollup -c",
+    "serve": "http-server . -p 8080 -o",
+    "start": "npm run build && npm run serve",
+    "prepublishOnly": "npm run test && npm run build"
+  },
+  "keywords": [
+    "accessibility",
+    "WCAG",
+    "cookie",
+    "consent",
+    "GDPR",
+    "CCPA",
+    "banner",
+    "a11y"
+  ],
+  "author": "Karl Groves <karlgroves@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:AFixt/cookie-banner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/afixt/cookie-banner/issues"
+  },
+  "homepage": "https://github.com/afixt/cookie-banner#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.9",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@testing-library/dom": "^9.3.4",
+    "@testing-library/jest-dom": "^6.6.3",
+    "babel-jest": "^29.7.0",
+    "http-server": "^14.1.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.20.1",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  }
+}

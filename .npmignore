@@ -1,0 +1,36 @@
+# Source files (only dist is needed for npm)
+src/
+test/
+coverage/
+
+# Development files
+.idea/
+.vscode/
+.git/
+.github/
+.gitignore
+.babelrc
+.eslintrc
+.eslintignore
+.prettierrc
+.prettierignore
+*.log
+*.tsbuildinfo
+
+# Config files
+jest.config.js
+rollup.config.js
+babel.config.js
+tsconfig.json
+
+# Misc
+IMPROVEMENTS.md
+CONTRIBUTING.md
+.DS_Store
+Thumbs.db
+node_modules/
+
+# Include only necessary docs
+!README.md
+!LICENSE
+!ACCESSIBILITY.md

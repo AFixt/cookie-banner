@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessible Cookie Banner Examples</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      line-height: 1.5;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    h1 {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+    .example-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .example-card {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .example-card h3 {
+      margin: 0;
+      padding: 1rem;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+    }
+    .example-card .description {
+      padding: 1rem;
+    }
+    .example-card .link {
+      display: block;
+      padding: 0.75rem 1rem;
+      background: #0056b3;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .example-card .link:hover {
+      background: #003d82;
+    }
+    .example-card .link:focus {
+      outline: 3px solid #4d90fe;
+    }
+  </style>
+</head>
+<body>
+  <h1>Accessible Cookie Banner Examples</h1>
+  
+  <p>Below are various examples demonstrating the features and capabilities of the accessible cookie banner:</p>
+  
+  <ul class="example-list">
+    <li class="example-card">
+      <h3>Vanilla JavaScript</h3>
+      <div class="description">
+        <p>Basic implementation using vanilla JavaScript with no frameworks.</p>
+      </div>
+      <a href="vanilla-js.html" class="link">View Example</a>
+    </li>
+    
+    <li class="example-card">
+      <h3>High Contrast Theme</h3>
+      <div class="description">
+        <p>Demonstrates the high contrast theme for users with low vision.</p>
+      </div>
+      <a href="high-contrast.html" class="link">View Example</a>
+    </li>
+    
+    <li class="example-card">
+      <h3>RTL Support</h3>
+      <div class="description">
+        <p>Shows how the banner works with right-to-left languages like Arabic.</p>
+      </div>
+      <a href="rtl-support.html" class="link">View Example</a>
+    </li>
+    
+    <li class="example-card">
+      <h3>Custom Categories</h3>
+      <div class="description">
+        <p>Example of setting up custom consent categories beyond the defaults.</p>
+      </div>
+      <a href="custom-categories.html" class="link">View Example</a>
+    </li>
+  </ul>
+  
+  <footer style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #eee; text-align: center;">
+    <p>Accessible Cookie Banner - <a href="https://github.com/username/accessible-cookie-banner">GitHub Repository</a></p>
+  </footer>
+</body>
+</html>
