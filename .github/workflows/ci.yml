@@ -1,0 +1,180 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test and Build
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run linting
+      run: npm run lint --if-present
+      
+    - name: Run tests with coverage
+      run: npm run test:coverage
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: Upload coverage reports
+      if: matrix.node-version == '22.x'
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+        
+  accessibility-tests:
+    name: Accessibility Tests
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: Install Playwright browsers
+      run: npm run install:playwright
+      
+    - name: Run accessibility tests
+      run: npm run test:a11y
+      
+  bundle-analysis:
+    name: Bundle Size Analysis
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: Analyze bundle size
+      run: npm run analyze --if-present
+      
+    - name: Check bundle size limits
+      run: |
+        echo "Checking bundle sizes..."
+        MAX_SIZE=50000  # 50KB limit for main bundle
+        MAIN_SIZE=$(wc -c < dist/cookie-banner.min.js)
+        echo "Main bundle size: $MAIN_SIZE bytes"
+        if [ $MAIN_SIZE -gt $MAX_SIZE ]; then
+          echo "❌ Main bundle size ($MAIN_SIZE bytes) exceeds limit ($MAX_SIZE bytes)"
+          exit 1
+        else
+          echo "✅ Main bundle size is within limits"
+        fi
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [test, accessibility-tests, bundle-analysis]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+        cache: 'npm'
+        registry-url: 'https://registry.npmjs.org'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: Configure Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        
+    - name: Check if version changed
+      id: version-check
+      run: |
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        echo "current-version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        
+        # Check if this version has been tagged
+        if git tag --list | grep -q "^v$CURRENT_VERSION$"; then
+          echo "version-changed=false" >> $GITHUB_OUTPUT
+          echo "Version $CURRENT_VERSION already exists"
+        else
+          echo "version-changed=true" >> $GITHUB_OUTPUT
+          echo "New version detected: $CURRENT_VERSION"
+        fi
+        
+    - name: Create Git tag
+      if: steps.version-check.outputs.version-changed == 'true'
+      run: |
+        VERSION=${{ steps.version-check.outputs.current-version }}
+        git tag "v$VERSION"
+        git push origin "v$VERSION"
+        
+    - name: Create GitHub Release
+      if: steps.version-check.outputs.version-changed == 'true'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.version-check.outputs.current-version }}
+        release_name: Release v${{ steps.version-check.outputs.current-version }}
+        draft: false
+        prerelease: false
+        
+    - name: Publish to NPM
+      if: steps.version-check.outputs.version-changed == 'true'
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
