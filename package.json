@@ -9,18 +9,26 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "ACCESSIBILITY.md"
   ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:a11y": "playwright test --config=playwright.config.js",
+    "test:a11y:headed": "playwright test --config=playwright.config.js --headed",
+    "test:a11y:regression": "playwright test test/accessibility-regression.test.js --config=playwright.config.js",
+    "test:all": "npm run test && npm run test:a11y",
     "clean": "rimraf dist",
     "dev": "rollup -c -w",
     "build": "npm run clean && rollup -c",
-    "serve": "http-server . -p 8080 -o",
+    "serve": "http-server . -p 8080",
     "start": "npm run build && npm run serve",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run test:all && npm run build",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags",
+    "install:playwright": "playwright install"
   },
   "keywords": [
     "accessibility",
@@ -42,26 +50,41 @@
     "url": "https://github.com/afixt/cookie-banner/issues"
   },
   "homepage": "https://github.com/afixt/cookie-banner#readme",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "sideEffects": false,
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
     "@babel/preset-env": "^7.26.9",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.6.3",
     "babel-jest": "^29.7.0",
     "http-server": "^14.1.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "playwright": "^1.52.0",
     "rimraf": "^5.0.5",
     "rollup": "^4.20.1",
-    "rollup-plugin-copy": "^3.5.0",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-copy": "^3.5.0"
   },
   "babel": {
     "presets": [
       "@babel/preset-env"
     ]
+  },
+  "dependencies": {
+    "@playwright/test": "^1.52.0"
   }
 }
