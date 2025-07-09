@@ -19,6 +19,9 @@
     "test:a11y": "playwright test --config=playwright.config.js",
     "test:a11y:headed": "playwright test --config=playwright.config.js --headed",
     "test:a11y:regression": "playwright test test/accessibility-regression.test.js --config=playwright.config.js",
+    "test:visual": "playwright test --config=playwright-visual.config.js",
+    "test:visual:headed": "playwright test --config=playwright-visual.config.js --headed",
+    "test:visual:update": "playwright test --config=playwright-visual.config.js --update-snapshots",
     "test:all": "npm run test && npm run test:a11y",
     "clean": "rimraf dist",
     "css:build": "postcss src/css/main.css -o dist/banner.css",
@@ -69,6 +72,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
     "@babel/preset-env": "^7.26.9",
+    "@playwright/test": "^1.53.2",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
@@ -99,8 +103,5 @@
     "presets": [
       "@babel/preset-env"
     ]
-  },
-  "dependencies": {
-    "@playwright/test": "^1.52.0"
   }
 }
