@@ -1,0 +1,62 @@
+/**
+ * CSS Custom Properties for theming and consistent design
+ */
+
+:root {
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Typography */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --font-size-sm: 0.9rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.5rem;
+  --line-height-base: 1.5;
+  --font-weight-normal: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Border radius */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  
+  /* Z-index */
+  --z-modal-overlay: 9998;
+  --z-modal: 9999;
+  --z-banner: 9999;
+  
+  /* Breakpoints */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  
+  /* Transitions */
+  --transition-fast: 0.2s;
+  --transition-normal: 0.3s;
+  --transition-slow: 0.5s;
+}
+
+/* Light theme (default) */
+:root {
+  --bg-primary: #ffffff;
+  --text-primary: #111111;
+  --border-primary: #dddddd;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.2);
+  --modal-overlay: rgba(0, 0, 0, 0.5);
+  
+  --button-primary-bg: #0056b3;
+  --button-primary-text: #ffffff;
+  --button-primary-hover-bg: color-mix(in srgb, #0056b3 90%, black);
+  
+  --button-secondary-bg: #f8f9fa;
+  --button-secondary-text: #212529;
+  --button-secondary-border: #dee2e6;
+  --button-secondary-hover-bg: color-mix(in srgb, #f8f9fa 90%, black);
+  
+  --focus-outline: 3px solid #4d90fe;
+}

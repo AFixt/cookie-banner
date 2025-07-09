@@ -1,0 +1,46 @@
+/**
+ * Button mixins for consistent styling
+ */
+
+@define-mixin button-base {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 120px;
+  transition: background-color 0.2s, transform 0.1s;
+  border: none;
+  
+  &:focus {
+    outline: var(--focus-outline);
+    outline-offset: 2px;
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+@define-mixin button-primary {
+  @mixin button-base;
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  
+  &:hover,
+  &:focus {
+    background-color: var(--button-primary-hover-bg);
+  }
+}
+
+@define-mixin button-secondary {
+  @mixin button-base;
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--button-secondary-border);
+  
+  &:hover,
+  &:focus {
+    background-color: var(--button-secondary-hover-bg);
+  }
+}

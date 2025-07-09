@@ -1,0 +1,64 @@
+/**
+ * Cookie banner component styles
+ */
+
+#cookie-banner {
+  font-family: var(--font-family-base);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-banner);
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-top: 1px solid var(--border-primary);
+  box-shadow: 0 -2px 10px var(--shadow-light);
+  box-sizing: border-box;
+  line-height: var(--line-height-base);
+  animation: cookieBannerSlideIn var(--transition-slow) ease-out;
+  
+  @mixin flex-column;
+  align-items: center;
+  justify-content: space-between;
+  
+  @mixin responsive-breakpoint var(--breakpoint-md) {
+    flex-direction: row;
+  }
+}
+
+#cookie-description {
+  margin: 0 0 var(--spacing-md) 0;
+  max-width: 60ch;
+  font-size: var(--font-size-base);
+  
+  @mixin responsive-breakpoint var(--breakpoint-md) {
+    margin: 0 var(--spacing-md) 0 0;
+  }
+}
+
+.cookie-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+/* Button instances */
+#accept-all {
+  @mixin button-primary;
+}
+
+#reject-all,
+#customize-preferences {
+  @mixin button-secondary;
+}
+
+/* Animations */
+@keyframes cookieBannerSlideIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

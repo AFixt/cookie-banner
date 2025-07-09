@@ -1,0 +1,119 @@
+/**
+ * Modal component styles
+ */
+
+#cookie-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--modal-overlay);
+  z-index: var(--z-modal-overlay);
+  animation: cookieModalFadeIn var(--transition-normal) ease-out;
+}
+
+#cookie-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: var(--z-modal);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 4px 20px var(--shadow-medium);
+  padding: var(--spacing-xl);
+  max-width: 500px;
+  width: calc(100% - var(--spacing-xl));
+  max-height: calc(100vh - var(--spacing-xl));
+  overflow-y: auto;
+  box-sizing: border-box;
+  animation: cookieModalFadeIn var(--transition-normal) ease-out;
+}
+
+#modal-title {
+  margin-top: 0;
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Form elements */
+#cookie-form {
+  fieldset {
+    border: 1px solid var(--border-primary);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+  }
+  
+  legend {
+    font-weight: var(--font-weight-bold);
+    padding: 0 var(--spacing-sm);
+  }
+  
+  label {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  input[type="checkbox"] {
+    margin-right: var(--spacing-sm);
+    width: 1.25rem;
+    height: 1.25rem;
+    
+    &:focus {
+      outline: var(--focus-outline);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.cookie-description {
+  margin-top: var(--spacing-sm);
+  margin-bottom: 0;
+  font-size: var(--font-size-sm);
+}
+
+.cookie-modal-actions {
+  margin-top: var(--spacing-lg);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  
+  button {
+    @mixin button-secondary;
+    
+    &[type="submit"] {
+      @mixin button-primary;
+    }
+  }
+}
+
+/* RTL support */
+[dir="rtl"] {
+  #cookie-form input[type="checkbox"] {
+    margin-right: 0;
+    margin-left: var(--spacing-sm);
+  }
+  
+  #cookie-description {
+    margin: 0 0 var(--spacing-md) 0;
+    
+    @mixin responsive-breakpoint var(--breakpoint-md) {
+      margin: 0 0 0 var(--spacing-md);
+    }
+  }
+}
+
+/* Animations */
+@keyframes cookieModalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
