@@ -4,6 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build/Lint/Test Commands
 
+- Node.js version: LTS (use `nvm use` or Node.js 22+)
 - Install dependencies: `npm install`
 - Run tests: `npm test`
 - Run single test: `npm test -- -t "test name pattern"`
@@ -30,6 +31,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Aim for >90% test coverage in core utilities
 - Focus on testing the most critical user flows first
 - Verify that all required ARIA attributes are present
+
+## Testing Requirements
+
+- **All meaningful new work and changes MUST have tests** - No code should be committed without appropriate test coverage
+- **No commits should be made if tests are failing** - All tests must pass before any code is committed to the repository
+- Run the full test suite (`npm test`) before committing changes
+- If tests fail, investigate and fix the root cause before proceeding
+- New features require both unit tests and integration tests where applicable
 
 ## Accessibility Requirements
 

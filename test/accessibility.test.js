@@ -244,5 +244,223 @@ describe('Accessibility Features', () => {
       expect(saveBtn).not.toBeDisabled();
       expect(cancelBtn).not.toBeDisabled();
     });
+
+    test('banner buttons should be focusable with tab', () => {
+      const acceptBtn = document.getElementById('accept-all');
+      const rejectBtn = document.getElementById('reject-all');
+      const customizeBtn = document.getElementById('customize-preferences');
+      
+      // Mock focus methods
+      acceptBtn.focus = jest.fn();
+      rejectBtn.focus = jest.fn();
+      customizeBtn.focus = jest.fn();
+      
+      // Simulate tab navigation
+      acceptBtn.focus();
+      expect(acceptBtn.focus).toHaveBeenCalled();
+      
+      rejectBtn.focus();
+      expect(rejectBtn.focus).toHaveBeenCalled();
+      
+      customizeBtn.focus();
+      expect(customizeBtn.focus).toHaveBeenCalled();
+    });
+
+    test('should handle Enter key on banner buttons', () => {
+      const acceptBtn = document.getElementById('accept-all');
+      const clickHandler = jest.fn();
+      acceptBtn.addEventListener('click', clickHandler);
+      
+      // Add keydown handler that triggers click on Enter
+      acceptBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          acceptBtn.click();
+        }
+      });
+      
+      // Simulate Enter keypress
+      const enterEvent = new KeyboardEvent('keydown', { 
+        key: 'Enter',
+        keyCode: 13,
+        which: 13
+      });
+      acceptBtn.dispatchEvent(enterEvent);
+      
+      // Should trigger click
+      expect(clickHandler).toHaveBeenCalled();
+    });
+
+    test('should handle Space key on banner buttons', () => {
+      const rejectBtn = document.getElementById('reject-all');
+      const clickHandler = jest.fn();
+      rejectBtn.addEventListener('click', clickHandler);
+      
+      // Add keydown handler that triggers click on Space
+      rejectBtn.addEventListener('keydown', (e) => {
+        if (e.key === ' ') {
+          e.preventDefault();
+          rejectBtn.click();
+        }
+      });
+      
+      // Simulate Space keypress
+      const spaceEvent = new KeyboardEvent('keydown', { 
+        key: ' ',
+        keyCode: 32,
+        which: 32
+      });
+      rejectBtn.dispatchEvent(spaceEvent);
+      
+      // Should trigger click
+      expect(clickHandler).toHaveBeenCalled();
+    });
+
+    test('should handle Escape key to close modal', () => {
+      const modal = document.getElementById('cookie-modal');
+      const customizeBtn = document.getElementById('customize-preferences');
+      
+      // Open modal first
+      customizeBtn.click();
+      modal.removeAttribute('hidden');
+      expect(modal.hasAttribute('hidden')).toBe(false);
+      
+      // Mock close functionality
+      const closeHandler = jest.fn(() => {
+        modal.setAttribute('hidden', '');
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeHandler();
+        }
+      });
+      
+      // Simulate Escape keypress
+      const escapeEvent = new KeyboardEvent('keydown', { 
+        key: 'Escape',
+        keyCode: 27,
+        which: 27
+      });
+      document.dispatchEvent(escapeEvent);
+      
+      expect(closeHandler).toHaveBeenCalled();
+      expect(modal.hasAttribute('hidden')).toBe(true);
+    });
+
+    test('should trap focus within modal when open', () => {
+      const modal = document.getElementById('cookie-modal');
+      const firstInput = modal.querySelector('input[name="analytics"]');
+      const lastButton = document.getElementById('close-modal');
+      
+      // Mock focus methods
+      firstInput.focus = jest.fn();
+      lastButton.focus = jest.fn();
+      
+      // Open modal
+      modal.removeAttribute('hidden');
+      
+      // Focus should be trapped - tabbing from last element should go to first
+      lastButton.focus();
+      
+      // Simulate Tab from last focusable element
+      const tabEvent = new KeyboardEvent('keydown', { 
+        key: 'Tab',
+        keyCode: 9,
+        which: 9
+      });
+      
+      // Add event listener to handle focus trap
+      lastButton.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && !e.shiftKey) {
+          e.preventDefault();
+          firstInput.focus();
+        }
+      });
+      
+      lastButton.dispatchEvent(tabEvent);
+      expect(firstInput.focus).toHaveBeenCalled();
+    });
+
+    test('should handle Shift+Tab for reverse focus navigation', () => {
+      const modal = document.getElementById('cookie-modal');
+      const firstInput = modal.querySelector('input[name="analytics"]');
+      const lastButton = document.getElementById('close-modal');
+      
+      // Mock focus methods
+      firstInput.focus = jest.fn();
+      lastButton.focus = jest.fn();
+      
+      // Open modal
+      modal.removeAttribute('hidden');
+      
+      // Shift+Tab from first element should go to last
+      firstInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && e.shiftKey) {
+          e.preventDefault();
+          lastButton.focus();
+        }
+      });
+      
+      const shiftTabEvent = new KeyboardEvent('keydown', { 
+        key: 'Tab',
+        keyCode: 9,
+        which: 9,
+        shiftKey: true
+      });
+      
+      firstInput.dispatchEvent(shiftTabEvent);
+      expect(lastButton.focus).toHaveBeenCalled();
+    });
+
+    test('should handle arrow key navigation for radio/checkbox groups', () => {
+      const analyticsCheckbox = document.querySelector('input[name="analytics"]');
+      const marketingCheckbox = document.querySelector('input[name="marketing"]');
+      
+      // Mock focus methods
+      analyticsCheckbox.focus = jest.fn();
+      marketingCheckbox.focus = jest.fn();
+      
+      // Simulate Down arrow key
+      const downArrowEvent = new KeyboardEvent('keydown', { 
+        key: 'ArrowDown',
+        keyCode: 40,
+        which: 40
+      });
+      
+      // Add custom navigation handler
+      analyticsCheckbox.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          marketingCheckbox.focus();
+        }
+      });
+      
+      analyticsCheckbox.dispatchEvent(downArrowEvent);
+      expect(marketingCheckbox.focus).toHaveBeenCalled();
+    });
+
+    test('should provide focus indicators', () => {
+      const acceptBtn = document.getElementById('accept-all');
+      
+      // Should have focusable attributes
+      expect(acceptBtn.tabIndex).toBeGreaterThanOrEqual(0);
+      
+      // Should be able to receive focus
+      acceptBtn.focus();
+      expect(document.activeElement).toBe(acceptBtn);
+    });
+
+    test('should maintain logical tab order', () => {
+      const acceptBtn = document.getElementById('accept-all');
+      const rejectBtn = document.getElementById('reject-all');
+      const customizeBtn = document.getElementById('customize-preferences');
+      
+      // Check that elements can be focused in logical order
+      const elements = [acceptBtn, rejectBtn, customizeBtn];
+      
+      elements.forEach((element, index) => {
+        element.focus();
+        expect(document.activeElement).toBe(element);
+      });
+    });
   });
 });

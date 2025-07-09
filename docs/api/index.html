@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>Accessible Cookie Banner</h1>
+<p>A customizable, WCAG-conformant component designed to provide clear, user-friendly consent for the use of cookies and tracking technologies on websites and web applications. It complies with GDPR, ePrivacy Directive, and CCPA regulations, while maintaining accessibility standards set by WCAG 2.2 AA, ensuring users of all abilities can interact with and understand the banner.</p>
+<h2>Features</h2>
+<ul>
+<li><strong>Accessible by Design</strong>
+<ul>
+<li>Complies with WCAG 2.2 AA</li>
+<li>Fully operable via keyboard</li>
+<li>Screen reader-friendly (ARIA roles, live regions, and focus management)</li>
+</ul>
+</li>
+<li><strong>Consent Management</strong>
+<ul>
+<li>Supports &quot;Accept All&quot;, &quot;Reject All&quot;, and &quot;Customize&quot; buttons</li>
+<li>Optional granular controls for categories (e.g., functional, analytics, marketing)</li>
+</ul>
+</li>
+<li><strong>Compliance Support</strong>
+<ul>
+<li>GDPR-ready with audit logging hooks</li>
+<li>CCPA opt-out support</li>
+</ul>
+</li>
+<li><strong>Customizable</strong>
+<ul>
+<li>Theming via CSS variables</li>
+<li>Optionally include a full preferences modal</li>
+</ul>
+</li>
+<li><strong>Internationalization (i18n)</strong>
+<ul>
+<li>Text fully configurable in JSON or via locale files</li>
+<li>RTL (Right-To-Left) layout support</li>
+</ul>
+</li>
+</ul>
+<h2>Installation</h2>
+<h3>Via NPM</h3>
+<pre class="prettyprint source lang-bash"><code>npm install accessible-cookie-banner
+</code></pre>
+<h3>Manual Installation</h3>
+<ol>
+<li>Download the package</li>
+<li>Include the necessary files in your HTML:</li>
+</ol>
+<pre class="prettyprint source lang-html"><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;path/to/dist/banner.css&quot; />
+&lt;script src=&quot;path/to/dist/cookie-banner.min.js&quot;>&lt;/script>
+</code></pre>
+<h2>Usage</h2>
+<h3>Basic Usage</h3>
+<pre class="prettyprint source lang-javascript"><code>// Using as a global variable (UMD build)
+window.CookieBanner.init({
+  locale: 'en',
+  theme: 'light', // or 'dark'
+  onConsentChange: (consent) => {
+    // Use to enable/disable analytics or ad scripts
+    console.log('Consent changed:', consent);
+    
+    // Example: Enable Google Analytics if analytics consent is given
+    if (consent.analytics) {
+      // Initialize analytics
+    }
+  },
+});
+
+// Using as an ES module
+import CookieBanner from 'accessible-cookie-banner';
+
+CookieBanner.init({
+  locale: 'en',
+  theme: 'light',
+  // other options...
+});
+</code></pre>
+<h3>Advanced Configuration</h3>
+<pre class="prettyprint source lang-javascript"><code>CookieBanner.init({
+  locale: 'en',
+  theme: 'light',
+  showModal: true,
+  storageMethod: 'localStorage', // or 'cookie'
+  expireDays: 365,
+  categories: {
+    functional: true, // Always required
+    analytics: false, // Default state
+    marketing: false  // Default state
+  },
+  onConsentChange: (consent) => {
+    console.log('Consent changed:', consent);
+  }
+});
+</code></pre>
+<h3>Check Consent Status</h3>
+<pre class="prettyprint source lang-javascript"><code>// Check if user has given consent for analytics
+if (CookieBanner.hasConsent('analytics')) {
+  // Initialize analytics
+}
+
+// Get full consent object
+const consent = CookieBanner.getConsent();
+console.log(consent);
+// Example output: { functional: true, analytics: true, marketing: false, timestamp: &quot;2023-...&quot; }
+</code></pre>
+<h3>Listening for Consent Changes</h3>
+<pre class="prettyprint source lang-javascript"><code>document.addEventListener('cookieConsentChanged', (e) => {
+  console.log('Consent changed:', e.detail);
+  
+  // Enable/disable scripts based on consent
+  if (e.detail.analytics) {
+    // Initialize analytics
+  }
+  
+  if (e.detail.marketing) {
+    // Initialize marketing scripts
+  }
+});
+</code></pre>
+<h2>Customization</h2>
+<h3>Changing the Theme</h3>
+<p>The banner comes with three built-in themes: <code>light</code>, <code>dark</code>, and <code>high-contrast</code>. You can set the theme during initialization:</p>
+<pre class="prettyprint source lang-javascript"><code>CookieBanner.init({
+  theme: 'dark' // 'light', 'dark', or 'high-contrast'
+});
+</code></pre>
+<p>You can also customize the colors by overriding the CSS variables in your stylesheet:</p>
+<pre class="prettyprint source lang-css"><code>:root {
+  --cookie-bg: #f0f0f0;
+  --cookie-text: #333333;
+  --cookie-button-primary-bg: #0056b3;
+  --cookie-button-primary-text: #ffffff;
+  /* ... other variables ... */
+}
+</code></pre>
+<h3>Localization</h3>
+<p>You can set the banner language during initialization:</p>
+<pre class="prettyprint source lang-javascript"><code>CookieBanner.init({
+  locale: 'fr' // Uses locales/fr.json
+});
+</code></pre>
+<p>To add a new language, create a new JSON file in the <code>locales</code> directory with the appropriate translations.</p>
+<h2>Project Structure</h2>
+<pre class="prettyprint source"><code>accessible-cookie-banner/
+├── dist/                    # Distribution files
+│   ├── cookie-banner.js     # UMD build
+│   ├── cookie-banner.min.js # Minified UMD build
+│   ├── cookie-banner.esm.js # ES module
+│   ├── banner.css           # Styles
+│   ├── locales/             # Localization files
+│   ├── types/               # TypeScript declarations
+│   └── examples/            # Example pages
+├── src/                     # Source code
+│   ├── js/                  # JavaScript source
+│   │   ├── banner.js        # Banner implementation
+│   │   ├── consent-manager.js # Consent management
+│   │   └── index.js         # Entry point
+│   ├── css/                 # CSS source
+│   ├── html/                # HTML examples
+│   ├── examples/            # Implementation examples
+│   ├── types/               # TypeScript type definitions
+│   └── locales/             # Translation files
+└── test/                    # Test files
+</code></pre>
+<h2>Examples</h2>
+<p>The package includes various examples to help you implement the cookie banner in different environments:</p>
+<ul>
+<li><strong>Basic Usage</strong>: Simple implementation with vanilla JavaScript</li>
+<li><strong>Framework Integration</strong>:
+<ul>
+<li><a href="src/examples/react-example.jsx">React</a></li>
+<li><a href="src/examples/vue-example.vue">Vue</a></li>
+<li><a href="src/examples/angular-example.ts">Angular</a></li>
+</ul>
+</li>
+<li><strong>TypeScript</strong>: <a href="src/examples/typescript-example.ts">Type-safe implementation</a></li>
+<li><strong>Accessibility Features</strong>:
+<ul>
+<li><a href="src/examples/high-contrast.html">High Contrast Theme</a></li>
+<li><a href="src/examples/rtl-support.html">RTL Support</a></li>
+</ul>
+</li>
+</ul>
+<h3>Running Examples Locally</h3>
+<p>To view the examples in your browser:</p>
+<ol>
+<li><strong>Install dependencies and build the project:</strong></li>
+</ol>
+<pre class="prettyprint source lang-bash"><code>   npm install --legacy-peer-deps
+   npm run build
+</code></pre>
+<ol start="2">
+<li><strong>Start the development server:</strong></li>
+</ol>
+<pre class="prettyprint source lang-bash"><code>   npm start
+</code></pre>
+<p>This will build the project and start a local HTTP server at <code>http://localhost:8080</code></p>
+<ol start="3">
+<li><strong>View examples:</strong></li>
+</ol>
+<ul>
+<li>Main examples index: <code>http://localhost:8080/dist/examples/</code></li>
+<li>Vanilla JS example: <code>http://localhost:8080/dist/examples/vanilla-js.html</code></li>
+<li>High contrast theme: <code>http://localhost:8080/dist/examples/high-contrast.html</code></li>
+<li>RTL support: <code>http://localhost:8080/dist/examples/rtl-support.html</code></li>
+<li>Custom categories: <code>http://localhost:8080/dist/examples/custom-categories.html</code></li>
+</ul>
+<p><strong>Note:</strong> If you encounter issues with ad blockers blocking <code>cookie-banner.min.js</code>, either disable your ad blocker for localhost or use the unminified version by changing script references from <code>cookie-banner.min.js</code> to <code>cookie-banner.js</code>.</p>
+<p>See the <a href="src/examples/">examples directory</a> for more detailed examples and implementation guides.</p>
+<h2>Accessibility Features</h2>
+<ul>
+<li>Proper ARIA roles, states, and properties</li>
+<li>Focus management in the modal dialog</li>
+<li>Visible focus indicators</li>
+<li>Keyboard navigation support</li>
+<li>High-contrast theme option</li>
+<li>Readable text with sufficient color contrast</li>
+<li>No time limits or auto-dismissal</li>
+</ul>
+<h2>Privacy &amp; Compliance Notes</h2>
+<ul>
+<li>GDPR: Includes &quot;Reject All&quot; button and granular consent options</li>
+<li>CCPA: Can be configured to include &quot;Do Not Sell My Info&quot;</li>
+<li>Audit logging: Emits consent change events to hook into audit systems</li>
+<li>Time-to-live: Consent expires after the specified period (default: 365 days)</li>
+</ul>
+<h2>Browser Support</h2>
+<p>Supports all modern browsers, including:</p>
+<ul>
+<li>Chrome, Firefox, Safari, Edge (latest versions)</li>
+<li>IE11 with appropriate polyfills</li>
+</ul>
+<h2>Development</h2>
+<pre class="prettyprint source lang-bash"><code># Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Run tests
+npm test
+
+# Build for production
+npm run build
+</code></pre>
+<h2>License</h2>
+<p>MIT</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-banner.html">banner</a></li><li><a href="module-consent-manager.html">consent-manager</a></li><li><a href="module-cookie-banner.html">cookie-banner</a></li><li><a href="module-cookie-blocker.html">cookie-blocker</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-cookie-banner-CookieBanner.html">CookieBanner</a></li><li><a href="window.CookieBanner.html">CookieBanner</a></li><li><a href="window.CookieBlocker.html">CookieBlocker</a></li></ul><h3>Classes</h3><ul><li><a href="module-consent-manager-ConsentManager.html">ConsentManager</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 09 2025 07:31:43 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

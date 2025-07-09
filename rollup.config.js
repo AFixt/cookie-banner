@@ -2,7 +2,7 @@
  * Rollup configuration file
  */
 
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -19,18 +19,21 @@ export default {
       file: `${outputDir}/cookie-banner.js`,
       format: 'umd',
       name: 'CookieBanner',
+      exports: 'named',
       sourcemap: !production
     },
     {
       file: `${outputDir}/cookie-banner.min.js`,
       format: 'umd',
       name: 'CookieBanner',
+      exports: 'named',
       plugins: [terser()],
       sourcemap: !production
     },
     {
       file: `${outputDir}/cookie-banner.esm.js`,
       format: 'es',
+      exports: 'named',
       sourcemap: !production
     }
   ],
@@ -51,7 +54,9 @@ export default {
         { src: 'src/html/banner.html', dest: `${outputDir}/examples` },
         { src: 'src/html/preferences-modal.html', dest: `${outputDir}/examples` },
         { src: 'src/examples/*', dest: `${outputDir}/examples` },
-        { src: 'src/types', dest: `${outputDir}` }
+        { src: 'src/types', dest: `${outputDir}` },
+        { src: 'README.md', dest: outputDir },
+        { src: 'LICENSE', dest: outputDir }
       ]
     })
   ],

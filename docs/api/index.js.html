@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: index.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: index.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Accessible Cookie Banner - Entry point for the library
+ * @module cookie-banner
+ * @author Karl Groves &lt;karlgroves@gmail.com>
+ * @version 1.0.0
+ */
+
+// Import required modules
+import ConsentManager from './consent-manager.js';
+import './banner.js';
+import './cookie-blocker.js';
+
+/**
+ * @namespace CookieBanner
+ * @description The main cookie banner API exposed on the global window object
+ */
+
+/**
+ * @typedef {Object} ConsentObject
+ * @property {boolean} functional - Always true, functional cookies are required
+ * @property {boolean} analytics - Whether analytics cookies are allowed
+ * @property {boolean} marketing - Whether marketing cookies are allowed
+ * @property {string} timestamp - ISO timestamp of when consent was given
+ */
+
+/**
+ * @typedef {Object} CookieBannerConfig
+ * @property {string} [locale='en'] - Language locale for the banner
+ * @property {string} [theme='light'] - Theme for the banner ('light' or 'dark')
+ * @property {boolean} [showModal=true] - Whether to show the preferences modal
+ * @property {Function} [onConsentChange] - Callback function called when consent changes
+ * @property {string} [storageMethod='localStorage'] - Storage method ('localStorage' or 'cookie')
+ * @property {number} [expireDays=365] - Number of days before consent expires
+ * @property {Object} [categories] - Default consent categories
+ * @property {boolean} [categories.functional=true] - Functional cookies (always required)
+ * @property {boolean} [categories.analytics=false] - Analytics cookies default
+ * @property {boolean} [categories.marketing=false] - Marketing cookies default
+ */
+
+// Export the ConsentManager class for advanced usage
+export { ConsentManager };
+
+// For UMD builds, expose the API on the global object after the modules are loaded
+if (typeof window !== 'undefined') {
+  /**
+   * Global cookie banner API
+   * @namespace window.CookieBanner
+   * @property {Function} init - Initialize the cookie banner
+   * @property {Function} getConsent - Get current consent status
+   * @property {Function} setConsent - Set consent status
+   * @property {Function} hasConsent - Check if a specific category has consent
+   */
+  window.CookieBanner = {
+    /**
+     * Initialize the cookie banner with options
+     * @function
+     * @memberof window.CookieBanner
+     * @param {CookieBannerConfig} options - Configuration options
+     * @returns {Promise&lt;void>} Promise that resolves when banner is initialized
+     * @example
+     * window.CookieBanner.init({
+     *   locale: 'en',
+     *   theme: 'dark',
+     *   onConsentChange: (consent) => console.log('Consent changed:', consent)
+     * });
+     */
+    init: window.initCookieBanner,
+    
+    /**
+     * Get current consent status
+     * @function
+     * @memberof window.CookieBanner
+     * @returns {ConsentObject|null} Current consent object or null if no consent stored
+     * @example
+     * const consent = window.CookieBanner.getConsent();
+     * if (consent &amp;&amp; consent.analytics) {
+     *   // Analytics cookies are allowed
+     * }
+     */
+    getConsent: () => window.CookieConsent ? window.CookieConsent.getConsent() : null,
+    
+    /**
+     * Set consent status
+     * @function
+     * @memberof window.CookieBanner
+     * @param {ConsentObject} consent - Consent object with boolean values
+     * @example
+     * window.CookieBanner.setConsent({
+     *   functional: true,
+     *   analytics: true,
+     *   marketing: false
+     * });
+     */
+    setConsent: (consent) => window.CookieConsent ? window.CookieConsent.setConsent(consent) : null,
+    
+    /**
+     * Check if a specific category has consent
+     * @function
+     * @memberof window.CookieBanner
+     * @param {string} category - Category to check ('functional', 'analytics', 'marketing')
+     * @returns {boolean} True if consent is given for the category
+     * @example
+     * if (window.CookieBanner.hasConsent('analytics')) {
+     *   // Load analytics scripts
+     * }
+     */
+    hasConsent: (category) => window.CookieConsent ? window.CookieConsent.hasConsent(category) : false
+  };
+}
+
+/**
+ * Default export - the CookieBanner API or null in non-browser environments
+ * @type {Object|null}
+ */
+export default typeof window !== 'undefined' ? window.CookieBanner : null;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-banner.html">banner</a></li><li><a href="module-consent-manager.html">consent-manager</a></li><li><a href="module-cookie-banner.html">cookie-banner</a></li><li><a href="module-cookie-blocker.html">cookie-blocker</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-cookie-banner-CookieBanner.html">CookieBanner</a></li><li><a href="window.CookieBanner.html">CookieBanner</a></li><li><a href="window.CookieBlocker.html">CookieBlocker</a></li></ul><h3>Classes</h3><ul><li><a href="module-consent-manager-ConsentManager.html">ConsentManager</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jul 09 2025 07:31:43 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,34 +1,29 @@
 // Import testing-library extensions
 require('@testing-library/jest-dom');
 
-// Mock localStorage
-class LocalStorageMock {
-  constructor() {
+// Mock localStorage using jest functions for easier testing
+const localStorageMock = {
+  store: {},
+  clear: jest.fn(function() {
     this.store = {};
-  }
-
-  clear() {
-    this.store = {};
-  }
-
-  getItem(key) {
+  }),
+  getItem: jest.fn(function(key) {
     return this.store[key] || null;
-  }
-
-  setItem(key, value) {
+  }),
+  setItem: jest.fn(function(key, value) {
     this.store[key] = String(value);
-  }
-
-  removeItem(key) {
+  }),
+  removeItem: jest.fn(function(key) {
     delete this.store[key];
-  }
-}
+  })
+};
 
 // Set up localStorage mock
-global.localStorage = new LocalStorageMock();
+global.localStorage = localStorageMock;
 
-// Mock document.cookie
+// Mock document.cookie with configurable property
 Object.defineProperty(document, 'cookie', {
   writable: true,
+  configurable: true,
   value: '',
 });

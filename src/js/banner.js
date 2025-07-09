@@ -1,6 +1,8 @@
 /**
- * Accessible Cookie Banner
- * Main functionality for banner and preference modal
+ * @fileoverview Accessible Cookie Banner - Main functionality for banner and preference modal
+ * @module banner
+ * @author Karl Groves <karlgroves@gmail.com>
+ * @version 1.0.0
  */
 
 (function() {
@@ -37,34 +39,45 @@
    * @param {Object} userConfig - Configuration options
    */
   function initCookieBanner(userConfig = {}) {
-    // Merge user configuration with defaults
-    config = { ...defaultConfig, ...userConfig };
+    try {
+      // Merge user configuration with defaults
+      config = { ...defaultConfig, ...userConfig };
 
-    // Check if consent is already given
-    const consent = getConsent();
-    if (consent && consent.hasOwnProperty('functional')) {
-      // User has already made a choice
-      dispatchConsentEvent(consent);
-      return;
+      // Check if consent is already given
+      const consent = window.CookieConsent ? window.CookieConsent.getConsent() : getConsentFromStorage();
+      if (consent && consent.hasOwnProperty('functional')) {
+        // User has already made a choice
+        dispatchConsentEvent(consent);
+        return Promise.resolve();
+      }
+
+      // Load locale strings
+      return loadLocaleStrings(config.locale)
+        .then(() => {
+          try {
+            // Create and append banner
+            createBanner();
+            
+            // Create and append modal if enabled
+            if (config.showModal) {
+              createModal();
+            }
+            
+            // Add event listeners
+            addEventListeners();
+          } catch (error) {
+            console.error('Failed to initialize cookie banner:', error);
+            throw error;
+          }
+        })
+        .catch(error => {
+          console.error('Failed to initialize cookie banner:', error);
+          throw error;
+        });
+    } catch (error) {
+      console.error('Failed to initialize cookie banner:', error);
+      throw error;
     }
-
-    // Load locale strings
-    loadLocaleStrings(config.locale)
-      .then(() => {
-        // Create and append banner
-        createBanner();
-        
-        // Create and append modal if enabled
-        if (config.showModal) {
-          createModal();
-        }
-        
-        // Add event listeners
-        addEventListeners();
-      })
-      .catch(error => {
-        console.error('Failed to initialize cookie banner:', error);
-      });
   }
 
   /**
@@ -73,7 +86,7 @@
    * @returns {Promise}
    */
   function loadLocaleStrings(locale) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       // Use default English strings as fallback
       localeStrings = {
         description: 'We use cookies to improve your experience.',
@@ -101,7 +114,15 @@
             return response.json();
           })
           .then(data => {
-            localeStrings = data;
+            // Merge with defaults to ensure all required properties exist
+            localeStrings = {
+              ...localeStrings,
+              ...data,
+              modal: {
+                ...localeStrings.modal,
+                ...(data.modal || {})
+              }
+            };
             resolve();
           })
           .catch(error => {
@@ -133,14 +154,17 @@
     
     const acceptAllBtn = document.createElement('button');
     acceptAllBtn.id = 'accept-all';
+    acceptAllBtn.setAttribute('data-action', 'accept-all');
     acceptAllBtn.textContent = localeStrings.acceptAll;
     
     const rejectAllBtn = document.createElement('button');
     rejectAllBtn.id = 'reject-all';
+    rejectAllBtn.setAttribute('data-action', 'reject-all');
     rejectAllBtn.textContent = localeStrings.rejectAll;
     
     const customizeBtn = document.createElement('button');
     customizeBtn.id = 'customize-preferences';
+    customizeBtn.setAttribute('data-action', 'customize');
     customizeBtn.textContent = localeStrings.customize;
     if (config.showModal) {
       customizeBtn.setAttribute('aria-haspopup', 'dialog');
@@ -170,6 +194,7 @@
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
     modal.setAttribute('aria-labelledby', 'modal-title');
+    modal.setAttribute('aria-hidden', 'true');
     modal.setAttribute('hidden', '');
     
     const title = document.createElement('h2');
@@ -294,21 +319,31 @@
   function addEventListeners() {
     // Accept all button
     document.getElementById('accept-all').addEventListener('click', () => {
-      setConsent({
+      const consentData = {
         functional: true,
         analytics: true,
         marketing: true
-      });
+      };
+      if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
+        window.CookieConsent.setConsent(consentData);
+      } else {
+        setConsent(consentData);
+      }
       hideBanner();
     });
     
     // Reject all button
     document.getElementById('reject-all').addEventListener('click', () => {
-      setConsent({
+      const consentData = {
         functional: true, // Functional is always required
         analytics: false,
         marketing: false
-      });
+      };
+      if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
+        window.CookieConsent.setConsent(consentData);
+      } else {
+        setConsent(consentData);
+      }
       hideBanner();
     });
     
@@ -327,11 +362,16 @@
       document.getElementById('cookie-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const form = e.target;
-        setConsent({
+        const consentData = {
           functional: true, // Always required
           analytics: form.elements.analytics.checked,
           marketing: form.elements.marketing.checked
-        });
+        };
+        if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
+          window.CookieConsent.setConsent(consentData);
+        } else {
+          setConsent(consentData);
+        }
         closeModal();
         hideBanner();
       });
@@ -359,6 +399,7 @@
     
     // Show the modal
     modal.removeAttribute('hidden');
+    modal.setAttribute('aria-hidden', 'false');
     isModalOpen = true;
     
     // Find all focusable elements in the modal
@@ -386,6 +427,7 @@
     
     // Hide the modal
     modal.setAttribute('hidden', '');
+    modal.setAttribute('aria-hidden', 'true');
     isModalOpen = false;
     
     // Remove overlay
@@ -434,10 +476,10 @@
   }
 
   /**
-   * Get current consent settings
+   * Get current consent settings from storage directly
    * @returns {Object|null} - Consent object or null if no consent is stored
    */
-  function getConsent() {
+  function getConsentFromStorage() {
     try {
       if (config.storageMethod === 'localStorage') {
         const storedConsent = localStorage.getItem('cookieConsent');
@@ -451,6 +493,14 @@
       console.error('Error retrieving consent:', e);
       return null;
     }
+  }
+
+  /**
+   * Get current consent settings (public API)
+   * @returns {Object|null} - Consent object or null if no consent is stored
+   */
+  function getConsent() {
+    return getConsentFromStorage();
   }
 
   /**
@@ -496,7 +546,7 @@
    * @returns {boolean} - True if consent is given, false otherwise
    */
   function hasConsent(category) {
-    const consent = getConsent();
+    const consent = getConsentFromStorage();
     return consent ? !!consent[category] : false;
   }
 
@@ -514,9 +564,13 @@
 
   // Export public API
   window.initCookieBanner = initCookieBanner;
-  window.CookieConsent = {
-    getConsent,
-    setConsent,
-    hasConsent
-  };
+  
+  // Only create CookieConsent if it doesn't already exist
+  if (!window.CookieConsent) {
+    window.CookieConsent = {
+      getConsent,
+      setConsent,
+      hasConsent
+    };
+  }
 })();

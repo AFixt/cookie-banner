@@ -1,0 +1,2072 @@
+<testsuites id="" name="" tests="50" failures="50" skipped="0" errors="0" time="90.66058799999999">
+<testsuite name="accessibility-e2e.test.js" timestamp="2025-07-08T11:44:07.179Z" hostname="chromium" tests="10" failures="10" skipped="0" time="106.754" errors="0">
+<testcase name="Cookie Banner Accessibility › should not have any accessibility violations on initial load" classname="accessibility-e2e.test.js" time="5.728">
+<failure message="accessibility-e2e.test.js:22:3 should not have any accessibility violations on initial load" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:22:3 › Cookie Banner Accessibility › should not have any accessibility violations on initial load 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should be keyboard navigable" classname="accessibility-e2e.test.js" time="5.656">
+<failure message="accessibility-e2e.test.js:30:3 should be keyboard navigable" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:30:3 › Cookie Banner Accessibility › should be keyboard navigable 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should open modal with keyboard and maintain focus" classname="accessibility-e2e.test.js" time="5.736">
+<failure message="accessibility-e2e.test.js:42:3 should open modal with keyboard and maintain focus" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:42:3 › Cookie Banner Accessibility › should open modal with keyboard and maintain focus 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should close modal with Escape key" classname="accessibility-e2e.test.js" time="5.634">
+<failure message="accessibility-e2e.test.js:65:3 should close modal with Escape key" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:65:3 › Cookie Banner Accessibility › should close modal with Escape key 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should have proper ARIA attributes" classname="accessibility-e2e.test.js" time="5.7">
+<failure message="accessibility-e2e.test.js:78:3 should have proper ARIA attributes" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:78:3 › Cookie Banner Accessibility › should have proper ARIA attributes 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with screen readers (basic simulation)" classname="accessibility-e2e.test.js" time="5.793">
+<failure message="accessibility-e2e.test.js:90:3 should work with screen readers (basic simulation)" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:90:3 › Cookie Banner Accessibility › should work with screen readers (basic simulation) 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should maintain accessibility in high contrast mode" classname="accessibility-e2e.test.js" time="5.682">
+<failure message="accessibility-e2e.test.js:106:3 should maintain accessibility in high contrast mode" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:106:3 › Cookie Banner Accessibility › should maintain accessibility in high contrast mode 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with text scaling up to 200%" classname="accessibility-e2e.test.js" time="5.524">
+<failure message="accessibility-e2e.test.js:127:3 should work with text scaling up to 200%" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:127:3 › Cookie Banner Accessibility › should work with text scaling up to 200% 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should emit consent events when user makes choices" classname="accessibility-e2e.test.js" time="30.65">
+<failure message="accessibility-e2e.test.js:159:3 should emit consent events when user makes choices" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:159:3 › Cookie Banner Consent Functionality › should emit consent events when user makes choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should persist consent choices" classname="accessibility-e2e.test.js" time="30.651">
+<failure message="accessibility-e2e.test.js:181:3 should persist consent choices" type="FAILURE">
+<![CDATA[  [chromium] › accessibility-e2e.test.js:181:3 › Cookie Banner Consent Functionality › should persist consent choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-chromium/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="accessibility-e2e.test.js" timestamp="2025-07-08T11:44:07.179Z" hostname="firefox" tests="10" failures="10" skipped="0" time="105.779" errors="0">
+<testcase name="Cookie Banner Accessibility › should not have any accessibility violations on initial load" classname="accessibility-e2e.test.js" time="5.759">
+<failure message="accessibility-e2e.test.js:22:3 should not have any accessibility violations on initial load" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:22:3 › Cookie Banner Accessibility › should not have any accessibility violations on initial load 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should be keyboard navigable" classname="accessibility-e2e.test.js" time="5.672">
+<failure message="accessibility-e2e.test.js:30:3 should be keyboard navigable" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:30:3 › Cookie Banner Accessibility › should be keyboard navigable 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should open modal with keyboard and maintain focus" classname="accessibility-e2e.test.js" time="5.736">
+<failure message="accessibility-e2e.test.js:42:3 should open modal with keyboard and maintain focus" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:42:3 › Cookie Banner Accessibility › should open modal with keyboard and maintain focus 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should close modal with Escape key" classname="accessibility-e2e.test.js" time="5.661">
+<failure message="accessibility-e2e.test.js:65:3 should close modal with Escape key" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:65:3 › Cookie Banner Accessibility › should close modal with Escape key 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should have proper ARIA attributes" classname="accessibility-e2e.test.js" time="5.756">
+<failure message="accessibility-e2e.test.js:78:3 should have proper ARIA attributes" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:78:3 › Cookie Banner Accessibility › should have proper ARIA attributes 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with screen readers (basic simulation)" classname="accessibility-e2e.test.js" time="5.711">
+<failure message="accessibility-e2e.test.js:90:3 should work with screen readers (basic simulation)" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:90:3 › Cookie Banner Accessibility › should work with screen readers (basic simulation) 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should maintain accessibility in high contrast mode" classname="accessibility-e2e.test.js" time="5.682">
+<failure message="accessibility-e2e.test.js:106:3 should maintain accessibility in high contrast mode" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:106:3 › Cookie Banner Accessibility › should maintain accessibility in high contrast mode 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with text scaling up to 200%" classname="accessibility-e2e.test.js" time="5.697">
+<failure message="accessibility-e2e.test.js:127:3 should work with text scaling up to 200%" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:127:3 › Cookie Banner Accessibility › should work with text scaling up to 200% 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should emit consent events when user makes choices" classname="accessibility-e2e.test.js" time="30.056">
+<failure message="accessibility-e2e.test.js:159:3 should emit consent events when user makes choices" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:159:3 › Cookie Banner Consent Functionality › should emit consent events when user makes choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should persist consent choices" classname="accessibility-e2e.test.js" time="30.049">
+<failure message="accessibility-e2e.test.js:181:3 should persist consent choices" type="FAILURE">
+<![CDATA[  [firefox] › accessibility-e2e.test.js:181:3 › Cookie Banner Consent Functionality › should persist consent choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-firefox/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="accessibility-e2e.test.js" timestamp="2025-07-08T11:44:07.179Z" hostname="webkit" tests="10" failures="10" skipped="0" time="103.659" errors="0">
+<testcase name="Cookie Banner Accessibility › should not have any accessibility violations on initial load" classname="accessibility-e2e.test.js" time="5.601">
+<failure message="accessibility-e2e.test.js:22:3 should not have any accessibility violations on initial load" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:22:3 › Cookie Banner Accessibility › should not have any accessibility violations on initial load 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should be keyboard navigable" classname="accessibility-e2e.test.js" time="5.63">
+<failure message="accessibility-e2e.test.js:30:3 should be keyboard navigable" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:30:3 › Cookie Banner Accessibility › should be keyboard navigable 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should open modal with keyboard and maintain focus" classname="accessibility-e2e.test.js" time="5.303">
+<failure message="accessibility-e2e.test.js:42:3 should open modal with keyboard and maintain focus" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:42:3 › Cookie Banner Accessibility › should open modal with keyboard and maintain focus 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should close modal with Escape key" classname="accessibility-e2e.test.js" time="5.333">
+<failure message="accessibility-e2e.test.js:65:3 should close modal with Escape key" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:65:3 › Cookie Banner Accessibility › should close modal with Escape key 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should have proper ARIA attributes" classname="accessibility-e2e.test.js" time="5.469">
+<failure message="accessibility-e2e.test.js:78:3 should have proper ARIA attributes" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:78:3 › Cookie Banner Accessibility › should have proper ARIA attributes 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with screen readers (basic simulation)" classname="accessibility-e2e.test.js" time="5.47">
+<failure message="accessibility-e2e.test.js:90:3 should work with screen readers (basic simulation)" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:90:3 › Cookie Banner Accessibility › should work with screen readers (basic simulation) 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should maintain accessibility in high contrast mode" classname="accessibility-e2e.test.js" time="5.299">
+<failure message="accessibility-e2e.test.js:106:3 should maintain accessibility in high contrast mode" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:106:3 › Cookie Banner Accessibility › should maintain accessibility in high contrast mode 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with text scaling up to 200%" classname="accessibility-e2e.test.js" time="5.303">
+<failure message="accessibility-e2e.test.js:127:3 should work with text scaling up to 200%" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:127:3 › Cookie Banner Accessibility › should work with text scaling up to 200% 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should emit consent events when user makes choices" classname="accessibility-e2e.test.js" time="30.126">
+<failure message="accessibility-e2e.test.js:159:3 should emit consent events when user makes choices" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:159:3 › Cookie Banner Consent Functionality › should emit consent events when user makes choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should persist consent choices" classname="accessibility-e2e.test.js" time="30.125">
+<failure message="accessibility-e2e.test.js:181:3 should persist consent choices" type="FAILURE">
+<![CDATA[  [webkit] › accessibility-e2e.test.js:181:3 › Cookie Banner Consent Functionality › should persist consent choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-webkit/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="accessibility-e2e.test.js" timestamp="2025-07-08T11:44:07.179Z" hostname="Mobile Chrome" tests="10" failures="10" skipped="0" time="103.329" errors="0">
+<testcase name="Cookie Banner Accessibility › should not have any accessibility violations on initial load" classname="accessibility-e2e.test.js" time="5.325">
+<failure message="accessibility-e2e.test.js:22:3 should not have any accessibility violations on initial load" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:22:3 › Cookie Banner Accessibility › should not have any accessibility violations on initial load 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should be keyboard navigable" classname="accessibility-e2e.test.js" time="5.26">
+<failure message="accessibility-e2e.test.js:30:3 should be keyboard navigable" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:30:3 › Cookie Banner Accessibility › should be keyboard navigable 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should open modal with keyboard and maintain focus" classname="accessibility-e2e.test.js" time="5.268">
+<failure message="accessibility-e2e.test.js:42:3 should open modal with keyboard and maintain focus" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:42:3 › Cookie Banner Accessibility › should open modal with keyboard and maintain focus 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should close modal with Escape key" classname="accessibility-e2e.test.js" time="5.269">
+<failure message="accessibility-e2e.test.js:65:3 should close modal with Escape key" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:65:3 › Cookie Banner Accessibility › should close modal with Escape key 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should have proper ARIA attributes" classname="accessibility-e2e.test.js" time="5.371">
+<failure message="accessibility-e2e.test.js:78:3 should have proper ARIA attributes" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:78:3 › Cookie Banner Accessibility › should have proper ARIA attributes 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with screen readers (basic simulation)" classname="accessibility-e2e.test.js" time="5.214">
+<failure message="accessibility-e2e.test.js:90:3 should work with screen readers (basic simulation)" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:90:3 › Cookie Banner Accessibility › should work with screen readers (basic simulation) 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should maintain accessibility in high contrast mode" classname="accessibility-e2e.test.js" time="5.284">
+<failure message="accessibility-e2e.test.js:106:3 should maintain accessibility in high contrast mode" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:106:3 › Cookie Banner Accessibility › should maintain accessibility in high contrast mode 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with text scaling up to 200%" classname="accessibility-e2e.test.js" time="5.285">
+<failure message="accessibility-e2e.test.js:127:3 should work with text scaling up to 200%" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:127:3 › Cookie Banner Accessibility › should work with text scaling up to 200% 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should emit consent events when user makes choices" classname="accessibility-e2e.test.js" time="30.535">
+<failure message="accessibility-e2e.test.js:159:3 should emit consent events when user makes choices" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:159:3 › Cookie Banner Consent Functionality › should emit consent events when user makes choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should persist consent choices" classname="accessibility-e2e.test.js" time="30.518">
+<failure message="accessibility-e2e.test.js:181:3 should persist consent choices" type="FAILURE">
+<![CDATA[  [Mobile Chrome] › accessibility-e2e.test.js:181:3 › Cookie Banner Consent Functionality › should persist consent choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Chrome/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Chrome/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Chrome/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Chrome/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Chrome/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Chrome/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="accessibility-e2e.test.js" timestamp="2025-07-08T11:44:07.179Z" hostname="Mobile Safari" tests="10" failures="10" skipped="0" time="102.663" errors="0">
+<testcase name="Cookie Banner Accessibility › should not have any accessibility violations on initial load" classname="accessibility-e2e.test.js" time="5.304">
+<failure message="accessibility-e2e.test.js:22:3 should not have any accessibility violations on initial load" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:22:3 › Cookie Banner Accessibility › should not have any accessibility violations on initial load 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-60dc2--violations-on-initial-load-Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should be keyboard navigable" classname="accessibility-e2e.test.js" time="5.279">
+<failure message="accessibility-e2e.test.js:30:3 should be keyboard navigable" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:30:3 › Cookie Banner Accessibility › should be keyboard navigable 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-0470b-hould-be-keyboard-navigable-Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should open modal with keyboard and maintain focus" classname="accessibility-e2e.test.js" time="5.34">
+<failure message="accessibility-e2e.test.js:42:3 should open modal with keyboard and maintain focus" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:42:3 › Cookie Banner Accessibility › should open modal with keyboard and maintain focus 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-20e14-keyboard-and-maintain-focus-Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should close modal with Escape key" classname="accessibility-e2e.test.js" time="5.339">
+<failure message="accessibility-e2e.test.js:65:3 should close modal with Escape key" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:65:3 › Cookie Banner Accessibility › should close modal with Escape key 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-91a13-close-modal-with-Escape-key-Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should have proper ARIA attributes" classname="accessibility-e2e.test.js" time="5.293">
+<failure message="accessibility-e2e.test.js:78:3 should have proper ARIA attributes" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:78:3 › Cookie Banner Accessibility › should have proper ARIA attributes 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-45d9a-have-proper-ARIA-attributes-Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with screen readers (basic simulation)" classname="accessibility-e2e.test.js" time="5.285">
+<failure message="accessibility-e2e.test.js:90:3 should work with screen readers (basic simulation)" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:90:3 › Cookie Banner Accessibility › should work with screen readers (basic simulation) 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-68d69-n-readers-basic-simulation--Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should maintain accessibility in high contrast mode" classname="accessibility-e2e.test.js" time="5.358">
+<failure message="accessibility-e2e.test.js:106:3 should maintain accessibility in high contrast mode" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:106:3 › Cookie Banner Accessibility › should maintain accessibility in high contrast mode 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-c8ea2-ility-in-high-contrast-mode-Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Accessibility › should work with text scaling up to 200%" classname="accessibility-e2e.test.js" time="5.359">
+<failure message="accessibility-e2e.test.js:127:3 should work with text scaling up to 200%" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:127:3 › Cookie Banner Accessibility › should work with text scaling up to 200% 
+
+    TimeoutError: page.waitForSelector: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      17 |     
+      18 |     // Wait for the banner to load
+    > 19 |     await page.waitForSelector('#cookie-banner', { timeout: 5000 });
+         |                ^
+      20 |   });
+      21 |
+      22 |   test('should not have any accessibility violations on initial load', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:19:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-3c2fc-ith-text-scaling-up-to-200--Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should emit consent events when user makes choices" classname="accessibility-e2e.test.js" time="30.055">
+<failure message="accessibility-e2e.test.js:159:3 should emit consent events when user makes choices" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:159:3 › Cookie Banner Consent Functionality › should emit consent events when user makes choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-1efe6-nts-when-user-makes-choices-Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Cookie Banner Consent Functionality › should persist consent choices" classname="accessibility-e2e.test.js" time="30.051">
+<failure message="accessibility-e2e.test.js:181:3 should persist consent choices" type="FAILURE">
+<![CDATA[  [Mobile Safari] › accessibility-e2e.test.js:181:3 › Cookie Banner Consent Functionality › should persist consent choices 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      151 |
+      152 | test.describe('Cookie Banner Consent Functionality', () => {
+    > 153 |   test.beforeEach(async ({ page }) => {
+          |        ^
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+      156 |     await page.waitForSelector('#cookie-banner');
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:153:8
+
+    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#cookie-banner') to be visible
+
+
+      154 |     const examplePath = path.resolve(__dirname, '../dist/examples/vanilla-js.html');
+      155 |     await page.goto(`file://${examplePath}`);
+    > 156 |     await page.waitForSelector('#cookie-banner');
+          |                ^
+      157 |   });
+      158 |
+      159 |   test('should emit consent events when user makes choices', async ({ page }) => {
+        at /Users/karlgroves/Projects/cookie-banner/test/accessibility-e2e.test.js:156:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Safari/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Safari/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Safari/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Safari/test-failed-1.png]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Safari/video.webm]]
+
+[[ATTACHMENT|accessibility-e2e-Cookie-B-975da-uld-persist-consent-choices-Mobile-Safari/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

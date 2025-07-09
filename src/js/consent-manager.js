@@ -1,6 +1,8 @@
 /**
- * Consent Manager
- * Handles storage, retrieval, and validation of cookie consent
+ * @fileoverview Consent Manager - Handles storage, retrieval, and validation of cookie consent
+ * @module consent-manager
+ * @author Karl Groves <karlgroves@gmail.com>
+ * @version 1.0.0
  */
 
 class ConsentManager {
@@ -70,7 +72,11 @@ class ConsentManager {
       
       // Call onConsentChange callback if provided
       if (typeof this.options.onConsentChange === 'function') {
-        this.options.onConsentChange(consentData);
+        try {
+          this.options.onConsentChange(consentData);
+        } catch (e) {
+          console.error('Error in onConsentChange callback:', e);
+        }
       }
       
       return consentData;
@@ -95,11 +101,15 @@ class ConsentManager {
    * @param {Object} consentData - Consent data
    */
   dispatchConsentEvent(consentData) {
-    const event = new CustomEvent('cookieConsentChanged', {
-      detail: consentData,
-      bubbles: true
-    });
-    document.dispatchEvent(event);
+    try {
+      const event = new CustomEvent('cookieConsentChanged', {
+        detail: consentData,
+        bubbles: true
+      });
+      document.dispatchEvent(event);
+    } catch (e) {
+      console.error('Error dispatching consent event:', e);
+    }
   }
 
   /**
