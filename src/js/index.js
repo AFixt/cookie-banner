@@ -9,6 +9,7 @@
 import ConsentManager from './consent-manager.js';
 import './banner.js';
 import './cookie-blocker.js';
+import './subdomain-sync.js';
 
 /**
  * @namespace CookieBanner

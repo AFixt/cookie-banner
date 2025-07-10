@@ -35,6 +35,17 @@
             }
         });
         
+        // Optional: Initialize subdomain sync (enterprise feature)
+        // Uncomment and configure for your domain:
+        /*
+        window.CookieConsentSync.init({
+            enabled: true,
+            primaryDomain: 'example.com',
+            allowedSubdomains: ['www', 'app', 'shop'],
+            syncInterval: 5000
+        });
+        */
+        
         // Helper function to reset consent for testing
         function resetConsent() {
             localStorage.removeItem('cookieConsent');
