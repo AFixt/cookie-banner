@@ -8,6 +8,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import copy from 'rollup-plugin-copy';
+import analyzer from 'rollup-plugin-analyzer';
 
 const production = !process.env.ROLLUP_WATCH;
 const outputDir = 'dist';
@@ -58,6 +59,12 @@ export default {
         { src: 'README.md', dest: outputDir },
         { src: 'LICENSE', dest: outputDir }
       ]
+    }),
+    // Add bundle analyzer only in development or when explicitly requested
+    process.env.ANALYZE && analyzer({
+      hideDeps: true,
+      limit: 10,
+      summaryOnly: true
     })
   ],
   watch: {
