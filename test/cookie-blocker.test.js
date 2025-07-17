@@ -24,7 +24,13 @@ describe('Cookie Blocker', () => {
     
     // Clear localStorage and cookies
     localStorage.clear();
-    document.cookie = '';
+    // Clear all cookies properly
+    document.cookie.split(';').forEach(cookie => {
+      const [name] = cookie.trim().split('=');
+      if (name) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+      }
+    });
     
     // Mock consent manager
     mockConsentManager = {
@@ -87,6 +93,9 @@ describe('Cookie Blocker', () => {
     });
 
     test('should override DOM methods on initialization', () => {
+      if (window.CookieBlocker) {
+        window.CookieBlocker.reset();
+      }
       jest.resetModules();
       require('../src/js/cookie-blocker.js');
       
@@ -102,6 +111,9 @@ describe('Cookie Blocker', () => {
 
   describe('Script Blocking', () => {
     beforeEach(() => {
+      if (window.CookieBlocker) {
+        window.CookieBlocker.reset();
+      }
       jest.resetModules();
       require('../src/js/cookie-blocker.js');
       window.initCookieBlocker();
@@ -441,17 +453,32 @@ describe('Cookie Blocker', () => {
     });
 
     test('should handle cookie setting errors gracefully', () => {
-      // Mock cookie setter to throw error
-      Object.defineProperty(document, 'cookie', {
-        set: jest.fn().mockImplementation(() => {
-          throw new Error('Cookie setting failed');
-        }),
-        get: jest.fn().mockReturnValue('')
-      });
+      // Save the original descriptor setter
+      const descriptor = Object.getOwnPropertyDescriptor(document, 'cookie');
+      const originalSet = descriptor.set;
       
+      // Mock the underlying cookie setter to throw error
+      if (descriptor && originalSet) {
+        descriptor.set = function(value) {
+          // Check if our wrapper is trying to set a cookie
+          if (value.includes('test-error')) {
+            throw new Error('Cookie setting failed');
+          }
+          return originalSet.call(this, value);
+        };
+        Object.defineProperty(document, 'cookie', descriptor);
+      }
+      
+      // This should not throw because our wrapper catches errors
       expect(() => {
-        document.cookie = '_ga=test';
+        document.cookie = 'test-error=value';
       }).not.toThrow();
+      
+      // Check that error was logged
+      expect(console.error).toHaveBeenCalledWith(
+        '[Cookie Banner] Error setting cookie:',
+        'Cookie setting failed'
+      );
     });
 
     test('should handle missing consent manager gracefully', () => {
@@ -514,6 +541,9 @@ describe('Cookie Blocker', () => {
 
   describe('Integration with ConsentManager', () => {
     beforeEach(() => {
+      if (window.CookieBlocker) {
+        window.CookieBlocker.reset();
+      }
       jest.resetModules();
       require('../src/js/cookie-blocker.js');
       window.initCookieBlocker();
