@@ -24,13 +24,21 @@ describe('Cookie Blocker', () => {
     
     // Clear localStorage and cookies
     localStorage.clear();
-    // Clear all cookies properly
-    document.cookie.split(';').forEach(cookie => {
+    // Clear all cookies properly - more thorough approach
+    const cookies = document.cookie.split(';');
+    cookies.forEach(cookie => {
       const [name] = cookie.trim().split('=');
       if (name) {
+        // Clear with various path combinations
         document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${window.location.hostname}`;
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
       }
     });
+    // Force empty state
+    if (document.cookie) {
+      console.warn('Cookies still present after clearing:', document.cookie);
+    }
     
     // Mock consent manager
     mockConsentManager = {

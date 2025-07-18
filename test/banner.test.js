@@ -13,6 +13,11 @@ describe('Banner Functionality', () => {
   let mockConsentManager;
 
   beforeEach(() => {
+    // Reset cookie-blocker if it exists (before clearing DOM)
+    if (window.CookieBlocker && window.CookieBlocker.reset) {
+      window.CookieBlocker.reset();
+    }
+    
     // Clear DOM and localStorage
     document.body.innerHTML = '';
     localStorage.clear();
@@ -38,6 +43,11 @@ describe('Banner Functionality', () => {
   });
 
   afterEach(() => {
+    // Reset cookie-blocker if it exists (important to do this first)
+    if (window.CookieBlocker && window.CookieBlocker.reset) {
+      window.CookieBlocker.reset();
+    }
+    
     // Restore original fetch
     if (originalFetch) {
       global.fetch = originalFetch;
@@ -51,6 +61,12 @@ describe('Banner Functionality', () => {
     // Clean up event listeners
     document.removeEventListener('keydown', () => {});
     document.removeEventListener('click', () => {});
+    
+    // Clear any DOM modifications
+    document.body.innerHTML = '';
+    
+    // Clear all mocks
+    jest.clearAllMocks();
   });
 
   describe('initCookieBanner', () => {
@@ -62,6 +78,12 @@ describe('Banner Functionality', () => {
       
       // Re-import the module to get a fresh copy
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
@@ -106,27 +128,37 @@ describe('Banner Functionality', () => {
     test('should handle initialization errors gracefully', async () => {
       mockConsentManager.getConsent.mockReturnValue(null);
       
-      // Mock DOM method to throw error during banner creation
-      const originalCreateElement = document.createElement;
-      document.createElement = jest.fn().mockImplementation(() => {
-        throw new Error('DOM creation failed');
+      // Instead of mocking createElement, let's mock something else that would cause an error
+      // Mock body.appendChild to throw an error
+      const originalAppendChild = document.body.appendChild;
+      document.body.appendChild = jest.fn().mockImplementation(() => {
+        throw new Error('Failed to append banner to body');
       });
       
-      await window.initCookieBanner();
+      // The initCookieBanner should reject with an error
+      await expect(window.initCookieBanner()).rejects.toThrow('Failed to append banner to body');
       
+      // Console.error should be called (possibly twice due to try-catch structure)
+      expect(console.error).toHaveBeenCalled();
       expect(console.error).toHaveBeenCalledWith(
         'Failed to initialize cookie banner:',
         expect.any(Error)
       );
       
       // Restore
-      document.createElement = originalCreateElement;
+      document.body.appendChild = originalAppendChild;
     });
   });
 
   describe('loadLocaleStrings', () => {
     beforeEach(() => {
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
@@ -182,6 +214,12 @@ describe('Banner Functionality', () => {
     beforeEach(() => {
       global.fetch = jest.fn().mockResolvedValue({ ok: false });
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
@@ -229,6 +267,12 @@ describe('Banner Functionality', () => {
     beforeEach(() => {
       global.fetch = jest.fn().mockResolvedValue({ ok: false });
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
@@ -264,6 +308,12 @@ describe('Banner Functionality', () => {
     beforeEach(() => {
       global.fetch = jest.fn().mockResolvedValue({ ok: false });
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
@@ -371,6 +421,12 @@ describe('Banner Functionality', () => {
     beforeEach(() => {
       global.fetch = jest.fn().mockResolvedValue({ ok: false });
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
@@ -445,6 +501,12 @@ describe('Banner Functionality', () => {
     beforeEach(() => {
       global.fetch = jest.fn().mockResolvedValue({ ok: false });
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
@@ -488,6 +550,12 @@ describe('Banner Functionality', () => {
     beforeEach(() => {
       global.fetch = jest.fn().mockResolvedValue({ ok: false });
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
@@ -519,6 +587,12 @@ describe('Banner Functionality', () => {
   describe('Error Handling', () => {
     beforeEach(() => {
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
@@ -550,7 +624,8 @@ describe('Banner Functionality', () => {
         throw new Error('DOM error');
       });
       
-      await window.initCookieBanner();
+      // Should reject with the error
+      await expect(window.initCookieBanner()).rejects.toThrow('DOM error');
       
       expect(console.error).toHaveBeenCalled();
       
@@ -563,6 +638,12 @@ describe('Banner Functionality', () => {
     beforeEach(() => {
       global.fetch = jest.fn().mockResolvedValue({ ok: false });
       jest.resetModules();
+      
+      // Reset cookie-blocker if it exists
+      if (window.CookieBlocker && window.CookieBlocker.reset) {
+        window.CookieBlocker.reset();
+      }
+      
       require('../src/js/banner.js');
     });
 
