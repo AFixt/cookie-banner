@@ -2,6 +2,24 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Git Flow Branching Strategy
+
+This repository follows the Git Flow branching model. All development work must adhere to the following branching conventions:
+
+### Branch Types
+- **main**: Production-ready code only. Direct commits are not allowed.
+- **develop**: Integration branch for features. All feature branches merge here first.
+- **feature/***: New features (branch from develop, merge back to develop)
+- **release/***: Release preparation (branch from develop, merge to main and develop)
+- **hotfix/***: Emergency fixes (branch from main, merge to main and develop)
+
+### Workflow Rules
+1. Never commit directly to main or develop branches
+2. Always create feature branches from develop
+3. Use pull requests for all merges
+4. Delete feature branches after merging
+5. Tag releases on the main branch with semantic versioning
+
 ## Build/Lint/Test Commands
 
 - Node.js version: LTS (use `nvm use` or Node.js 22+)
