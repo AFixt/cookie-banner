@@ -71,14 +71,19 @@
     const primaryDomain = config.primaryDomain;
     
     // Check if we're on the primary domain
-    if (currentDomain === primaryDomain || currentDomain.endsWith('.' + primaryDomain)) {
+    if (currentDomain === primaryDomain) {
+      return true;
+    }
+    
+    // Always allow www subdomain
+    if (currentDomain === `www.${primaryDomain}`) {
       return true;
     }
     
     // Check if we're on an allowed subdomain
     return config.allowedSubdomains.some(subdomain => {
       const fullSubdomain = subdomain + '.' + primaryDomain;
-      return currentDomain === fullSubdomain || currentDomain.endsWith('.' + fullSubdomain);
+      return currentDomain === fullSubdomain;
     });
   }
 
@@ -87,6 +92,9 @@
    * @returns {void}
    */
   function setupPostMessageSync() {
+    // Register message handler immediately
+    window.addEventListener('message', handleSyncMessage);
+    
     // Create hidden iframe for cross-domain communication
     syncFrame = document.createElement('iframe');
     syncFrame.style.display = 'none';
@@ -95,9 +103,6 @@
     
     // Wait for iframe to load
     syncFrame.onload = () => {
-      // Register message handler
-      window.addEventListener('message', handleSyncMessage);
-      
       // Request current consent from primary domain
       requestConsentSync();
       
@@ -298,7 +303,7 @@
 (function() {
   'use strict';
   
-  // Allowed domains for sync
+  // Allowed domains for sync: ['${config.allowedSubdomains.join("', '")}']
   const ALLOWED_DOMAINS = ${JSON.stringify(config.allowedSubdomains.map(s => s + '.' + config.primaryDomain))};
   ALLOWED_DOMAINS.push('${config.primaryDomain}');
   

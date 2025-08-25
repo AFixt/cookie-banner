@@ -288,11 +288,13 @@
     
     const saveBtn = document.createElement('button');
     saveBtn.type = 'submit';
+    saveBtn.setAttribute('data-action', 'save');
     saveBtn.textContent = localeStrings.modal.save;
     
     const cancelBtn = document.createElement('button');
     cancelBtn.type = 'button';
     cancelBtn.id = 'close-modal';
+    cancelBtn.setAttribute('data-action', 'cancel');
     cancelBtn.textContent = localeStrings.modal.cancel;
     
     actions.appendChild(saveBtn);
@@ -314,43 +316,85 @@
   }
 
   /**
+   * Add keyboard event handler to button
+   */
+  function addKeyboardHandler(button, callback) {
+    button.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        callback();
+      }
+    });
+  }
+
+  /**
    * Add event listeners to buttons and form
    */
   function addEventListeners() {
     // Accept all button
-    document.getElementById('accept-all').addEventListener('click', () => {
-      const consentData = {
-        functional: true,
-        analytics: true,
-        marketing: true
-      };
-      if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
-        window.CookieConsent.setConsent(consentData);
-      } else {
-        setConsent(consentData);
+    const acceptAllHandler = () => {
+      try {
+        const consentData = {
+          functional: true,
+          analytics: true,
+          marketing: true
+        };
+        if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
+          window.CookieConsent.setConsent(consentData);
+          // Also dispatch the event and call callbacks
+          dispatchConsentEvent(consentData);
+          if (typeof config.onConsentChange === 'function') {
+            config.onConsentChange(consentData);
+          }
+        } else {
+          setConsent(consentData);
+        }
+        hideBanner();
+      } catch (error) {
+        console.error('[Cookie Banner] Error setting consent:', error);
       }
-      hideBanner();
-    });
+    };
+    
+    const acceptBtn = document.getElementById('accept-all');
+    acceptBtn.addEventListener('click', acceptAllHandler);
+    addKeyboardHandler(acceptBtn, acceptAllHandler);
     
     // Reject all button
-    document.getElementById('reject-all').addEventListener('click', () => {
-      const consentData = {
-        functional: true, // Functional is always required
-        analytics: false,
-        marketing: false
-      };
-      if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
-        window.CookieConsent.setConsent(consentData);
-      } else {
-        setConsent(consentData);
+    const rejectAllHandler = () => {
+      try {
+        const consentData = {
+          functional: true, // Functional is always required
+          analytics: false,
+          marketing: false
+        };
+        if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
+          window.CookieConsent.setConsent(consentData);
+          // Also dispatch the event and call callbacks
+          dispatchConsentEvent(consentData);
+          if (typeof config.onConsentChange === 'function') {
+            config.onConsentChange(consentData);
+          }
+        } else {
+          setConsent(consentData);
+        }
+        hideBanner();
+      } catch (error) {
+        console.error('[Cookie Banner] Error setting consent:', error);
       }
-      hideBanner();
-    });
+    };
+    
+    const rejectBtn = document.getElementById('reject-all');
+    rejectBtn.addEventListener('click', rejectAllHandler);
+    addKeyboardHandler(rejectBtn, rejectAllHandler);
     
     // Customize button
     const customizeBtn = document.getElementById('customize-preferences');
     if (customizeBtn && config.showModal) {
-      customizeBtn.addEventListener('click', openModal);
+      customizeBtn.addEventListener('click', (e) => {
+        // Store the element that triggered the modal opening
+        previouslyFocusedElement = e.target;
+        openModal();
+      });
     }
     
     // Modal events (if enabled)
@@ -361,19 +405,28 @@
       // Form submission
       document.getElementById('cookie-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        const form = e.target;
-        const consentData = {
-          functional: true, // Always required
-          analytics: form.elements.analytics.checked,
-          marketing: form.elements.marketing.checked
-        };
-        if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
-          window.CookieConsent.setConsent(consentData);
-        } else {
-          setConsent(consentData);
+        try {
+          const form = e.target;
+          const consentData = {
+            functional: true, // Always required
+            analytics: form.elements.analytics.checked,
+            marketing: form.elements.marketing.checked
+          };
+          if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
+            window.CookieConsent.setConsent(consentData);
+            // Also dispatch the event and call callbacks
+            dispatchConsentEvent(consentData);
+            if (typeof config.onConsentChange === 'function') {
+              config.onConsentChange(consentData);
+            }
+          } else {
+            setConsent(consentData);
+          }
+          closeModal();
+          hideBanner();
+        } catch (error) {
+          console.error('[Cookie Banner] Error setting consent:', error);
         }
-        closeModal();
-        hideBanner();
       });
       
       // Close modal on Escape key
@@ -394,8 +447,10 @@
   function openModal() {
     if (!modal) return;
     
-    // Store the element that had focus before opening the modal
-    previouslyFocusedElement = document.activeElement;
+    // Store the element that had focus before opening the modal (if not already set)
+    if (!previouslyFocusedElement) {
+      previouslyFocusedElement = document.activeElement;
+    }
     
     // Show the modal
     modal.removeAttribute('hidden');
@@ -439,6 +494,7 @@
     // Return focus to the element that had focus before opening the modal
     if (previouslyFocusedElement) {
       previouslyFocusedElement.focus();
+      previouslyFocusedElement = null; // Reset after use
     }
   }
 

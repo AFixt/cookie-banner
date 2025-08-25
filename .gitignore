@@ -18,6 +18,8 @@ coverage
 # Testing
 .nyc_output
 junit.xml
+playwright-report/
+test-results/
 
 # Build tool caches
 .rollup.cache
@@ -36,3 +38,9 @@ babel.config.local.*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Generated documentation
+docs/api/
+
+# Bundle analysis
+bundle-report.html
