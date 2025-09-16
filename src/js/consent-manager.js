@@ -48,16 +48,16 @@ class ConsentManager {
    * @param {Object} consent - Consent object with boolean values
    */
   setConsent(consent) {
+    // Ensure functional cookies are always enabled
+    const consentData = {
+      ...consent,
+      functional: true,
+      timestamp: new Date().toISOString()
+    };
+    
+    const consentString = JSON.stringify(consentData);
+    
     try {
-      // Ensure functional cookies are always enabled
-      const consentData = {
-        ...consent,
-        functional: true,
-        timestamp: new Date().toISOString()
-      };
-      
-      const consentString = JSON.stringify(consentData);
-      
       if (this.options.storageMethod === 'localStorage') {
         localStorage.setItem(this.consentKey, consentString);
       } else {
@@ -66,24 +66,24 @@ class ConsentManager {
         expiryDate.setDate(expiryDate.getDate() + this.options.expireDays);
         document.cookie = `${this.consentKey}=${encodeURIComponent(consentString)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
       }
-      
-      // Dispatch event
-      this.dispatchConsentEvent(consentData);
-      
-      // Call onConsentChange callback if provided
-      if (typeof this.options.onConsentChange === 'function') {
-        try {
-          this.options.onConsentChange(consentData);
-        } catch (e) {
-          console.error('Error in onConsentChange callback:', e);
-        }
-      }
-      
-      return consentData;
     } catch (e) {
       console.error('Error setting consent:', e);
       return null;
     }
+    
+    // Dispatch event
+    this.dispatchConsentEvent(consentData);
+    
+    // Call onConsentChange callback if provided
+    if (typeof this.options.onConsentChange === 'function') {
+      try {
+        this.options.onConsentChange(consentData);
+      } catch (e) {
+        console.error('Error in onConsentChange callback:', e);
+      }
+    }
+    
+    return consentData;
   }
 
   /**

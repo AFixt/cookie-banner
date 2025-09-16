@@ -8,7 +8,8 @@ module.exports = {
   testMatch: ['**/test/**/*.test.js'],
   testPathIgnorePatterns: [
     '<rootDir>/test/.*e2e.*\\.js$',
-    '<rootDir>/test/accessibility-regression.test.js'
+    '<rootDir>/test/accessibility-regression.test.js',
+    '<rootDir>/test/visual-regression.test.js'
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',

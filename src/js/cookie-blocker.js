@@ -90,6 +90,9 @@
 
     isInitialized = true;
 
+    // Block cookies using document.cookie override - do this first
+    overrideCookieProperty();
+
     // Block existing cookies on page load
     blockExistingCookies();
 
@@ -101,9 +104,6 @@
 
     // Override setAttribute to catch src changes
     overrideSetAttribute();
-
-    // Block cookies using document.cookie override
-    overrideCookieProperty();
 
     // Listen for consent changes
     document.addEventListener('cookieConsentChanged', handleConsentChange);
@@ -315,6 +315,10 @@
           const consentManager = window.CookieConsent;
           if (!consentManager || !consentManager.hasConsent || !consentManager.hasConsent(dataCategory)) {
             console.log('Blocked tracking script:', child.src || 'inline script');
+            // Debug: check data-category scripts
+            if (child.src && child.src.includes('facebook')) {
+              console.warn(`[Debug] Blocking Facebook script with type: ${dataCategory}`);
+            }
             blockedScripts.push({
               element: child,
               src: child.src,
@@ -410,22 +414,65 @@
    * Override document.cookie property to block cookie setting
    */
   function overrideCookieProperty() {
-    // Check if cookie property has already been overridden
-    const currentDescriptor = Object.getOwnPropertyDescriptor(document, 'cookie');
-    if (currentDescriptor && currentDescriptor.configurable === false) {
-      // Already overridden and not configurable, skip
+    // Check if cookie property has already been overridden by us
+    if (document._cookieBlockerOverridden) {
       return;
     }
     
-    const originalCookieDescriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie') ||
-                                   Object.getOwnPropertyDescriptor(HTMLDocument.prototype, 'cookie');
+    // Get the original cookie descriptor - try different locations
+    let originalDescriptor = 
+      Object.getOwnPropertyDescriptor(Document.prototype, 'cookie') ||
+      Object.getOwnPropertyDescriptor(HTMLDocument.prototype, 'cookie');
     
-    if (!originalCookieDescriptor) return;
+    // If no descriptor found in prototypes, check document directly
+    if (!originalDescriptor) {
+      originalDescriptor = Object.getOwnPropertyDescriptor(document, 'cookie');
+      // If document.cookie is a simple value property (e.g., in test environment)
+      if (!originalDescriptor || (!originalDescriptor.get && !originalDescriptor.set)) {
+        // Create a backup storage and wrap the simple property
+        let cookieStorage = document.cookie || '';
+        originalDescriptor = {
+          get: function() { return cookieStorage; },
+          set: function(value) { 
+            // Simulate real cookie behavior
+            if (value) {
+              const [cookiePart] = value.split(';');
+              const [name, val] = cookiePart.split('=');
+              if (name && val) {
+                // Simple cookie storage simulation
+                const cookies = cookieStorage ? cookieStorage.split('; ') : [];
+                const updated = cookies.filter(c => !c.startsWith(name + '='));
+                updated.push(cookiePart.trim());
+                cookieStorage = updated.join('; ');
+              }
+            }
+            return value;
+          },
+          configurable: true
+        };
+      }
+    }
+    
+    if (!originalDescriptor || !originalDescriptor.set) {
+      console.warn('[Cookie Banner] Could not find valid cookie descriptor');
+      return;
+    }
 
     try {
+      // Store the original getter and setter
+      const originalGet = originalDescriptor.get || (() => '');
+      const originalSet = originalDescriptor.set;
+      
       Object.defineProperty(document, 'cookie', {
+        configurable: true,
+        enumerable: true,
         get: function() {
-          return originalCookieDescriptor.get.call(this);
+          try {
+            return originalGet.call(this);
+          } catch (error) {
+            console.error('[Cookie Banner] Error getting cookie:', error.message);
+            return '';
+          }
         },
         set: function(value) {
           try {
@@ -437,17 +484,25 @@
               return; // Don't actually set the cookie
             }
             
-            return originalCookieDescriptor.set.call(this, value);
+            return originalSet.call(this, value);
           } catch (error) {
             // Log error but don't throw to handle gracefully
             console.error('[Cookie Banner] Error setting cookie:', error.message);
+            // Try to set cookie anyway in case of error
+            try {
+              return originalSet.call(this, value);
+            } catch (e) {
+              // Silently fail
+            }
             return;
           }
-        },
-        configurable: true
+        }
       });
+      
+      // Mark as overridden
+      document._cookieBlockerOverridden = true;
     } catch (e) {
-      // Property may already be defined, ignore the error
+      // Property may already be defined or not configurable
       console.warn('[Cookie Banner] Could not override cookie property:', e.message);
     }
   }
@@ -458,6 +513,19 @@
    */
   function handleConsentChange(event) {
     const consent = event.detail;
+    const consentManager = window.CookieConsent;
+    
+    // Update blocking state based on consent
+    // If any tracking category has consent, disable blocking for those categories
+    if (consentManager && consentManager.hasConsent) {
+      // Check if we should stop blocking based on new consent
+      const hasAnyTrackingConsent = consentManager.hasConsent('analytics') || 
+                                     consentManager.hasConsent('marketing') || 
+                                     consentManager.hasConsent('social');
+      
+      // Note: We keep blocking enabled per category, not globally
+      // isBlocking remains true but we check per-category consent
+    }
     
     // Load previously blocked scripts based on new consent
     blockedScripts.forEach(blockedItem => {
@@ -466,10 +534,15 @@
       // Check if this script type is now allowed
       let shouldUnblock = false;
       
-      if (type === 'analytics' && consent.analytics === true) {
-        shouldUnblock = true;
-      } else if (type === 'marketing' && consent.marketing === true) {
-        shouldUnblock = true;
+      // Only unblock if explicit consent is granted
+      if (type === 'analytics') {
+        shouldUnblock = consent.analytics === true;
+      } else if (type === 'marketing') {
+        shouldUnblock = consent.marketing === true;
+      } else if (type === 'social') {
+        shouldUnblock = consent.social === true;
+      } else {
+        shouldUnblock = false;
       }
       
       if (shouldUnblock) {
@@ -581,6 +654,11 @@
     blockedScripts = [];
     isBlocking = true;
     isInitialized = false;
+    
+    // Reset cookie override flag
+    if (document._cookieBlockerOverridden) {
+      delete document._cookieBlockerOverridden;
+    }
     
     // Remove event listener
     document.removeEventListener('cookieConsentChanged', handleConsentChange);
