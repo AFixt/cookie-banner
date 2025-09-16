@@ -26,7 +26,7 @@ A customizable, WCAG-conformant component designed to provide clear, user-friend
 ### Via NPM
 
 ```bash
-npm install accessible-cookie-banner
+npm install @afixt/accessible-cookie-banner
 ```
 
 ### Manual Installation
