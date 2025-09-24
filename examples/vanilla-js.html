@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cookie Banner - Vanilla JS Example</title>
-  <link rel="stylesheet" href="../banner.css">
+  <link rel="stylesheet" href="../dist/banner.css">
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -42,7 +42,7 @@
 &lt;link rel="stylesheet" href="path/to/banner.css"&gt;
 
 &lt;!-- Include the JavaScript --&gt;
-&lt;script src="path/to/cookie-banner.min.js"&gt;&lt;/script&gt;
+&lt;script src="path/to/cookie-banner.js"&gt;&lt;/script&gt;
 
 &lt;script&gt;
   // Initialize the cookie banner
@@ -81,19 +81,28 @@
     </div>
   </div>
   
-  <!-- Include the scripts -->
-  <script src="../cookie-banner.min.js"></script>
+  <!-- Include the scripts directly from source -->
+  <script src="../src/js/consent-manager.js"></script>
+  <script src="../src/js/banner.js"></script>
+  <script src="../src/js/cookie-blocker.js"></script>
+  <script src="../src/js/subdomain-sync.js"></script>
   <script>
-    // Initialize the cookie banner
-    window.initCookieBanner({
+    // Wait for scripts to load then initialize
+    setTimeout(() => {
+      if (typeof window.initCookieBanner === 'function') {
+        window.initCookieBanner({
       locale: 'en',
       theme: 'light',
       onConsentChange: (consent) => {
         console.log('Consent changed:', consent);
         updateConsentStatus();
       }
-    });
-    
+        });
+      } else {
+        console.error('initCookieBanner function not found');
+      }
+    }, 100);
+
     // Update the consent status display
     function updateConsentStatus() {
       const consent = window.CookieConsent.getConsent();
@@ -111,8 +120,9 @@
     
     // Reset consent button
     document.getElementById('reset-consent').addEventListener('click', () => {
-      const manager = new ConsentManager();
-      manager.clearConsent();
+      // Clear consent from localStorage and cookies
+      localStorage.removeItem('cookieConsent');
+      document.cookie = 'cookieConsent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       location.reload();
     });
     
