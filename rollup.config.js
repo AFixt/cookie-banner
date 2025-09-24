@@ -54,7 +54,7 @@ export default {
         { src: 'src/locales/*', dest: `${outputDir}/locales` },
         { src: 'src/html/banner.html', dest: `${outputDir}/examples` },
         { src: 'src/html/preferences-modal.html', dest: `${outputDir}/examples` },
-        { src: 'src/examples/*', dest: `${outputDir}/examples` },
+        { src: 'examples/*', dest: `${outputDir}/examples` },
         { src: 'src/types', dest: `${outputDir}` },
         { src: 'README.md', dest: outputDir },
         { src: 'LICENSE', dest: outputDir }
