@@ -1,6 +1,6 @@
 {
   "name": "@afixt/accessible-cookie-banner",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A customizable, WCAG-conformant cookie consent banner with GDPR, CCPA compliance",
   "type": "module",
   "main": "dist/cookie-banner.js",
@@ -73,7 +73,6 @@
   ],
   "sideEffects": false,
   "devDependencies": {
-    "@axe-core/playwright": "^4.10.1",
     "@babel/preset-env": "^7.26.9",
     "@playwright/test": "^1.53.2",
     "@rollup/plugin-babel": "^6.0.4",
@@ -126,5 +125,8 @@
       "limit": "8kb",
       "gzip": true
     }
-  ]
+  ],
+  "dependencies": {
+    "@eventably/a11y-assert": "^1.1.0"
+  }
 }
