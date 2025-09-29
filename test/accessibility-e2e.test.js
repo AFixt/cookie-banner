@@ -131,18 +131,19 @@ test.describe('Cookie Banner Accessibility', () => {
     await page.addStyleTag({
       content: 'html { font-size: 200% !important; }'
     });
-    
+
     // Wait for layout to adjust
     await page.waitForTimeout(500);
-    
+
     // Check that banner is still functional
     const banner = page.locator('#cookie-banner');
     await expect(banner).toBeVisible();
-    
-    // Test button functionality
-    await page.click('#accept-all');
 
+    // Check accessibility while banner is still visible
     await checkAccessibility(page);
+
+    // Test button functionality after accessibility check
+    await page.click('#accept-all');
   });
 });
 
