@@ -28,6 +28,7 @@ This repository follows the Git Flow branching model. All development work must 
 - Run single test: `npm test -- -t "test name pattern"`
 - Run tests with coverage: `npm test -- --coverage`
 - Run tests with watch mode: `npm test -- --watch`
+- **NEVER use `--ignore-scripts` flag with npm commands** - Scripts must always run to ensure proper testing and validation
 
 ## Code Style Guidelines
 
