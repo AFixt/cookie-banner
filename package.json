@@ -125,8 +125,5 @@
       "limit": "8kb",
       "gzip": true
     }
-  ],
-  "dependencies": {
-    "@eventably/a11y-assert": "^1.1.7"
-  }
+  ]
 }
