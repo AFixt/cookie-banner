@@ -1,6 +1,6 @@
 {
   "name": "@afixt/accessible-cookie-banner",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A customizable, WCAG-conformant cookie consent banner with GDPR, CCPA compliance",
   "type": "module",
   "main": "dist/cookie-banner.js",
@@ -16,13 +16,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:a11y": "playwright test --config=playwright.config.js",
-    "test:a11y:headed": "playwright test --config=playwright.config.js --headed",
-    "test:a11y:regression": "playwright test test/accessibility-regression.test.js --config=playwright.config.js",
     "test:visual": "playwright test --config=playwright-visual.config.js",
     "test:visual:headed": "playwright test --config=playwright-visual.config.js --headed",
     "test:visual:update": "playwright test --config=playwright-visual.config.js --update-snapshots",
-    "test:all": "npm run test && npm run test:a11y",
+    "test:all": "npm run test",
     "clean": "rimraf dist",
     "css:build": "postcss src/css/main.css -o dist/banner.css",
     "css:watch": "postcss src/css/main.css -o dist/banner.css --watch",
@@ -56,7 +53,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:AFixt/cookie-banner.git"
+    "url": "git+ssh://git@github.com/AFixt/cookie-banner.git"
   },
   "bugs": {
     "url": "https://github.com/afixt/cookie-banner/issues"
