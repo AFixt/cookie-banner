@@ -14,6 +14,11 @@ on:
       - 'package.json'
       - 'rollup.config.js'
 
+# Restrict default permissions for all jobs
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   size-check:
     runs-on: ubuntu-latest
