@@ -3,6 +3,10 @@ name: Security and Dependencies
 on:
   workflow_dispatch:
 
+# Restrict default permissions for all jobs
+permissions:
+  contents: read
+
 jobs:
   security-audit:
     name: Security Audit
@@ -42,7 +46,10 @@ jobs:
     name: Update Dependencies
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule'
-    
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4

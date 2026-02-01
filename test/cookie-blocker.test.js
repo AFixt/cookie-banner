@@ -255,10 +255,10 @@ describe('Cookie Blocker', () => {
     });
 
     test('should allow functional cookies', () => {
-      document.cookie = 'sessionId=abc123; path=/';
-      
+      document.cookie = 'testFunctionalCookie=abc123; path=/';
+
       // Functional cookies should be allowed
-      expect(document.cookie).toContain('sessionId=abc123');
+      expect(document.cookie).toContain('testFunctionalCookie=abc123');
     });
 
     test('should allow cookies when consent is given', () => {
