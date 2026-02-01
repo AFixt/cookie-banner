@@ -262,14 +262,17 @@
    */
   function overrideCreateElement() {
     originalCreateElement = document.createElement;
-    
+
     document.createElement = function(tagName) {
       const element = originalCreateElement.call(this, tagName);
-      
+
       if (tagName.toLowerCase() === 'script') {
         // Store reference to check later when src is set
         element._cookieBannerTracked = true;
-        
+
+        // Store reference to the original src descriptor to properly set src on non-blocked scripts
+        const originalSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src');
+
         // Override the src setter
         let originalSrc = '';
         Object.defineProperty(element, 'src', {
@@ -278,7 +281,7 @@
           },
           set: function(value) {
             originalSrc = value;
-            
+
             if (shouldBlockScript(value)) {
               console.log('[Cookie Banner] Blocked script:', value);
               blockedScripts.push({
@@ -288,14 +291,16 @@
               });
               return; // Don't actually set the src
             }
-            
-            // Set the src normally if not blocked
-            originalCreateElement.call(document, 'script').src = value;
+
+            // Set the src normally using the original setter
+            if (originalSrcDescriptor && originalSrcDescriptor.set) {
+              originalSrcDescriptor.set.call(element, value);
+            }
           },
           configurable: true
         });
       }
-      
+
       return element;
     };
   }
