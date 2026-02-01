@@ -1,6 +1,6 @@
 {
   "name": "@afixt/accessible-cookie-banner",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A customizable, WCAG-conformant cookie consent banner with GDPR, CCPA compliance",
   "type": "module",
   "main": "dist/cookie-banner.js",

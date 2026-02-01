@@ -65,8 +65,17 @@ if (typeof window !== 'undefined') {
      *   onConsentChange: (consent) => console.log('Consent changed:', consent)
      * });
      */
-    init: window.initCookieBanner,
-    
+    init: (options) => {
+      // Use function wrapper to ensure initCookieBanner is resolved at call time
+      // This fixes timing issues in ESM environments where banner.js IIFE may not
+      // have executed by the time this module is evaluated
+      if (typeof window.initCookieBanner === 'function') {
+        return window.initCookieBanner(options);
+      }
+      console.error('CookieBanner: initCookieBanner not available. Ensure banner.js is loaded.');
+      return Promise.reject(new Error('initCookieBanner not available'));
+    },
+
     /**
      * Get current consent status
      * @function
@@ -79,7 +88,7 @@ if (typeof window !== 'undefined') {
      * }
      */
     getConsent: () => window.CookieConsent ? window.CookieConsent.getConsent() : null,
-    
+
     /**
      * Set consent status
      * @function
@@ -93,7 +102,7 @@ if (typeof window !== 'undefined') {
      * });
      */
     setConsent: (consent) => window.CookieConsent ? window.CookieConsent.setConsent(consent) : null,
-    
+
     /**
      * Check if a specific category has consent
      * @function
