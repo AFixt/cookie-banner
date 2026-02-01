@@ -8,6 +8,7 @@ yarn-error.log*
 
 # Environment files
 .env*
+.npmrc
 
 # Build files
 dist
