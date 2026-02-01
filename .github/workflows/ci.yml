@@ -73,9 +73,12 @@ jobs:
       
     - name: Install Playwright browsers
       run: npm run install:playwright
-      
-    - name: Run accessibility tests
-      run: npm run test:visual
+
+    - name: Start server and run accessibility tests
+      run: |
+        npm run serve &
+        sleep 3
+        npm run test:visual
       
   bundle-analysis:
     name: Bundle Size Analysis
