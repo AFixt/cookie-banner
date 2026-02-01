@@ -23,15 +23,7 @@ jobs:
       
     - name: Run security audit
       run: npm audit --audit-level=moderate
-      
-    - name: Run Snyk security scan
-      uses: snyk/actions/node@master
-      continue-on-error: true
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        args: --severity-threshold=medium
-        
+
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest
