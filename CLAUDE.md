@@ -20,6 +20,55 @@ This repository follows the Git Flow branching model. All development work must 
 4. Delete feature branches after merging
 5. Tag releases on the main branch with semantic versioning
 
+## Conventional Commits
+
+This repository uses [Conventional Commits](https://www.conventionalcommits.org/) for automatic changelog generation. All commit messages must follow this format:
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+### Commit Types
+- `feat`: New feature (triggers minor version bump)
+- `fix`: Bug fix (triggers patch version bump)
+- `docs`: Documentation only changes
+- `style`: Code style changes (formatting, semicolons, etc)
+- `refactor`: Code refactoring (no feature or fix)
+- `perf`: Performance improvements
+- `test`: Adding or updating tests
+- `build`: Build system or dependency changes
+- `ci`: CI configuration changes
+- `chore`: Other maintenance changes
+- `revert`: Revert a previous commit
+
+### Breaking Changes
+Add `BREAKING CHANGE:` in the commit footer or `!` after the type to trigger a major version bump:
+```
+feat!: Remove deprecated API endpoint
+```
+
+### Examples
+```
+feat(banner): Add support for custom cookie categories
+fix(a11y): Correct focus trap behavior in modal
+docs: Update installation instructions
+refactor(utils): Simplify cookie parsing logic
+```
+
+## Release Process
+
+Releases are managed with `standard-version`. The changelog is automatically generated from conventional commits.
+
+- `npm run release` - Automatic version bump based on commits
+- `npm run release:patch` - Force patch release (0.0.X)
+- `npm run release:minor` - Force minor release (0.X.0)
+- `npm run release:major` - Force major release (X.0.0)
+- `npm run release:dry-run` - Preview release without changes
+
 ## Build/Lint/Test Commands
 
 - Node.js version: LTS (use `nvm use` or Node.js 22+)
