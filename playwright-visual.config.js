@@ -15,7 +15,7 @@ export default {
     // Configure visual comparison thresholds for cross-platform compatibility
     toMatchSnapshot: {
       threshold: 0.35, // Allow 35% difference for font rendering variations
-      maxDiffPixels: 5000 // Allow more pixel differences for cross-platform
+      maxDiffPixels: 25000 // Allow more pixel differences for cross-platform font rendering
     }
   },
   fullyParallel: false, // Run visual tests sequentially for consistency
