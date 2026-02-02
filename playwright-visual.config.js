@@ -8,6 +8,8 @@ export default {
   testDir: './test',
   testMatch: '**/visual-*.test.js',
   timeout: 60 * 1000, // Longer timeout for screenshot operations
+  // Remove platform suffix for cross-platform compatibility, keep project name
+  snapshotPathTemplate: '{testDir}/{testFileDir}/__snapshots__/{testFileName}-snapshots/{projectName}/{arg}{ext}',
   expect: {
     timeout: 10000, // Longer timeout for visual comparisons
     // Configure visual comparison thresholds
