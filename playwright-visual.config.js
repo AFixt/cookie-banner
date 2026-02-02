@@ -14,6 +14,10 @@ export default {
     timeout: 10000, // Longer timeout for visual comparisons
     // Configure visual comparison thresholds for cross-platform compatibility
     toMatchSnapshot: {
+      threshold: 0.35,
+      maxDiffPixels: 25000
+    },
+    toHaveScreenshot: {
       threshold: 0.35, // Allow 35% difference for font rendering variations
       maxDiffPixels: 25000 // Allow more pixel differences for cross-platform font rendering
     }
