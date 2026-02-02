@@ -5,7 +5,7 @@
 import { test, expect } from '@playwright/test';
 
 // Test configuration
-const TEST_URL = 'http://localhost:8080/example.html';
+const TEST_URL = 'http://localhost:8080/examples/vanilla-js.html';
 const VIEWPORT_SIZES = [
   { width: 1280, height: 720, name: 'desktop' },
   { width: 768, height: 1024, name: 'tablet' },
