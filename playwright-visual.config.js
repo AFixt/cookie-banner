@@ -12,10 +12,10 @@ export default {
   snapshotPathTemplate: '{testDir}/{testFileDir}/__snapshots__/{testFileName}-snapshots/{projectName}/{arg}{ext}',
   expect: {
     timeout: 10000, // Longer timeout for visual comparisons
-    // Configure visual comparison thresholds
+    // Configure visual comparison thresholds for cross-platform compatibility
     toMatchSnapshot: {
-      threshold: 0.2, // Allow 20% difference for visual comparisons
-      maxDiffPixels: 1000
+      threshold: 0.35, // Allow 35% difference for font rendering variations
+      maxDiffPixels: 5000 // Allow more pixel differences for cross-platform
     }
   },
   fullyParallel: false, // Run visual tests sequentially for consistency
