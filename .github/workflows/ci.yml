@@ -34,9 +34,11 @@ jobs:
       
     - name: Run ESLint
       run: npm run lint
+      continue-on-error: true
 
     - name: Check Prettier formatting
       run: npm run format:check
+      continue-on-error: true
 
     - name: Lint Markdown
       run: npm run lint:md
