@@ -32,8 +32,31 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
-    - name: Run linting
-      run: npm run lint --if-present
+    - name: Run ESLint
+      run: npm run lint
+
+    - name: Check Prettier formatting
+      run: npm run format:check
+
+    - name: Lint Markdown
+      run: npm run lint:md
+      continue-on-error: true
+
+    - name: Lint CSS
+      run: npm run lint:css
+      continue-on-error: true
+
+    - name: Check for code duplication (jscpd)
+      run: npm run lint:cpd:ci
+      continue-on-error: true
+
+    - name: Upload duplication report
+      uses: actions/upload-artifact@v4
+      with:
+        name: jscpd-report
+        path: reports/jscpd/
+        retention-days: 30
+      if: always()
       
     - name: Run tests with coverage
       run: npm run test:coverage
