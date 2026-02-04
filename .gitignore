@@ -45,3 +45,6 @@ docs/api/
 
 # Bundle analysis
 bundle-report.html
+
+# Linting reports
+reports/
