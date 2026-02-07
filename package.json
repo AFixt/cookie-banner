@@ -100,7 +100,7 @@
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.6.3",
     "autoprefixer": "^10.4.21",
-    "babel-jest": "^29.7.0",
+    "babel-jest": "^30.2.0",
     "eslint": "^9.39.2",
     "globals": "^17.3.0",
     "http-server": "^14.1.1",
