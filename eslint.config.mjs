@@ -41,6 +41,7 @@ export default [
       'coverage/**',
       '*.min.js',
       'docs/**',
+      'reports/**',
       'playwright-visual-report/**',
     ],
   },
