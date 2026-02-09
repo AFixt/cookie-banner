@@ -120,7 +120,7 @@
     "postcss-mixins": "^12.0.0",
     "postcss-nested": "^7.0.2",
     "prettier": "^3.8.1",
-    "rimraf": "^5.0.5",
+    "rimraf": "^6.1.2",
     "rollup": "^4.20.1",
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-copy": "^3.5.0",
