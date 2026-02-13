@@ -21,7 +21,7 @@ export default {
       format: 'umd',
       name: 'CookieBanner',
       exports: 'named',
-      sourcemap: !production
+      sourcemap: !production,
     },
     {
       file: `${outputDir}/cookie-banner.min.js`,
@@ -29,24 +29,24 @@ export default {
       name: 'CookieBanner',
       exports: 'named',
       plugins: [terser()],
-      sourcemap: !production
+      sourcemap: !production,
     },
     {
       file: `${outputDir}/cookie-banner.esm.js`,
       format: 'es',
       exports: 'named',
-      sourcemap: !production
-    }
+      sourcemap: !production,
+    },
   ],
   plugins: [
     resolve({
-      browser: true
+      browser: true,
     }),
     commonjs(),
     json(),
     babel({
       babelHelpers: 'bundled',
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
     }),
     copy({
       targets: [
@@ -57,17 +57,18 @@ export default {
         { src: 'examples/*', dest: `${outputDir}/examples` },
         { src: 'src/types', dest: `${outputDir}` },
         { src: 'README.md', dest: outputDir },
-        { src: 'LICENSE', dest: outputDir }
-      ]
+        { src: 'LICENSE', dest: outputDir },
+      ],
     }),
     // Add bundle analyzer only in development or when explicitly requested
-    process.env.ANALYZE && analyzer({
-      hideDeps: true,
-      limit: 10,
-      summaryOnly: true
-    })
+    process.env.ANALYZE &&
+      analyzer({
+        hideDeps: true,
+        limit: 10,
+        summaryOnly: true,
+      }),
   ],
   watch: {
-    clearScreen: false
-  }
+    clearScreen: false,
+  },
 };

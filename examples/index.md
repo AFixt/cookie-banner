@@ -16,7 +16,7 @@ These HTML examples demonstrate various features and can be viewed directly in y
 Code examples showing how to integrate with popular frameworks:
 
 - [React Integration](react-example.jsx) - React component implementation
-- [Vue Integration](vue-example.vue) - Vue component implementation  
+- [Vue Integration](vue-example.vue) - Vue component implementation
 - [Angular Integration](angular-example.ts) - Angular component and service implementation
 - [TypeScript Integration](typescript-example.ts) - Type-safe implementation
 
@@ -41,7 +41,7 @@ To run these examples locally:
 
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Build the project: `npm run build`  
+3. Build the project: `npm run build`
 4. Open the HTML examples in your browser
 
 The compiled examples will also be available in the `dist/examples/` directory after building the project.

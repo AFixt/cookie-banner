@@ -9,65 +9,64 @@ export default {
   testMatch: '**/accessibility-*.test.js',
   timeout: 30 * 1000,
   expect: {
-    timeout: 5000
+    timeout: 5000,
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: [
-    ['html'],
-    ['junit', { outputFile: 'test-results/accessibility-results.xml' }]
-  ],
+  reporter: [['html'], ['junit', { outputFile: 'test-results/accessibility-results.xml' }]],
   use: {
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure'
+    video: 'retain-on-failure',
   },
 
   projects: [
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         // Force reduced motion for consistent testing
-        reducedMotion: 'reduce'
+        reducedMotion: 'reduce',
       },
     },
     {
       name: 'firefox',
-      use: { 
+      use: {
         ...devices['Desktop Firefox'],
-        reducedMotion: 'reduce'
+        reducedMotion: 'reduce',
       },
     },
     {
       name: 'webkit',
-      use: { 
+      use: {
         ...devices['Desktop Safari'],
-        reducedMotion: 'reduce'
+        reducedMotion: 'reduce',
       },
     },
     // Mobile testing
     {
       name: 'Mobile Chrome',
-      use: { 
+      use: {
         ...devices['Pixel 5'],
-        reducedMotion: 'reduce'
+        reducedMotion: 'reduce',
       },
     },
     {
       name: 'Mobile Safari',
-      use: { 
+      use: {
         ...devices['iPhone 12'],
-        reducedMotion: 'reduce'
+        reducedMotion: 'reduce',
       },
     },
   ],
 
-  webServer: process.env.CI ? undefined : {
-    command: 'npm run serve',
-    port: 8080,
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: process.env.CI
+    ? undefined
+    : {
+        command: 'npm run serve',
+        port: 8080,
+        reuseExistingServer: !process.env.CI,
+      },
 };

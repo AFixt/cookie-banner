@@ -1,138 +1,146 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cookie Banner - High Contrast Example</title>
-  <link rel="stylesheet" href="../css/banner.css">
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      line-height: 1.5;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      background: #000;
-      color: #fff;
-    }
-    h1, h2, h3, h4 {
-      color: #ffff00;
-    }
-    a {
-      color: #00ffff;
-    }
-    pre {
-      background: #222;
-      color: #ffffff;
-      padding: 1rem;
-      border: 1px solid #ffff00;
-      border-radius: 4px;
-      overflow-x: auto;
-    }
-    code {
-      color: #ffffff;
-    }
-    .demo-controls {
-      margin: 2rem 0;
-      padding: 1rem;
-      border: 1px solid #ffff00;
-      border-radius: 4px;
-    }
-    button, select {
-      padding: 0.5rem 1rem;
-      margin-right: 0.5rem;
-      margin-bottom: 0.5rem;
-      background: #000;
-      color: #fff;
-      border: 2px solid #ffff00;
-    }
-    button:focus, select:focus {
-      outline: 2px solid #00ffff;
-    }
-  </style>
-</head>
-<body>
-  <h1>Cookie Banner - High Contrast Example</h1>
-  
-  <p>This example demonstrates the cookie banner in high contrast mode, suitable for users with low vision.</p>
-  
-  <h2>Implementation</h2>
-  <pre><code>window.CookieBanner.init({
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookie Banner - High Contrast Example</title>
+    <link rel="stylesheet" href="../css/banner.css" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: #000;
+        color: #fff;
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        color: #ffff00;
+      }
+      a {
+        color: #00ffff;
+      }
+      pre {
+        background: #222;
+        color: #ffffff;
+        padding: 1rem;
+        border: 1px solid #ffff00;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+      code {
+        color: #ffffff;
+      }
+      .demo-controls {
+        margin: 2rem 0;
+        padding: 1rem;
+        border: 1px solid #ffff00;
+        border-radius: 4px;
+      }
+      button,
+      select {
+        padding: 0.5rem 1rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        background: #000;
+        color: #fff;
+        border: 2px solid #ffff00;
+      }
+      button:focus,
+      select:focus {
+        outline: 2px solid #00ffff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cookie Banner - High Contrast Example</h1>
+
+    <p>
+      This example demonstrates the cookie banner in high contrast mode, suitable for users with low
+      vision.
+    </p>
+
+    <h2>Implementation</h2>
+    <pre><code>window.CookieBanner.init({
   locale: 'en',
   theme: 'high-contrast',  // Use high-contrast theme
   onConsentChange: (consent) => {
     console.log('Consent changed:', consent);
   }
 });</code></pre>
-  
-  <div class="demo-controls">
-    <h3>Demo Controls</h3>
-    <div>
-      <button id="reset-consent">Reset Consent</button>
-      <button id="toggle-theme">Toggle Normal/High-Contrast</button>
+
+    <div class="demo-controls">
+      <h3>Demo Controls</h3>
+      <div>
+        <button id="reset-consent">Reset Consent</button>
+        <button id="toggle-theme">Toggle Normal/High-Contrast</button>
+      </div>
+      <div>
+        <h4>Current Consent Status:</h4>
+        <pre id="consent-status">No consent data found</pre>
+      </div>
     </div>
-    <div>
-      <h4>Current Consent Status:</h4>
-      <pre id="consent-status">No consent data found</pre>
-    </div>
-  </div>
-  
-  <!-- Include the scripts -->
-  <script src="../js/consent-manager.js"></script>
-  <script src="../js/banner.js"></script>
-  <script>
-    // Initialize the cookie banner with high-contrast theme
-    window.initCookieBanner({
-      locale: 'en',
-      theme: 'high-contrast',
-      onConsentChange: (consent) => {
-        console.log('Consent changed:', consent);
-        updateConsentStatus();
-      }
-    });
-    
-    // Update the consent status display
-    function updateConsentStatus() {
-      const consent = window.CookieConsent.getConsent();
-      const statusEl = document.getElementById('consent-status');
-      
-      if (consent) {
-        statusEl.textContent = JSON.stringify(consent, null, 2);
-      } else {
-        statusEl.textContent = 'No consent data found';
-      }
-    }
-    
-    // Initial update
-    updateConsentStatus();
-    
-    // Reset consent button
-    document.getElementById('reset-consent').addEventListener('click', () => {
-      const manager = new ConsentManager();
-      manager.clearConsent();
-      location.reload();
-    });
-    
-    // Toggle theme button
-    document.getElementById('toggle-theme').addEventListener('click', () => {
-      const banner = document.getElementById('cookie-banner');
-      if (!banner) {
-        alert('Banner is not currently visible. Reset consent to see it again.');
-        return;
-      }
-      
-      const isHighContrast = banner.classList.contains('theme-high-contrast');
-      const newTheme = isHighContrast ? 'dark' : 'high-contrast';
-      
+
+    <!-- Include the scripts -->
+    <script src="../js/consent-manager.js"></script>
+    <script src="../js/banner.js"></script>
+    <script>
+      // Initialize the cookie banner with high-contrast theme
       window.initCookieBanner({
         locale: 'en',
-        theme: newTheme,
-        onConsentChange: (consent) => {
+        theme: 'high-contrast',
+        onConsentChange: consent => {
           console.log('Consent changed:', consent);
           updateConsentStatus();
-        }
+        },
       });
-    });
-  </script>
-</body>
+
+      // Update the consent status display
+      function updateConsentStatus() {
+        const consent = window.CookieConsent.getConsent();
+        const statusEl = document.getElementById('consent-status');
+
+        if (consent) {
+          statusEl.textContent = JSON.stringify(consent, null, 2);
+        } else {
+          statusEl.textContent = 'No consent data found';
+        }
+      }
+
+      // Initial update
+      updateConsentStatus();
+
+      // Reset consent button
+      document.getElementById('reset-consent').addEventListener('click', () => {
+        const manager = new ConsentManager();
+        manager.clearConsent();
+        location.reload();
+      });
+
+      // Toggle theme button
+      document.getElementById('toggle-theme').addEventListener('click', () => {
+        const banner = document.getElementById('cookie-banner');
+        if (!banner) {
+          alert('Banner is not currently visible. Reset consent to see it again.');
+          return;
+        }
+
+        const isHighContrast = banner.classList.contains('theme-high-contrast');
+        const newTheme = isHighContrast ? 'dark' : 'high-contrast';
+
+        window.initCookieBanner({
+          locale: 'en',
+          theme: newTheme,
+          onConsentChange: consent => {
+            console.log('Consent changed:', consent);
+            updateConsentStatus();
+          },
+        });
+      });
+    </script>
+  </body>
 </html>

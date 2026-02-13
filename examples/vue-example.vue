@@ -6,13 +6,13 @@
 <template>
   <div class="consent-manager">
     <h2>Consent Management Component</h2>
-    
+
     <div class="consent-status">
       <h3>Current Consent Status:</h3>
       <pre v-if="consent">{{ JSON.stringify(consent, null, 2) }}</pre>
       <p v-else>No consent data found</p>
     </div>
-    
+
     <button @click="resetConsent">Reset Consent</button>
   </div>
 </template>
@@ -24,13 +24,13 @@
 
 export default {
   name: 'ConsentManager',
-  
+
   data() {
     return {
-      consent: null
+      consent: null,
     };
   },
-  
+
   mounted() {
     // Initialize the cookie banner when the component is mounted
     // Assume CookieBanner is available globally for this example
@@ -38,38 +38,38 @@ export default {
       locale: 'en',
       theme: 'light',
       showModal: true,
-      onConsentChange: (newConsent) => {
+      onConsentChange: newConsent => {
         console.log('Consent changed:', newConsent);
         this.consent = newConsent;
-        
+
         // Conditionally load scripts based on consent
         if (newConsent.analytics) {
           this.loadAnalytics();
         }
-        
+
         if (newConsent.marketing) {
           this.loadMarketingScripts();
         }
-      }
+      },
     });
-    
+
     // Check initial consent
     this.consent = window.CookieBanner.getConsent();
-    
+
     // Listen for consent change events
     document.addEventListener('cookieConsentChanged', this.handleConsentChange);
   },
-  
+
   beforeDestroy() {
     // Clean up event listener when component is destroyed
     document.removeEventListener('cookieConsentChanged', this.handleConsentChange);
   },
-  
+
   methods: {
     handleConsentChange(e) {
       this.consent = e.detail;
     },
-    
+
     loadAnalytics() {
       console.log('Loading analytics...');
       // In a real app, you would load your analytics script here
@@ -78,19 +78,19 @@ export default {
       // script.src = 'https://www.google-analytics.com/analytics.js';
       // document.body.appendChild(script);
     },
-    
+
     loadMarketingScripts() {
       console.log('Loading marketing scripts...');
       // In a real app, you would load marketing scripts here
     },
-    
+
     resetConsent() {
       // Create a ConsentManager instance to access clearConsent method
       const manager = new window.ConsentManager();
       manager.clearConsent();
       window.location.reload();
-    }
-  }
+    },
+  },
 };
 </script>
 

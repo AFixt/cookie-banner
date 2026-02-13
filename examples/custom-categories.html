@@ -1,55 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cookie Banner - Custom Categories Example</title>
-  <link rel="stylesheet" href="../css/banner.css">
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      line-height: 1.5;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-    pre {
-      background: #f5f5f5;
-      padding: 1rem;
-      border-radius: 4px;
-      overflow-x: auto;
-    }
-    .demo-controls {
-      margin: 2rem 0;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    button, select {
-      padding: 0.5rem 1rem;
-      margin-right: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .note {
-      background: #ffffd0;
-      padding: 1rem;
-      border-left: 4px solid #e0e000;
-      margin: 1rem 0;
-    }
-  </style>
-</head>
-<body>
-  <h1>Cookie Banner - Custom Categories Example</h1>
-  
-  <p>This example demonstrates how to set up custom categories in the cookie consent banner.</p>
-  
-  <div class="note">
-    <strong>Note:</strong> This example shows how you would set up custom categories, but it does not modify the actual UI rendering. 
-    For a production implementation, you would need to modify the banner.js source code to display these custom categories in the preferences modal.
-  </div>
-  
-  <h2>Implementation</h2>
-  <pre><code>window.CookieBanner.init({
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookie Banner - Custom Categories Example</title>
+    <link rel="stylesheet" href="../css/banner.css" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 1rem;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+      .demo-controls {
+        margin: 2rem 0;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      button,
+      select {
+        padding: 0.5rem 1rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .note {
+        background: #ffffd0;
+        padding: 1rem;
+        border-left: 4px solid #e0e000;
+        margin: 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cookie Banner - Custom Categories Example</h1>
+
+    <p>This example demonstrates how to set up custom categories in the cookie consent banner.</p>
+
+    <div class="note">
+      <strong>Note:</strong> This example shows how you would set up custom categories, but it does
+      not modify the actual UI rendering. For a production implementation, you would need to modify
+      the banner.js source code to display these custom categories in the preferences modal.
+    </div>
+
+    <h2>Implementation</h2>
+    <pre><code>window.CookieBanner.init({
   locale: 'en',
   theme: 'light',
   categories: {
@@ -72,94 +74,94 @@
     }
   }
 });</code></pre>
-  
-  <div class="demo-controls">
-    <h3>Demo Controls</h3>
-    <div>
-      <button id="reset-consent">Reset Consent</button>
+
+    <div class="demo-controls">
+      <h3>Demo Controls</h3>
+      <div>
+        <button id="reset-consent">Reset Consent</button>
+      </div>
+      <div>
+        <h4>Current Consent Status:</h4>
+        <pre id="consent-status">No consent data found</pre>
+      </div>
+
+      <h4>Test Consent Settings Manually:</h4>
+      <div>
+        <button id="set-custom-consent">Set Custom Consent</button>
+        <p>This will set the following custom consent categories:</p>
+        <ul>
+          <li>functional: true (always required)</li>
+          <li>analytics: true</li>
+          <li>marketing: false</li>
+          <li>preferences: true (custom category)</li>
+          <li>personalization: false (custom category)</li>
+        </ul>
+      </div>
     </div>
-    <div>
-      <h4>Current Consent Status:</h4>
-      <pre id="consent-status">No consent data found</pre>
-    </div>
-    
-    <h4>Test Consent Settings Manually:</h4>
-    <div>
-      <button id="set-custom-consent">Set Custom Consent</button>
-      <p>This will set the following custom consent categories:</p>
-      <ul>
-        <li>functional: true (always required)</li>
-        <li>analytics: true</li>
-        <li>marketing: false</li>
-        <li>preferences: true (custom category)</li>
-        <li>personalization: false (custom category)</li>
-      </ul>
-    </div>
-  </div>
-  
-  <!-- Include the scripts -->
-  <script src="../js/consent-manager.js"></script>
-  <script src="../js/banner.js"></script>
-  <script>
-    // Initialize the cookie banner with custom categories
-    window.initCookieBanner({
-      locale: 'en',
-      theme: 'light',
-      categories: {
-        functional: true,      // Required, always enabled
-        analytics: false,      // Default off
-        marketing: false,      // Default off
-        preferences: false,    // Custom category for user preferences
-        personalization: false // Custom category for personalization
-      },
-      onConsentChange: (consent) => {
-        console.log('Consent changed:', consent);
-        updateConsentStatus();
-      }
-    });
-    
-    // Update the consent status display
-    function updateConsentStatus() {
-      const consent = window.CookieConsent.getConsent();
-      const statusEl = document.getElementById('consent-status');
-      
-      if (consent) {
-        statusEl.textContent = JSON.stringify(consent, null, 2);
-      } else {
-        statusEl.textContent = 'No consent data found';
-      }
-    }
-    
-    // Initial update
-    updateConsentStatus();
-    
-    // Reset consent button
-    document.getElementById('reset-consent').addEventListener('click', () => {
-      const manager = new ConsentManager();
-      manager.clearConsent();
-      location.reload();
-    });
-    
-    // Set custom consent button
-    document.getElementById('set-custom-consent').addEventListener('click', () => {
-      // Set custom consent values
-      window.CookieConsent.setConsent({
-        functional: true,
-        analytics: true,
-        marketing: false,
-        preferences: true,
-        personalization: false
+
+    <!-- Include the scripts -->
+    <script src="../js/consent-manager.js"></script>
+    <script src="../js/banner.js"></script>
+    <script>
+      // Initialize the cookie banner with custom categories
+      window.initCookieBanner({
+        locale: 'en',
+        theme: 'light',
+        categories: {
+          functional: true, // Required, always enabled
+          analytics: false, // Default off
+          marketing: false, // Default off
+          preferences: false, // Custom category for user preferences
+          personalization: false, // Custom category for personalization
+        },
+        onConsentChange: consent => {
+          console.log('Consent changed:', consent);
+          updateConsentStatus();
+        },
       });
-      
-      // Update the display
-      updateConsentStatus();
-      
-      // Hide the banner if visible
-      const banner = document.getElementById('cookie-banner');
-      if (banner) {
-        banner.remove();
+
+      // Update the consent status display
+      function updateConsentStatus() {
+        const consent = window.CookieConsent.getConsent();
+        const statusEl = document.getElementById('consent-status');
+
+        if (consent) {
+          statusEl.textContent = JSON.stringify(consent, null, 2);
+        } else {
+          statusEl.textContent = 'No consent data found';
+        }
       }
-    });
-  </script>
-</body>
+
+      // Initial update
+      updateConsentStatus();
+
+      // Reset consent button
+      document.getElementById('reset-consent').addEventListener('click', () => {
+        const manager = new ConsentManager();
+        manager.clearConsent();
+        location.reload();
+      });
+
+      // Set custom consent button
+      document.getElementById('set-custom-consent').addEventListener('click', () => {
+        // Set custom consent values
+        window.CookieConsent.setConsent({
+          functional: true,
+          analytics: true,
+          marketing: false,
+          preferences: true,
+          personalization: false,
+        });
+
+        // Update the display
+        updateConsentStatus();
+
+        // Hide the banner if visible
+        const banner = document.getElementById('cookie-banner');
+        if (banner) {
+          banner.remove();
+        }
+      });
+    </script>
+  </body>
 </html>

@@ -64,15 +64,15 @@ declare global {
  */
 class TypescriptConsentManager {
   private consent: ConsentData | null = null;
-  
+
   constructor() {
     // Initialize the banner
     this.initBanner();
-    
+
     // Set up event listener for consent changes
     document.addEventListener('cookieConsentChanged', this.handleConsentChange.bind(this));
   }
-  
+
   /**
    * Initialize the cookie banner with options
    */
@@ -84,24 +84,24 @@ class TypescriptConsentManager {
       storageMethod: 'localStorage',
       expireDays: 365,
       categories: {
-        functional: true,  // Required
-        analytics: false,  // Off by default
-        marketing: false   // Off by default
+        functional: true, // Required
+        analytics: false, // Off by default
+        marketing: false, // Off by default
       },
-      onConsentChange: (newConsent) => {
+      onConsentChange: newConsent => {
         console.log('Consent changed:', newConsent);
         this.consent = newConsent;
         this.handleConsentStateChange();
-      }
+      },
     });
-    
+
     // Get initial consent
     this.consent = window.CookieBanner.getConsent();
     if (this.consent) {
       this.handleConsentStateChange();
     }
   }
-  
+
   /**
    * Handle consent change event
    */
@@ -109,23 +109,23 @@ class TypescriptConsentManager {
     this.consent = event.detail;
     this.handleConsentStateChange();
   }
-  
+
   /**
    * React to consent state changes
    */
   private handleConsentStateChange(): void {
     if (!this.consent) return;
-    
+
     // Load appropriate scripts based on consent
     if (this.consent.analytics) {
       this.loadAnalytics();
     }
-    
+
     if (this.consent.marketing) {
       this.loadMarketingScripts();
     }
   }
-  
+
   /**
    * Load analytics scripts if consent is given
    */
@@ -133,7 +133,7 @@ class TypescriptConsentManager {
     console.log('Loading analytics scripts...');
     // Actual implementation would load scripts
   }
-  
+
   /**
    * Load marketing scripts if consent is given
    */
@@ -141,14 +141,14 @@ class TypescriptConsentManager {
     console.log('Loading marketing scripts...');
     // Actual implementation would load scripts
   }
-  
+
   /**
    * Check if consent is given for a specific category
    */
   public hasConsent(category: string): boolean {
     return window.CookieBanner.hasConsent(category);
   }
-  
+
   /**
    * Reset all consent settings
    */
@@ -157,7 +157,7 @@ class TypescriptConsentManager {
     manager.clearConsent();
     window.location.reload();
   }
-  
+
   /**
    * Get the current consent data
    */
@@ -169,7 +169,7 @@ class TypescriptConsentManager {
 // Usage example
 document.addEventListener('DOMContentLoaded', () => {
   const consentManager = new TypescriptConsentManager();
-  
+
   // Example: Add a reset button event listener
   const resetButton = document.getElementById('reset-consent');
   if (resetButton) {
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
       consentManager.resetConsent();
     });
   }
-  
+
   // Example: Display current consent in a pre element
   const updateConsentDisplay = () => {
     const consentDisplay = document.getElementById('consent-status');
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   };
-  
+
   // Update display initially and when consent changes
   updateConsentDisplay();
   document.addEventListener('cookieConsentChanged', updateConsentDisplay);
@@ -198,9 +198,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Note: This is a demonstration file only.
- * 
+ *
  * To use in a real TypeScript project:
- * 
+ *
  * 1. Install the package: npm install accessible-cookie-banner
  * 2. Create proper TypeScript declarations or use a declaration file if provided
  * 3. Import the necessary modules and styles
