@@ -47,7 +47,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore CHANGELOG.md",
+    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore CHANGELOG.md --ignore dist",
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:css:fix": "stylelint 'src/**/*.css' --fix",
     "lint:cpd": "jscpd . --config .jscpd.json",

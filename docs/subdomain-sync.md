@@ -61,7 +61,7 @@ window.initCookieBanner({
 
 Your API endpoint should handle CORS headers appropriately:
 
-```
+```text
 Access-Control-Allow-Origin: https://*.example.com
 Access-Control-Allow-Credentials: true
 ```
@@ -141,6 +141,7 @@ window.CookieConsentSync.stop();
 ## Browser Support
 
 Subdomain sync requires:
+
 - postMessage API (IE8+)
 - localStorage API (IE8+)
 - Modern browsers recommended for best performance

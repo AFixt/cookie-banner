@@ -251,7 +251,7 @@ describe('Accessibility Features', () => {
     test('should handle Enter key on banner buttons via keyboard.simulateEnter', () => {
       const acceptBtn = document.getElementById('accept-all');
       const clickHandler = jest.fn();
-      acceptBtn.addEventListener('keydown', (e) => {
+      acceptBtn.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
           clickHandler();
         }
@@ -264,7 +264,7 @@ describe('Accessibility Features', () => {
     test('should handle Space key on banner buttons via keyboard.simulateSpace', () => {
       const rejectBtn = document.getElementById('reject-all');
       const clickHandler = jest.fn();
-      rejectBtn.addEventListener('keydown', (e) => {
+      rejectBtn.addEventListener('keydown', e => {
         if (e.key === 'Space' || e.code === 'Space') {
           clickHandler();
         }
@@ -281,7 +281,7 @@ describe('Accessibility Features', () => {
       const closeHandler = jest.fn(() => {
         modal.setAttribute('hidden', '');
       });
-      document.addEventListener('keydown', (e) => {
+      document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
           closeHandler();
         }
@@ -345,7 +345,7 @@ describe('Accessibility Features', () => {
 
       const elements = [acceptBtn, rejectBtn, customizeBtn];
 
-      elements.forEach((element) => {
+      elements.forEach(element => {
         element.focus();
         expect(document.activeElement).toBe(element);
       });

@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-(function() {
+(function () {
   'use strict';
 
   // Common tracking script patterns to block
@@ -26,7 +26,7 @@
     /_gid/,
     /_gat/,
     /fbp/,
-    /fbc/
+    /fbc/,
   ];
 
   // Cookie patterns to block by category
@@ -41,7 +41,7 @@
       /^__utmc/,
       /^__utmt/,
       /^__utmz/,
-      /^_dc_gtm/
+      /^_dc_gtm/,
     ],
     marketing: [
       /^_fbp/,
@@ -53,17 +53,9 @@
       /^ads-id/,
       /^_gcl_/,
       /^__Secure-3PAPISID/,
-      /^__Secure-3PSID/
+      /^__Secure-3PSID/,
     ],
-    social: [
-      /^__twitter_sess/,
-      /^li_at/,
-      /^li_gc/,
-      /^bcookie/,
-      /^bscookie/,
-      /^lang/,
-      /^lidc/
-    ]
+    social: [/^__twitter_sess/, /^li_at/, /^li_gc/, /^bcookie/, /^bscookie/, /^lang/, /^lidc/],
   };
 
   // Blocked scripts and elements storage
@@ -114,7 +106,7 @@
    */
   function blockExistingCookies() {
     const cookies = document.cookie.split(';');
-    
+
     cookies.forEach(cookie => {
       const [name] = cookie.trim().split('=');
       if (shouldBlockCookie(name)) {
@@ -137,8 +129,9 @@
   function shouldBlockCookie(cookieName) {
     if (!isBlocking) return false;
 
-    const consentManager = (typeof window !== 'undefined' && window.CookieConsent) ? window.CookieConsent : null;
-    
+    const consentManager =
+      typeof window !== 'undefined' && window.CookieConsent ? window.CookieConsent : null;
+
     // If no consent yet, block all non-functional cookies
     if (!consentManager) {
       return !cookieName.startsWith('cookie-consent'); // Allow our own consent cookie
@@ -171,8 +164,9 @@
   function shouldBlockScript(src) {
     if (!isBlocking || !src) return false;
 
-    const consentManager = (typeof window !== 'undefined' && window.CookieConsent) ? window.CookieConsent : null;
-    
+    const consentManager =
+      typeof window !== 'undefined' && window.CookieConsent ? window.CookieConsent : null;
+
     // If no consent manager or no consent yet, block all tracking scripts
     if (!consentManager || !consentManager.hasConsent) {
       return TRACKING_PATTERNS.some(pattern => pattern.test(src));
@@ -209,7 +203,7 @@
       /gtag\s*\(/,
       /_gaq\./,
       /fbq\s*\(/,
-      /dataLayer\.push/
+      /dataLayer\.push/,
     ];
 
     return inlineTrackingPatterns.some(pattern => pattern.test(content));
@@ -225,9 +219,9 @@
     const patterns = {
       'ga(': /ga\s*\(/,
       'gtag(': /gtag\s*\(/,
-      '_gaq': /_gaq\./,
+      _gaq: /_gaq\./,
       'fbq(': /fbq\s*\(/,
-      'dataLayer.push': /dataLayer\.push/
+      'dataLayer.push': /dataLayer\.push/,
     };
 
     for (const [keyword, pattern] of Object.entries(patterns)) {
@@ -247,13 +241,13 @@
    */
   function getScriptCategory(src) {
     if (!src) return 'analytics';
-    
+
     if (src.match(/google-analytics|googletagmanager|_ga|_gid|_gat/i)) {
       return 'analytics';
     } else if (src.match(/facebook|twitter|linkedin|doubleclick/i)) {
       return 'marketing';
     }
-    
+
     return 'analytics'; // Default to analytics
   }
 
@@ -263,7 +257,7 @@
   function overrideCreateElement() {
     originalCreateElement = document.createElement;
 
-    document.createElement = function(tagName) {
+    document.createElement = function (tagName) {
       const element = originalCreateElement.call(this, tagName);
 
       if (tagName.toLowerCase() === 'script') {
@@ -271,15 +265,18 @@
         element._cookieBannerTracked = true;
 
         // Store reference to the original src descriptor to properly set src on non-blocked scripts
-        const originalSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src');
+        const originalSrcDescriptor = Object.getOwnPropertyDescriptor(
+          HTMLScriptElement.prototype,
+          'src'
+        );
 
         // Override the src setter
         let originalSrc = '';
         Object.defineProperty(element, 'src', {
-          get: function() {
+          get: function () {
             return originalSrc;
           },
-          set: function(value) {
+          set: function (value) {
             originalSrc = value;
 
             if (shouldBlockScript(value)) {
@@ -287,7 +284,7 @@
               blockedScripts.push({
                 element: element,
                 src: value,
-                type: 'analytics' // Could be enhanced to detect type
+                type: 'analytics', // Could be enhanced to detect type
               });
               return; // Don't actually set the src
             }
@@ -297,7 +294,7 @@
               originalSrcDescriptor.set.call(element, value);
             }
           },
-          configurable: true
+          configurable: true,
         });
       }
 
@@ -312,13 +309,17 @@
     originalAppendChild = Element.prototype.appendChild;
     originalInsertBefore = Element.prototype.insertBefore;
 
-    Element.prototype.appendChild = function(child) {
+    Element.prototype.appendChild = function (child) {
       if (child && child.tagName === 'SCRIPT') {
         // Check for manual data-category attribute
         const dataCategory = child.getAttribute && child.getAttribute('data-category');
         if (dataCategory) {
           const consentManager = window.CookieConsent;
-          if (!consentManager || !consentManager.hasConsent || !consentManager.hasConsent(dataCategory)) {
+          if (
+            !consentManager ||
+            !consentManager.hasConsent ||
+            !consentManager.hasConsent(dataCategory)
+          ) {
             console.log('Blocked tracking script:', child.src || 'inline script');
             // Debug: check data-category scripts
             if (child.src && child.src.includes('facebook')) {
@@ -328,7 +329,7 @@
               element: child,
               src: child.src,
               innerHTML: child.innerHTML,
-              type: dataCategory
+              type: dataCategory,
             });
             return child; // Return the element but don't actually append it
           }
@@ -339,15 +340,18 @@
           blockedScripts.push({
             element: child,
             src: child.src,
-            type: getScriptCategory(child.src)
+            type: getScriptCategory(child.src),
           });
           return child; // Return the element but don't actually append it
         } else if (child.innerHTML && shouldBlockInlineScript(child.innerHTML)) {
-          console.log('Blocked inline tracking script containing:', getTrackingKeyword(child.innerHTML));
+          console.log(
+            'Blocked inline tracking script containing:',
+            getTrackingKeyword(child.innerHTML)
+          );
           blockedScripts.push({
             element: child,
             innerHTML: child.innerHTML,
-            type: 'analytics'
+            type: 'analytics',
           });
           return child; // Return the element but don't actually append it
         }
@@ -355,19 +359,23 @@
       return originalAppendChild.call(this, child);
     };
 
-    Element.prototype.insertBefore = function(newNode, referenceNode) {
+    Element.prototype.insertBefore = function (newNode, referenceNode) {
       if (newNode && newNode.tagName === 'SCRIPT') {
         // Check for manual data-category attribute
         const dataCategory = newNode.getAttribute && newNode.getAttribute('data-category');
         if (dataCategory) {
           const consentManager = window.CookieConsent;
-          if (!consentManager || !consentManager.hasConsent || !consentManager.hasConsent(dataCategory)) {
+          if (
+            !consentManager ||
+            !consentManager.hasConsent ||
+            !consentManager.hasConsent(dataCategory)
+          ) {
             console.log('Blocked tracking script:', newNode.src || 'inline script');
             blockedScripts.push({
               element: newNode,
               src: newNode.src,
               innerHTML: newNode.innerHTML,
-              type: dataCategory
+              type: dataCategory,
             });
             return newNode; // Return the element but don't actually insert it
           }
@@ -378,15 +386,18 @@
           blockedScripts.push({
             element: newNode,
             src: newNode.src,
-            type: getScriptCategory(newNode.src)
+            type: getScriptCategory(newNode.src),
           });
           return newNode; // Return the element but don't actually insert it
         } else if (newNode.innerHTML && shouldBlockInlineScript(newNode.innerHTML)) {
-          console.log('Blocked inline tracking script containing:', getTrackingKeyword(newNode.innerHTML));
+          console.log(
+            'Blocked inline tracking script containing:',
+            getTrackingKeyword(newNode.innerHTML)
+          );
           blockedScripts.push({
             element: newNode,
             innerHTML: newNode.innerHTML,
-            type: 'analytics'
+            type: 'analytics',
           });
           return newNode; // Return the element but don't actually insert it
         }
@@ -401,13 +412,13 @@
   function overrideSetAttribute() {
     originalSetAttribute = Element.prototype.setAttribute;
 
-    Element.prototype.setAttribute = function(name, value) {
+    Element.prototype.setAttribute = function (name, value) {
       if (this.tagName === 'SCRIPT' && name === 'src' && shouldBlockScript(value)) {
         console.log('[Cookie Banner] Blocked script setAttribute:', value);
         blockedScripts.push({
           element: this,
           src: value,
-          type: 'analytics'
+          type: 'analytics',
         });
         return; // Don't set the attribute
       }
@@ -423,12 +434,12 @@
     if (document._cookieBlockerOverridden) {
       return;
     }
-    
+
     // Get the original cookie descriptor - try different locations
-    let originalDescriptor = 
+    let originalDescriptor =
       Object.getOwnPropertyDescriptor(Document.prototype, 'cookie') ||
       Object.getOwnPropertyDescriptor(HTMLDocument.prototype, 'cookie');
-    
+
     // If no descriptor found in prototypes, check document directly
     if (!originalDescriptor) {
       originalDescriptor = Object.getOwnPropertyDescriptor(document, 'cookie');
@@ -437,8 +448,10 @@
         // Create a backup storage and wrap the simple property
         let cookieStorage = document.cookie || '';
         originalDescriptor = {
-          get: function() { return cookieStorage; },
-          set: function(value) { 
+          get: function () {
+            return cookieStorage;
+          },
+          set: function (value) {
             // Simulate real cookie behavior
             if (value) {
               const [cookiePart] = value.split(';');
@@ -453,11 +466,11 @@
             }
             return value;
           },
-          configurable: true
+          configurable: true,
         };
       }
     }
-    
+
     if (!originalDescriptor || !originalDescriptor.set) {
       console.warn('[Cookie Banner] Could not find valid cookie descriptor');
       return;
@@ -467,11 +480,11 @@
       // Store the original getter and setter
       const originalGet = originalDescriptor.get || (() => '');
       const originalSet = originalDescriptor.set;
-      
+
       Object.defineProperty(document, 'cookie', {
         configurable: true,
         enumerable: true,
-        get: function() {
+        get: function () {
           try {
             return originalGet.call(this);
           } catch (error) {
@@ -479,16 +492,16 @@
             return '';
           }
         },
-        set: function(value) {
+        set: function (value) {
           try {
             const [cookieString] = value.split(';');
             const [name] = cookieString.split('=');
-            
+
             if (shouldBlockCookie(name.trim())) {
               console.log('Blocked cookie:', cookieString.trim());
               return; // Don't actually set the cookie
             }
-            
+
             return originalSet.call(this, value);
           } catch (error) {
             // Log error but don't throw to handle gracefully
@@ -501,9 +514,9 @@
             }
             return;
           }
-        }
+        },
       });
-      
+
       // Mark as overridden
       document._cookieBlockerOverridden = true;
     } catch (e) {
@@ -519,26 +532,27 @@
   function handleConsentChange(event) {
     const consent = event.detail;
     const consentManager = window.CookieConsent;
-    
+
     // Update blocking state based on consent
     // If any tracking category has consent, disable blocking for those categories
     if (consentManager && consentManager.hasConsent) {
       // Check if we should stop blocking based on new consent
-      const hasAnyTrackingConsent = consentManager.hasConsent('analytics') || 
-                                     consentManager.hasConsent('marketing') || 
-                                     consentManager.hasConsent('social');
-      
+      const hasAnyTrackingConsent =
+        consentManager.hasConsent('analytics') ||
+        consentManager.hasConsent('marketing') ||
+        consentManager.hasConsent('social');
+
       // Note: We keep blocking enabled per category, not globally
       // isBlocking remains true but we check per-category consent
     }
-    
+
     // Load previously blocked scripts based on new consent
     blockedScripts.forEach(blockedItem => {
       const { element, src, innerHTML, type } = blockedItem;
-      
+
       // Check if this script type is now allowed
       let shouldUnblock = false;
-      
+
       // Only unblock if explicit consent is granted
       if (type === 'analytics') {
         shouldUnblock = consent.analytics === true;
@@ -549,23 +563,23 @@
       } else {
         shouldUnblock = false;
       }
-      
+
       if (shouldUnblock) {
         console.log('Executing previously blocked script:', src || 'inline script');
-        
+
         // Create a new script element and load it
         const newScript = originalCreateElement.call(document, 'script');
-        
+
         if (src) {
           newScript.src = src;
         } else if (innerHTML) {
           newScript.innerHTML = innerHTML;
         }
-        
+
         if (element) {
           newScript.async = element.async || false;
           newScript.defer = element.defer || false;
-          
+
           // Copy other attributes
           Array.from(element.attributes).forEach(attr => {
             if (attr.name !== 'src') {
@@ -573,7 +587,7 @@
             }
           });
         }
-        
+
         // Add to document using original appendChild to bypass our override
         originalAppendChild.call(document.head || document.body, newScript);
       }
@@ -654,17 +668,17 @@
       Element.prototype.setAttribute = originalSetAttribute;
       originalSetAttribute = null;
     }
-    
+
     // Reset state
     blockedScripts = [];
     isBlocking = true;
     isInitialized = false;
-    
+
     // Reset cookie override flag
     if (document._cookieBlockerOverridden) {
       delete document._cookieBlockerOverridden;
     }
-    
+
     // Remove event listener
     document.removeEventListener('cookieConsentChanged', handleConsentChange);
   }
@@ -684,9 +698,9 @@
       disable: disableBlocking,
       enable: enableBlocking,
       getBlocked: getBlockedScripts,
-      reset: resetCookieBlocker
+      reset: resetCookieBlocker,
     };
-    
+
     /**
      * Initialize the cookie blocker (backward compatibility)
      * @function
@@ -702,5 +716,4 @@
       initCookieBlocker();
     }
   }
-
 })();

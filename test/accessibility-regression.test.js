@@ -9,7 +9,7 @@ async function checkAccessibility(page) {
   try {
     await playwrightAdapter(page, [], {
       performanceMode: true,
-      enableStreamProcessing: false
+      enableStreamProcessing: false,
     });
   } catch (error) {
     if (error.message.includes('CSS is not defined')) {

@@ -47,23 +47,23 @@
     padding: var(--spacing-md);
     border-radius: var(--border-radius-sm);
   }
-  
+
   legend {
     font-weight: var(--font-weight-bold);
     padding: 0 var(--spacing-sm);
   }
-  
+
   label {
     display: flex;
     align-items: center;
     margin-bottom: var(--spacing-sm);
   }
-  
-  input[type="checkbox"] {
+
+  input[type='checkbox'] {
     margin-right: var(--spacing-sm);
     width: 1.25rem;
     height: 1.25rem;
-    
+
     &:focus {
       outline: var(--focus-outline);
       outline-offset: 2px;
@@ -82,26 +82,26 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--spacing-md);
-  
+
   button {
     @mixin button-secondary;
-    
-    &[type="submit"] {
+
+    &[type='submit'] {
       @mixin button-primary;
     }
   }
 }
 
 /* RTL support */
-[dir="rtl"] {
-  #cookie-form input[type="checkbox"] {
+[dir='rtl'] {
+  #cookie-form input[type='checkbox'] {
     margin-right: 0;
     margin-left: var(--spacing-sm);
   }
-  
+
   #cookie-description {
     margin: 0 0 var(--spacing-md) 0;
-    
+
     @mixin responsive-breakpoint var(--breakpoint-md) {
       margin: 0 0 0 var(--spacing-md);
     }

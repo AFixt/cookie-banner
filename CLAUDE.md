@@ -7,13 +7,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This repository follows the Git Flow branching model. All development work must adhere to the following branching conventions:
 
 ### Branch Types
+
 - **main**: Production-ready code only. Direct commits are not allowed.
 - **develop**: Integration branch for features. All feature branches merge here first.
-- **feature/***: New features (branch from develop, merge back to develop)
-- **release/***: Release preparation (branch from develop, merge to main and develop)
-- **hotfix/***: Emergency fixes (branch from main, merge to main and develop)
+- **feature/\***: New features (branch from develop, merge back to develop)
+- **release/\***: Release preparation (branch from develop, merge to main and develop)
+- **hotfix/\***: Emergency fixes (branch from main, merge to main and develop)
 
 ### Workflow Rules
+
 1. Never commit directly to main or develop branches
 2. Always create feature branches from develop
 3. Use pull requests for all merges
@@ -24,7 +26,7 @@ This repository follows the Git Flow branching model. All development work must 
 
 This repository uses [Conventional Commits](https://www.conventionalcommits.org/) for automatic changelog generation. All commit messages must follow this format:
 
-```
+```text
 <type>(<scope>): <description>
 
 [optional body]
@@ -33,6 +35,7 @@ This repository uses [Conventional Commits](https://www.conventionalcommits.org/
 ```
 
 ### Commit Types
+
 - `feat`: New feature (triggers minor version bump)
 - `fix`: Bug fix (triggers patch version bump)
 - `docs`: Documentation only changes
@@ -46,13 +49,16 @@ This repository uses [Conventional Commits](https://www.conventionalcommits.org/
 - `revert`: Revert a previous commit
 
 ### Breaking Changes
+
 Add `BREAKING CHANGE:` in the commit footer or `!` after the type to trigger a major version bump:
-```
+
+```text
 feat!: Remove deprecated API endpoint
 ```
 
 ### Examples
-```
+
+```text
 feat(banner): Add support for custom cookie categories
 fix(a11y): Correct focus trap behavior in modal
 docs: Update installation instructions

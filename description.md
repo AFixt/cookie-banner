@@ -6,60 +6,64 @@ This banner is framework-agnostic and can be embedded into static websites, sing
 
 ## Key Features
 
-* Accessible by Design
-  * Complies with WCAG 2.2 AA
-  * Fully operable via keyboard
-  * Screen reader-friendly (ARIA roles, live regions, and focus management)
-* Consent Management
-  * Supports "Accept All", "Reject All", and "Customize" buttons
-  * Optional granular controls for categories (e.g., functional, analytics, marketing)
-* Compliance Support
-  * GDPR-ready with audit logging hooks
-  * CCPA opt-out support
-* Customizable
-  * Theming via CSS variables
-  * Optionally include a full preferences modal
-* Internationalization (i18n)
-  * Text fully configurable in JSON or via locale files
-  * RTL (Right-To-Left) layout support
+- Accessible by Design
+  - Complies with WCAG 2.2 AA
+  - Fully operable via keyboard
+  - Screen reader-friendly (ARIA roles, live regions, and focus management)
+- Consent Management
+  - Supports "Accept All", "Reject All", and "Customize" buttons
+  - Optional granular controls for categories (e.g., functional, analytics, marketing)
+- Compliance Support
+  - GDPR-ready with audit logging hooks
+  - CCPA opt-out support
+- Customizable
+  - Theming via CSS variables
+  - Optionally include a full preferences modal
+- Internationalization (i18n)
+  - Text fully configurable in JSON or via locale files
+  - RTL (Right-To-Left) layout support
 
 ## Architecture Overview
 
 cookie-banner/
-├── index.js                  # Entry script
-├── banner.html               # HTML markup
-├── banner.css                # CSS styles with accessible contrast
-├── preferences-modal.html    # Optional modal for granular consent
-├── consent-manager.js        # Logic for storing, reading, and updating consent
+├── index.js # Entry script
+├── banner.html # HTML markup
+├── banner.css # CSS styles with accessible contrast
+├── preferences-modal.html # Optional modal for granular consent
+├── consent-manager.js # Logic for storing, reading, and updating consent
 ├── locales/
-│   ├── en.json
-│   ├── fr.json
-│   └── ...
+│ ├── en.json
+│ ├── fr.json
+│ └── ...
 └── README.md
 
 ## Technical Specification
 
 ### 1. Accessibility Requirements (WCAG 2.2)
 
-| Feature | Details |
-| ------- | ------- |
-| Keyboard Navigation | Tab, Shift+Tab, Enter, Escape supported |
-| Focus Management | Focus is trapped in modal; returned to invoking element on close |
-| ARIA Roles and Properties | role="dialog", aria-labelledby, aria-describedby, live regions |
-| Color Contrast | All elements must meet at least 4.5:1 contrast ratio |
-| Visible Focus Indicator | All focusable elements have visible focus outlines |
-| Time Limits | No auto-dismissal; waits for user input |
-| Responsive Design | Works on mobile, tablet, and desktop |
+| Feature                   | Details                                                          |
+| ------------------------- | ---------------------------------------------------------------- |
+| Keyboard Navigation       | Tab, Shift+Tab, Enter, Escape supported                          |
+| Focus Management          | Focus is trapped in modal; returned to invoking element on close |
+| ARIA Roles and Properties | role="dialog", aria-labelledby, aria-describedby, live regions   |
+| Color Contrast            | All elements must meet at least 4.5:1 contrast ratio             |
+| Visible Focus Indicator   | All focusable elements have visible focus outlines               |
+| Time Limits               | No auto-dismissal; waits for user input                          |
+| Responsive Design         | Works on mobile, tablet, and desktop                             |
 
 ### 2. Banner HTML Structure
 
 ```html
 <div id="cookie-banner" role="region" aria-label="Cookie Consent" aria-live="polite">
-  <p id="cookie-description">We use cookies to improve your experience. You can manage your preferences below.</p>
+  <p id="cookie-description">
+    We use cookies to improve your experience. You can manage your preferences below.
+  </p>
   <div class="cookie-buttons">
     <button id="accept-all">Accept All</button>
     <button id="reject-all">Reject All</button>
-    <button id="customize-preferences" aria-haspopup="dialog" aria-controls="cookie-modal">Customize</button>
+    <button id="customize-preferences" aria-haspopup="dialog" aria-controls="cookie-modal">
+      Customize
+    </button>
   </div>
 </div>
 ```
@@ -72,7 +76,9 @@ cookie-banner/
   <form id="cookie-form">
     <fieldset>
       <legend>Functional Cookies</legend>
-      <label><input type="checkbox" name="functional" checked disabled /> Required (Always On)</label>
+      <label
+        ><input type="checkbox" name="functional" checked disabled /> Required (Always On)</label
+      >
     </fieldset>
     <fieldset>
       <legend>Analytics Cookies</legend>
@@ -94,17 +100,17 @@ cookie-banner/
 
 #### Consent Storage
 
-* Stores user preference in `localStorage` or cookies with expiration.
-* Fires events on consent change (`cookieConsentChanged`).
-* Provides methods:
-  * `getConsent()`
-  * `setConsent({ functional, analytics, marketing })`
-  * `hasConsent(category)`
+- Stores user preference in `localStorage` or cookies with expiration.
+- Fires events on consent change (`cookieConsentChanged`).
+- Provides methods:
+  - `getConsent()`
+  - `setConsent({ functional, analytics, marketing })`
+  - `hasConsent(category)`
 
 #### Events
 
 ```javascript
-document.addEventListener('cookieConsentChanged', (e) => {
+document.addEventListener('cookieConsentChanged', e => {
   console.log('Consent changed:', e.detail);
 });
 ```
@@ -155,7 +161,7 @@ document.addEventListener('cookieConsentChanged', (e) => {
 window.initCookieBanner({
   locale: 'en',
   theme: 'light', // or 'dark'
-  onConsentChange: (consent) => {
+  onConsentChange: consent => {
     // Use to enable/disable analytics or ad scripts
   },
 });
@@ -163,15 +169,15 @@ window.initCookieBanner({
 
 ## Privacy & Compliance Notes
 
-* GDPR: Includes "Reject All" and granular consent.
-* CCPA: Can be configured to include "Do Not Sell My Info."
-* Logs: Emits consent change events to be hooked into audit systems.
-* TTL: Consent must be renewed annually.
+- GDPR: Includes "Reject All" and granular consent.
+- CCPA: Can be configured to include "Do Not Sell My Info."
+- Logs: Emits consent change events to be hooked into audit systems.
+- TTL: Consent must be renewed annually.
 
 ## Future Enhancements
 
-* Auto-blocking of cookies prior to consent
-* Consent syncing across subdomains
-* Integration with Tag Managers (e.g., GTM)
-* Logging with anonymized analytics
-* Consent revocation UI (via footer link)
+- Auto-blocking of cookies prior to consent
+- Consent syncing across subdomains
+- Integration with Tag Managers (e.g., GTM)
+- Logging with anonymized analytics
+- Consent revocation UI (via footer link)

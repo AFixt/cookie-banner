@@ -1,29 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cookie Banner Test Page</title>
-  <link rel="stylesheet" href="../dist/banner.css">
-</head>
-<body>
-  <h1>Test Page for Cookie Banner</h1>
-  <p>This page is used for automated accessibility testing.</p>
-  
-  <script src="../src/js/consent-manager.js"></script>
-  <script src="../src/js/banner.js"></script>
-  <script>
-    // Clear any existing consent for testing
-    localStorage.removeItem('cookie-consent');
-    
-    // Initialize the cookie banner
-    window.initCookieBanner({
-      locale: 'en',
-      theme: 'light',
-      onConsentChange: (consent) => {
-        console.log('Consent changed:', consent);
-      }
-    });
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookie Banner Test Page</title>
+    <link rel="stylesheet" href="../dist/banner.css" />
+  </head>
+  <body>
+    <h1>Test Page for Cookie Banner</h1>
+    <p>This page is used for automated accessibility testing.</p>
+
+    <script src="../src/js/consent-manager.js"></script>
+    <script src="../src/js/banner.js"></script>
+    <script>
+      // Clear any existing consent for testing
+      localStorage.removeItem('cookie-consent');
+
+      // Initialize the cookie banner
+      window.initCookieBanner({
+        locale: 'en',
+        theme: 'light',
+        onConsentChange: consent => {
+          console.log('Consent changed:', consent);
+        },
+      });
+    </script>
+  </body>
 </html>

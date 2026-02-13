@@ -17,11 +17,11 @@
   box-sizing: border-box;
   line-height: var(--line-height-base);
   animation: cookieBannerSlideIn var(--transition-slow) ease-out;
-  
+
   @mixin flex-column;
   align-items: center;
   justify-content: space-between;
-  
+
   @mixin responsive-breakpoint var(--breakpoint-md) {
     flex-direction: row;
   }
@@ -31,7 +31,7 @@
   margin: 0 0 var(--spacing-md) 0;
   max-width: 60ch;
   font-size: var(--font-size-base);
-  
+
   @mixin responsive-breakpoint var(--breakpoint-md) {
     margin: 0 var(--spacing-md) 0 0;
   }

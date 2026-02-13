@@ -38,30 +38,30 @@ import 'accessible-cookie-banner/dist/banner.css';
 
 function ConsentManager() {
   const [consent, setConsent] = useState(null);
-  
+
   useEffect(() => {
     // Initialize the banner
     CookieBanner.init({
       locale: 'en',
       theme: 'light',
-      onConsentChange: (newConsent) => {
+      onConsentChange: newConsent => {
         setConsent(newConsent);
-      }
+      },
     });
-    
+
     // Set initial consent state
     setConsent(CookieBanner.getConsent());
-    
+
     // Listen for consent change events
-    const handleConsentChange = (e) => setConsent(e.detail);
+    const handleConsentChange = e => setConsent(e.detail);
     document.addEventListener('cookieConsentChanged', handleConsentChange);
-    
+
     // Clean up event listener
     return () => {
       document.removeEventListener('cookieConsentChanged', handleConsentChange);
     };
   }, []);
-  
+
   // Rest of your component...
 }
 ```
@@ -79,36 +79,36 @@ import 'accessible-cookie-banner/dist/banner.css';
 export default {
   data() {
     return {
-      consent: null
+      consent: null,
     };
   },
-  
+
   mounted() {
     // Initialize the banner
     CookieBanner.init({
       locale: 'en',
       theme: 'light',
-      onConsentChange: (newConsent) => {
+      onConsentChange: newConsent => {
         this.consent = newConsent;
-      }
+      },
     });
-    
+
     // Set initial consent
     this.consent = CookieBanner.getConsent();
-    
+
     // Listen for consent change events
     document.addEventListener('cookieConsentChanged', this.handleConsentChange);
   },
-  
+
   beforeDestroy() {
     document.removeEventListener('cookieConsentChanged', this.handleConsentChange);
   },
-  
+
   methods: {
     handleConsentChange(e) {
       this.consent = e.detail;
-    }
-  }
+    },
+  },
 };
 ```
 
@@ -134,31 +134,31 @@ export interface ConsentState {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConsentService {
   private consentSubject = new BehaviorSubject<ConsentState | null>(null);
   consent$ = this.consentSubject.asObservable();
-  
+
   constructor() {
     // Initialize banner
     CookieBanner.init({
       locale: 'en',
       theme: 'light',
-      onConsentChange: (consent) => {
+      onConsentChange: consent => {
         this.consentSubject.next(consent);
-      }
+      },
     });
-    
+
     // Set initial value
     this.consentSubject.next(CookieBanner.getConsent());
-    
+
     // Listen for changes
     document.addEventListener('cookieConsentChanged', ((e: CustomEvent) => {
       this.consentSubject.next(e.detail);
     }) as EventListener);
   }
-  
+
   hasConsent(category: string): boolean {
     const consent = this.consentSubject.value;
     return consent ? !!consent[category] : false;
@@ -206,7 +206,7 @@ declare global {
 // Usage
 window.CookieBanner.init({
   locale: 'en',
-  theme: 'light'
+  theme: 'light',
 });
 ```
 
@@ -238,9 +238,9 @@ if (CookieBanner.hasConsent('analytics')) {
 Listen for the `cookieConsentChanged` event to react to consent changes anywhere in your application:
 
 ```js
-document.addEventListener('cookieConsentChanged', (e) => {
+document.addEventListener('cookieConsentChanged', e => {
   const consent = e.detail;
-  
+
   // Enable/disable features based on consent
   if (consent.analytics) {
     enableAnalytics();
