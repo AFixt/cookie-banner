@@ -86,6 +86,7 @@
   ],
   "sideEffects": false,
   "devDependencies": {
+    "@afixt/a11y-assert": "^2.0.0",
     "@babel/preset-env": "^7.26.9",
     "@commitlint/cli": "^20.4.0",
     "@commitlint/config-conventional": "^20.4.0",

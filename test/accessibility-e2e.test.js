@@ -1,25 +1,12 @@
 /**
- * End-to-end accessibility tests using Playwright and @eventably/a11y-assert
+ * End-to-end accessibility tests using Playwright and @afixt/a11y-assert
  */
 
 import { test, expect } from '@playwright/test';
-import { playwrightAdapter } from '@eventably/a11y-assert';
+import { playwrightAdapter } from '@afixt/a11y-assert';
 
 async function checkAccessibility(page) {
-  try {
-    await playwrightAdapter(page, [], {
-      performanceMode: true,
-      enableStreamProcessing: false
-    });
-  } catch (error) {
-    if (error.message.includes('CSS is not defined')) {
-      console.warn('Skipping CSS-dependent accessibility checks due to JSDOM limitations');
-    } else if (error.message.includes('Accessibility violations found')) {
-      throw error;
-    } else {
-      throw error;
-    }
-  }
+  await playwrightAdapter(page);
 }
 
 test.describe('Cookie Banner Accessibility', () => {

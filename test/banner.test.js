@@ -1,6 +1,9 @@
 /**
  * Tests for the banner.js functionality
+ * Integrates @afixt/a11y-assert keyboard utilities for accessibility assertions.
+ * Full automated a11y engine checks run via Playwright E2E tests.
  */
+const keyboard = require('@afixt/a11y-assert/keyboard');
 
 describe('Banner Functionality', () => {
   let originalFetch;
@@ -257,9 +260,22 @@ describe('Banner Functionality', () => {
     test('should not create modal when showModal is false', async () => {
       mockConsentManager.getConsent.mockReturnValue(null);
       await window.initCookieBanner({ showModal: false });
-      
+
       const modal = document.querySelector('[role="dialog"]');
       expect(modal).toBeNull();
+    });
+
+    test('banner buttons should be focusable (a11y-assert)', async () => {
+      mockConsentManager.getConsent.mockReturnValue(null);
+      await window.initCookieBanner();
+
+      const acceptBtn = document.querySelector('[data-action="accept-all"]');
+      const rejectBtn = document.querySelector('[data-action="reject-all"]');
+      const customizeBtn = document.querySelector('[data-action="customize"]');
+
+      expect(() => keyboard.assertIsFocusable(acceptBtn)).not.toThrow();
+      expect(() => keyboard.assertIsFocusable(rejectBtn)).not.toThrow();
+      expect(() => keyboard.assertIsFocusable(customizeBtn)).not.toThrow();
     });
   });
 
@@ -289,18 +305,29 @@ describe('Banner Functionality', () => {
     test('should create modal with form and checkboxes', async () => {
       mockConsentManager.getConsent.mockReturnValue(null);
       await window.initCookieBanner({ showModal: true });
-      
+
       const form = document.querySelector('#cookie-form');
       const functionalCheckbox = document.querySelector('input[name="functional"]');
       const analyticsCheckbox = document.querySelector('input[name="analytics"]');
       const marketingCheckbox = document.querySelector('input[name="marketing"]');
-      
+
       expect(form).toBeTruthy();
       expect(functionalCheckbox).toBeTruthy();
       expect(functionalCheckbox).toBeChecked();
       expect(functionalCheckbox).toBeDisabled();
       expect(analyticsCheckbox).toBeTruthy();
       expect(marketingCheckbox).toBeTruthy();
+    });
+
+    test('modal form controls should be focusable (a11y-assert)', async () => {
+      mockConsentManager.getConsent.mockReturnValue(null);
+      await window.initCookieBanner({ showModal: true });
+
+      const analyticsCheckbox = document.querySelector('input[name="analytics"]');
+      const marketingCheckbox = document.querySelector('input[name="marketing"]');
+
+      expect(() => keyboard.assertIsFocusable(analyticsCheckbox)).not.toThrow();
+      expect(() => keyboard.assertIsFocusable(marketingCheckbox)).not.toThrow();
     });
   });
 
@@ -430,41 +457,39 @@ describe('Banner Functionality', () => {
       require('../src/js/banner.js');
     });
 
-    test('should handle Escape key to close modal', async () => {
+    test('should handle Escape key to close modal (a11y-assert)', async () => {
       mockConsentManager.getConsent.mockReturnValue(null);
       await window.initCookieBanner({ showModal: true });
-      
+
       const customizeBtn = document.querySelector('[data-action="customize"]');
       const modal = document.querySelector('[role="dialog"]');
-      
+
       // Open modal
       customizeBtn.click();
       expect(modal).toHaveAttribute('aria-hidden', 'false');
-      
-      // Press Escape
-      const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
-      document.dispatchEvent(escapeEvent);
-      
+
+      // Use a11y-assert keyboard utility to simulate Escape
+      keyboard.simulateEscape();
+
       expect(modal).toHaveAttribute('aria-hidden', 'true');
     });
 
-    test('should handle Enter key on buttons', async () => {
+    test('should handle Enter key on buttons (a11y-assert)', async () => {
       mockConsentManager.getConsent.mockReturnValue(null);
       mockConsentManager.setConsent.mockReturnValue({
         functional: true,
         analytics: true,
         marketing: true
       });
-      
+
       await window.initCookieBanner();
-      
+
       const acceptBtn = document.querySelector('[data-action="accept-all"]');
       acceptBtn.focus();
-      
-      // Press Enter
-      const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
-      acceptBtn.dispatchEvent(enterEvent);
-      
+
+      // Use a11y-assert keyboard utility to simulate Enter
+      keyboard.simulateEnter(acceptBtn);
+
       expect(mockConsentManager.setConsent).toHaveBeenCalledWith({
         functional: true,
         analytics: true,
@@ -479,16 +504,18 @@ describe('Banner Functionality', () => {
         analytics: false,
         marketing: false
       });
-      
+
       await window.initCookieBanner();
-      
+
       const rejectBtn = document.querySelector('[data-action="reject-all"]');
       rejectBtn.focus();
-      
-      // Press Space
-      const spaceEvent = new KeyboardEvent('keydown', { key: ' ' });
+
+      // Note: keyboard.simulateSpace dispatches key='Space' (code-based),
+      // but the banner handles key=' ' (standard KeyboardEvent.key value).
+      // Use standard event for integration testing with the banner.
+      const spaceEvent = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
       rejectBtn.dispatchEvent(spaceEvent);
-      
+
       expect(mockConsentManager.setConsent).toHaveBeenCalledWith({
         functional: true,
         analytics: false,
