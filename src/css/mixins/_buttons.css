@@ -9,14 +9,16 @@
   font-weight: 600;
   cursor: pointer;
   min-width: 120px;
-  transition: background-color 0.2s, transform 0.1s;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
   border: none;
-  
+
   &:focus {
     outline: var(--focus-outline);
     outline-offset: 2px;
   }
-  
+
   &:active {
     transform: scale(0.98);
   }
@@ -26,7 +28,7 @@
   @mixin button-base;
   background-color: var(--button-primary-bg);
   color: var(--button-primary-text);
-  
+
   &:hover,
   &:focus {
     background-color: var(--button-primary-hover-bg);
@@ -38,7 +40,7 @@
   background-color: var(--button-secondary-bg);
   color: var(--button-secondary-text);
   border: 1px solid var(--button-secondary-border);
-  
+
   &:hover,
   &:focus {
     background-color: var(--button-secondary-hover-bg);

@@ -1,167 +1,168 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cookie Banner - RTL Support Example</title>
-  <link rel="stylesheet" href="../css/banner.css">
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      line-height: 1.5;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-    pre {
-      background: #f5f5f5;
-      padding: 1rem;
-      border-radius: 4px;
-      overflow-x: auto;
-      direction: ltr;
-      text-align: left;
-    }
-    code {
-      direction: ltr;
-      text-align: left;
-      display: block;
-    }
-    .demo-controls {
-      margin: 2rem 0;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    button, select {
-      padding: 0.5rem 1rem;
-      margin-left: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .ltr-example {
-      direction: ltr;
-      text-align: left;
-      background: #f5f5f5;
-      padding: 1rem;
-      border-radius: 4px;
-      margin: 1rem 0;
-    }
-  </style>
-</head>
-<body>
-  <h1>مثال عن دعم RTL في شريط ملفات تعريف الارتباط</h1>
-  
-  <p>يوضح هذا المثال كيفية استخدام الشريط مع اللغات التي تُكتب من اليمين إلى اليسار مثل العربية.</p>
-  
-  <h2>طريقة التنفيذ</h2>
-  <div class="ltr-example">
-    <code>// Add RTL attribute to your HTML
-&lt;html lang="ar" dir="rtl"&gt;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookie Banner - RTL Support Example</title>
+    <link rel="stylesheet" href="../css/banner.css" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 1rem;
+        border-radius: 4px;
+        overflow-x: auto;
+        direction: ltr;
+        text-align: left;
+      }
+      code {
+        direction: ltr;
+        text-align: left;
+        display: block;
+      }
+      .demo-controls {
+        margin: 2rem 0;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      button,
+      select {
+        padding: 0.5rem 1rem;
+        margin-left: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .ltr-example {
+        direction: ltr;
+        text-align: left;
+        background: #f5f5f5;
+        padding: 1rem;
+        border-radius: 4px;
+        margin: 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>مثال عن دعم RTL في شريط ملفات تعريف الارتباط</h1>
 
-// The banner will automatically adjust to RTL layout
-window.CookieBanner.init({
-  locale: 'ar',  // Use Arabic locale (you would need to create this file)
-  theme: 'light',
-  onConsentChange: (consent) => {
-    console.log('Consent changed:', consent);
-  }
-});</code>
-  </div>
-  
-  <div class="demo-controls">
-    <h3>أدوات التجربة</h3>
-    <div>
-      <button id="reset-consent">إعادة تعيين الموافقة</button>
-      <button id="toggle-theme">تبديل السمة</button>
-      <select id="language-selector">
-        <option value="en">الإنجليزية</option>
-        <option value="fr">الفرنسية</option>
-        <option value="es">الإسبانية</option>
-      </select>
+    <p>
+      يوضح هذا المثال كيفية استخدام الشريط مع اللغات التي تُكتب من اليمين إلى اليسار مثل العربية.
+    </p>
+
+    <h2>طريقة التنفيذ</h2>
+    <div class="ltr-example">
+      <code
+        >// Add RTL attribute to your HTML &lt;html lang="ar" dir="rtl"&gt; // The banner will
+        automatically adjust to RTL layout window.CookieBanner.init({ locale: 'ar', // Use Arabic
+        locale (you would need to create this file) theme: 'light', onConsentChange: (consent) => {
+        console.log('Consent changed:', consent); } });</code
+      >
     </div>
-    <div>
-      <h4>حالة الموافقة الحالية:</h4>
-      <pre id="consent-status" dir="ltr">لم يتم العثور على بيانات الموافقة</pre>
+
+    <div class="demo-controls">
+      <h3>أدوات التجربة</h3>
+      <div>
+        <button id="reset-consent">إعادة تعيين الموافقة</button>
+        <button id="toggle-theme">تبديل السمة</button>
+        <select id="language-selector">
+          <option value="en">الإنجليزية</option>
+          <option value="fr">الفرنسية</option>
+          <option value="es">الإسبانية</option>
+        </select>
+      </div>
+      <div>
+        <h4>حالة الموافقة الحالية:</h4>
+        <pre id="consent-status" dir="ltr">لم يتم العثور على بيانات الموافقة</pre>
+      </div>
     </div>
-  </div>
-  
-  <p>ملاحظة: هذا مجرد مثال توضيحي. لدعم العربية بشكل كامل، ستحتاج إلى إضافة ملف ترجمة عربي في مجلد locales.</p>
-  
-  <!-- Include the scripts -->
-  <script src="../js/consent-manager.js"></script>
-  <script src="../js/banner.js"></script>
-  <script>
-    // Initialize the cookie banner
-    window.initCookieBanner({
-      locale: 'en', // Using English as we don't have Arabic locale yet
-      theme: 'light',
-      onConsentChange: (consent) => {
-        console.log('Consent changed:', consent);
-        updateConsentStatus();
-      }
-    });
-    
-    // Update the consent status display
-    function updateConsentStatus() {
-      const consent = window.CookieConsent.getConsent();
-      const statusEl = document.getElementById('consent-status');
-      
-      if (consent) {
-        statusEl.textContent = JSON.stringify(consent, null, 2);
-      } else {
-        statusEl.textContent = 'No consent data found';
-      }
-    }
-    
-    // Initial update
-    updateConsentStatus();
-    
-    // Reset consent button
-    document.getElementById('reset-consent').addEventListener('click', () => {
-      const manager = new ConsentManager();
-      manager.clearConsent();
-      location.reload();
-    });
-    
-    // Toggle theme button
-    document.getElementById('toggle-theme').addEventListener('click', () => {
-      const banner = document.getElementById('cookie-banner');
-      if (!banner) {
-        alert('الشريط غير مرئي حالياً. أعد تعيين الموافقة لرؤيته مرة أخرى.');
-        return;
-      }
-      
-      const isDark = banner.classList.contains('theme-dark');
-      const newTheme = isDark ? 'light' : 'dark';
-      
+
+    <p>
+      ملاحظة: هذا مجرد مثال توضيحي. لدعم العربية بشكل كامل، ستحتاج إلى إضافة ملف ترجمة عربي في مجلد
+      locales.
+    </p>
+
+    <!-- Include the scripts -->
+    <script src="../js/consent-manager.js"></script>
+    <script src="../js/banner.js"></script>
+    <script>
+      // Initialize the cookie banner
       window.initCookieBanner({
-        locale: document.getElementById('language-selector').value,
-        theme: newTheme,
-        onConsentChange: (consent) => {
+        locale: 'en', // Using English as we don't have Arabic locale yet
+        theme: 'light',
+        onConsentChange: consent => {
           console.log('Consent changed:', consent);
           updateConsentStatus();
-        }
+        },
       });
-    });
-    
-    // Language selector
-    document.getElementById('language-selector').addEventListener('change', (e) => {
-      const banner = document.getElementById('cookie-banner');
-      if (!banner) {
-        alert('الشريط غير مرئي حالياً. أعد تعيين الموافقة لرؤيته مرة أخرى.');
-        return;
+
+      // Update the consent status display
+      function updateConsentStatus() {
+        const consent = window.CookieConsent.getConsent();
+        const statusEl = document.getElementById('consent-status');
+
+        if (consent) {
+          statusEl.textContent = JSON.stringify(consent, null, 2);
+        } else {
+          statusEl.textContent = 'No consent data found';
+        }
       }
-      
-      const isDark = banner.classList.contains('theme-dark');
-      
-      window.initCookieBanner({
-        locale: e.target.value,
-        theme: isDark ? 'dark' : 'light',
-        onConsentChange: (consent) => {
-          console.log('Consent changed:', consent);
-          updateConsentStatus();
-        }
+
+      // Initial update
+      updateConsentStatus();
+
+      // Reset consent button
+      document.getElementById('reset-consent').addEventListener('click', () => {
+        const manager = new ConsentManager();
+        manager.clearConsent();
+        location.reload();
       });
-    });
-  </script>
-</body>
+
+      // Toggle theme button
+      document.getElementById('toggle-theme').addEventListener('click', () => {
+        const banner = document.getElementById('cookie-banner');
+        if (!banner) {
+          alert('الشريط غير مرئي حالياً. أعد تعيين الموافقة لرؤيته مرة أخرى.');
+          return;
+        }
+
+        const isDark = banner.classList.contains('theme-dark');
+        const newTheme = isDark ? 'light' : 'dark';
+
+        window.initCookieBanner({
+          locale: document.getElementById('language-selector').value,
+          theme: newTheme,
+          onConsentChange: consent => {
+            console.log('Consent changed:', consent);
+            updateConsentStatus();
+          },
+        });
+      });
+
+      // Language selector
+      document.getElementById('language-selector').addEventListener('change', e => {
+        const banner = document.getElementById('cookie-banner');
+        if (!banner) {
+          alert('الشريط غير مرئي حالياً. أعد تعيين الموافقة لرؤيته مرة أخرى.');
+          return;
+        }
+
+        const isDark = banner.classList.contains('theme-dark');
+
+        window.initCookieBanner({
+          locale: e.target.value,
+          theme: isDark ? 'dark' : 'light',
+          onConsentChange: consent => {
+            console.log('Consent changed:', consent);
+            updateConsentStatus();
+          },
+        });
+      });
+    </script>
+  </body>
 </html>

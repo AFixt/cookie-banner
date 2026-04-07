@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-(function() {
+(function () {
   'use strict';
 
   // Default configuration
@@ -19,8 +19,8 @@
     categories: {
       functional: true,
       analytics: false,
-      marketing: false
-    }
+      marketing: false,
+    },
   };
 
   // State
@@ -44,7 +44,9 @@
       config = { ...defaultConfig, ...userConfig };
 
       // Check if consent is already given
-      const consent = window.CookieConsent ? window.CookieConsent.getConsent() : getConsentFromStorage();
+      const consent = window.CookieConsent
+        ? window.CookieConsent.getConsent()
+        : getConsentFromStorage();
       if (consent && consent.hasOwnProperty('functional')) {
         // User has already made a choice
         dispatchConsentEvent(consent);
@@ -57,12 +59,12 @@
           try {
             // Create and append banner
             createBanner();
-            
+
             // Create and append modal if enabled
             if (config.showModal) {
               createModal();
             }
-            
+
             // Add event listeners
             addEventListeners();
           } catch (error) {
@@ -86,7 +88,7 @@
    * @returns {Promise}
    */
   function loadLocaleStrings(locale) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       // Use default English strings as fallback
       localeStrings = {
         description: 'We use cookies to improve your experience.',
@@ -99,8 +101,8 @@
           analytics: 'Allow Analytics Cookies',
           marketing: 'Allow Marketing Cookies',
           save: 'Save Preferences',
-          cancel: 'Cancel'
-        }
+          cancel: 'Cancel',
+        },
       };
 
       // Try to load locale file if not English
@@ -120,8 +122,8 @@
               ...data,
               modal: {
                 ...localeStrings.modal,
-                ...(data.modal || {})
-              }
+                ...(data.modal || {}),
+              },
             };
             resolve();
           })
@@ -144,24 +146,24 @@
     banner.setAttribute('role', 'region');
     banner.setAttribute('aria-label', 'Cookie Consent');
     banner.setAttribute('aria-live', 'polite');
-    
+
     const description = document.createElement('p');
     description.id = 'cookie-description';
     description.textContent = localeStrings.description;
-    
+
     const buttons = document.createElement('div');
     buttons.className = 'cookie-buttons';
-    
+
     const acceptAllBtn = document.createElement('button');
     acceptAllBtn.id = 'accept-all';
     acceptAllBtn.setAttribute('data-action', 'accept-all');
     acceptAllBtn.textContent = localeStrings.acceptAll;
-    
+
     const rejectAllBtn = document.createElement('button');
     rejectAllBtn.id = 'reject-all';
     rejectAllBtn.setAttribute('data-action', 'reject-all');
     rejectAllBtn.textContent = localeStrings.rejectAll;
-    
+
     const customizeBtn = document.createElement('button');
     customizeBtn.id = 'customize-preferences';
     customizeBtn.setAttribute('data-action', 'customize');
@@ -170,17 +172,17 @@
       customizeBtn.setAttribute('aria-haspopup', 'dialog');
       customizeBtn.setAttribute('aria-controls', 'cookie-modal');
     }
-    
+
     // Append elements
     buttons.appendChild(acceptAllBtn);
     buttons.appendChild(rejectAllBtn);
     buttons.appendChild(customizeBtn);
     banner.appendChild(description);
     banner.appendChild(buttons);
-    
+
     // Apply theme
     banner.classList.add(`theme-${config.theme}`);
-    
+
     // Add to the DOM
     document.body.appendChild(banner);
   }
@@ -196,24 +198,24 @@
     modal.setAttribute('aria-labelledby', 'modal-title');
     modal.setAttribute('aria-hidden', 'true');
     modal.setAttribute('hidden', '');
-    
+
     const title = document.createElement('h2');
     title.id = 'modal-title';
     title.textContent = localeStrings.modal.title;
-    
+
     const form = document.createElement('form');
     form.id = 'cookie-form';
-    
+
     // Cookie categories fieldset - groups all related checkboxes
     const cookieFieldset = document.createElement('fieldset');
     const cookieLegend = document.createElement('legend');
     cookieLegend.textContent = 'Cookie Categories';
     cookieFieldset.appendChild(cookieLegend);
-    
+
     // Functional cookies (always required)
     const functionalDiv = document.createElement('div');
     functionalDiv.className = 'cookie-category';
-    
+
     const functionalLabel = document.createElement('label');
     const functionalCheckbox = document.createElement('input');
     functionalCheckbox.type = 'checkbox';
@@ -222,7 +224,7 @@
     functionalCheckbox.disabled = true;
     functionalLabel.appendChild(functionalCheckbox);
     functionalLabel.appendChild(document.createTextNode(' ' + localeStrings.modal.functional));
-    
+
     functionalDiv.appendChild(functionalLabel);
 
     // Add description if available
@@ -232,11 +234,11 @@
       functionalDesc.textContent = localeStrings.modal.functionalDescription;
       functionalDiv.appendChild(functionalDesc);
     }
-    
+
     // Analytics cookies
     const analyticsDiv = document.createElement('div');
     analyticsDiv.className = 'cookie-category';
-    
+
     const analyticsLabel = document.createElement('label');
     const analyticsCheckbox = document.createElement('input');
     analyticsCheckbox.type = 'checkbox';
@@ -244,7 +246,7 @@
     analyticsCheckbox.checked = config.categories.analytics;
     analyticsLabel.appendChild(analyticsCheckbox);
     analyticsLabel.appendChild(document.createTextNode(' ' + localeStrings.modal.analytics));
-    
+
     analyticsDiv.appendChild(analyticsLabel);
 
     // Add description if available
@@ -254,11 +256,11 @@
       analyticsDesc.textContent = localeStrings.modal.analyticsDescription;
       analyticsDiv.appendChild(analyticsDesc);
     }
-    
+
     // Marketing cookies
     const marketingDiv = document.createElement('div');
     marketingDiv.className = 'cookie-category';
-    
+
     const marketingLabel = document.createElement('label');
     const marketingCheckbox = document.createElement('input');
     marketingCheckbox.type = 'checkbox';
@@ -266,7 +268,7 @@
     marketingCheckbox.checked = config.categories.marketing;
     marketingLabel.appendChild(marketingCheckbox);
     marketingLabel.appendChild(document.createTextNode(' ' + localeStrings.modal.marketing));
-    
+
     marketingDiv.appendChild(marketingLabel);
 
     // Add description if available
@@ -276,41 +278,41 @@
       marketingDesc.textContent = localeStrings.modal.marketingDescription;
       marketingDiv.appendChild(marketingDesc);
     }
-    
+
     // Add all categories to the fieldset
     cookieFieldset.appendChild(functionalDiv);
     cookieFieldset.appendChild(analyticsDiv);
     cookieFieldset.appendChild(marketingDiv);
-    
+
     // Modal actions
     const actions = document.createElement('div');
     actions.className = 'cookie-modal-actions';
-    
+
     const saveBtn = document.createElement('button');
     saveBtn.type = 'submit';
     saveBtn.setAttribute('data-action', 'save');
     saveBtn.textContent = localeStrings.modal.save;
-    
+
     const cancelBtn = document.createElement('button');
     cancelBtn.type = 'button';
     cancelBtn.id = 'close-modal';
     cancelBtn.setAttribute('data-action', 'cancel');
     cancelBtn.textContent = localeStrings.modal.cancel;
-    
+
     actions.appendChild(saveBtn);
     actions.appendChild(cancelBtn);
-    
+
     // Append everything to the form
     form.appendChild(cookieFieldset);
     form.appendChild(actions);
-    
+
     // Append to modal
     modal.appendChild(title);
     modal.appendChild(form);
-    
+
     // Apply theme
     modal.classList.add(`theme-${config.theme}`);
-    
+
     // Add to the DOM
     document.body.appendChild(modal);
   }
@@ -319,7 +321,7 @@
    * Add keyboard event handler to button
    */
   function addKeyboardHandler(button, callback) {
-    button.addEventListener('keydown', (e) => {
+    button.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         callback();
@@ -337,7 +339,7 @@
         const consentData = {
           functional: true,
           analytics: true,
-          marketing: true
+          marketing: true,
         };
         if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
           window.CookieConsent.setConsent(consentData);
@@ -354,18 +356,18 @@
         console.error('[Cookie Banner] Error setting consent:', error);
       }
     };
-    
+
     const acceptBtn = document.getElementById('accept-all');
     acceptBtn.addEventListener('click', acceptAllHandler);
     addKeyboardHandler(acceptBtn, acceptAllHandler);
-    
+
     // Reject all button
     const rejectAllHandler = () => {
       try {
         const consentData = {
           functional: true, // Functional is always required
           analytics: false,
-          marketing: false
+          marketing: false,
         };
         if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
           window.CookieConsent.setConsent(consentData);
@@ -382,35 +384,35 @@
         console.error('[Cookie Banner] Error setting consent:', error);
       }
     };
-    
+
     const rejectBtn = document.getElementById('reject-all');
     rejectBtn.addEventListener('click', rejectAllHandler);
     addKeyboardHandler(rejectBtn, rejectAllHandler);
-    
+
     // Customize button
     const customizeBtn = document.getElementById('customize-preferences');
     if (customizeBtn && config.showModal) {
-      customizeBtn.addEventListener('click', (e) => {
+      customizeBtn.addEventListener('click', e => {
         // Store the element that triggered the modal opening
         previouslyFocusedElement = e.target;
         openModal();
       });
     }
-    
+
     // Modal events (if enabled)
     if (config.showModal) {
       // Close button
       document.getElementById('close-modal').addEventListener('click', closeModal);
-      
+
       // Form submission
-      document.getElementById('cookie-form').addEventListener('submit', (e) => {
+      document.getElementById('cookie-form').addEventListener('submit', e => {
         e.preventDefault();
         try {
           const form = e.target;
           const consentData = {
             functional: true, // Always required
             analytics: form.elements.analytics.checked,
-            marketing: form.elements.marketing.checked
+            marketing: form.elements.marketing.checked,
           };
           if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
             window.CookieConsent.setConsent(consentData);
@@ -428,14 +430,14 @@
           console.error('[Cookie Banner] Error setting consent:', error);
         }
       });
-      
+
       // Close modal on Escape key
-      document.addEventListener('keydown', (e) => {
+      document.addEventListener('keydown', e => {
         if (e.key === 'Escape' && isModalOpen) {
           closeModal();
         }
       });
-      
+
       // Trap focus in modal
       modal.addEventListener('keydown', trapFocus);
     }
@@ -446,28 +448,28 @@
    */
   function openModal() {
     if (!modal) return;
-    
+
     // Store the element that had focus before opening the modal (if not already set)
     if (!previouslyFocusedElement) {
       previouslyFocusedElement = document.activeElement;
     }
-    
+
     // Show the modal
     modal.removeAttribute('hidden');
     modal.setAttribute('aria-hidden', 'false');
     isModalOpen = true;
-    
+
     // Find all focusable elements in the modal
     focusableElements = modal.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
-    
+
     firstFocusableElement = focusableElements[0];
     lastFocusableElement = focusableElements[focusableElements.length - 1];
-    
+
     // Focus the first element
     firstFocusableElement.focus();
-    
+
     // Add overlay
     const overlay = document.createElement('div');
     overlay.id = 'cookie-modal-overlay';
@@ -479,18 +481,18 @@
    */
   function closeModal() {
     if (!modal) return;
-    
+
     // Hide the modal
     modal.setAttribute('hidden', '');
     modal.setAttribute('aria-hidden', 'true');
     isModalOpen = false;
-    
+
     // Remove overlay
     const overlay = document.getElementById('cookie-modal-overlay');
     if (overlay) {
       overlay.remove();
     }
-    
+
     // Return focus to the element that had focus before opening the modal
     if (previouslyFocusedElement) {
       previouslyFocusedElement.focus();
@@ -569,11 +571,11 @@
       const consentData = {
         ...consent,
         functional: true,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
-      
+
       const consentString = JSON.stringify(consentData);
-      
+
       if (config.storageMethod === 'localStorage') {
         localStorage.setItem('cookieConsent', consentString);
       } else {
@@ -582,15 +584,14 @@
         expiryDate.setDate(expiryDate.getDate() + config.expireDays);
         document.cookie = `cookieConsent=${encodeURIComponent(consentString)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
       }
-      
+
       // Dispatch event
       dispatchConsentEvent(consentData);
-      
+
       // Call onConsentChange callback if provided
       if (typeof config.onConsentChange === 'function') {
         config.onConsentChange(consentData);
       }
-      
     } catch (e) {
       console.error('Error setting consent:', e);
     }
@@ -613,20 +614,20 @@
   function dispatchConsentEvent(consentData) {
     const event = new CustomEvent('cookieConsentChanged', {
       detail: consentData,
-      bubbles: true
+      bubbles: true,
     });
     document.dispatchEvent(event);
   }
 
   // Export public API
   window.initCookieBanner = initCookieBanner;
-  
+
   // Only create CookieConsent if it doesn't already exist
   if (!window.CookieConsent) {
     window.CookieConsent = {
       getConsent,
       setConsent,
-      hasConsent
+      hasConsent,
     };
   }
 })();
