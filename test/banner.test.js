@@ -205,7 +205,7 @@ describe('Banner Functionality', () => {
       await window.initCookieBanner({ locale: 'invalid' });
       
       expect(console.warn).toHaveBeenCalledWith(
-        'Locale invalid not found, using default English.'
+        "Invalid locale format 'invalid', using default English."
       );
     });
   });

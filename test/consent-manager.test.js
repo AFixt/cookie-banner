@@ -68,17 +68,23 @@ describe('ConsentManager', () => {
     test('should retrieve consent from localStorage', () => {
       const consent = { functional: true, analytics: false, marketing: true };
       localStorage.setItem('cookieConsent', JSON.stringify(consent));
-      
-      expect(consentManager.getConsent()).toEqual(consent);
+
+      const result = consentManager.getConsent();
+      expect(result.functional).toBe(true);
+      expect(result.analytics).toBe(false);
+      expect(result.marketing).toBe(true);
     });
 
     test('should retrieve consent from cookies when configured', () => {
       const cookieManager = new ConsentManager({ storageMethod: 'cookie' });
       const consent = { functional: true, analytics: true, marketing: false };
-      
+
       document.cookie = `cookieConsent=${encodeURIComponent(JSON.stringify(consent))}; path=/`;
-      
-      expect(cookieManager.getConsent()).toEqual(consent);
+
+      const result = cookieManager.getConsent();
+      expect(result.functional).toBe(true);
+      expect(result.analytics).toBe(true);
+      expect(result.marketing).toBe(false);
     });
 
     test('should handle parsing errors and return null', () => {

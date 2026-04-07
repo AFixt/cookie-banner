@@ -361,7 +361,9 @@ describe('Subdomain Consent Synchronization', () => {
       expect(html).toContain('<!DOCTYPE html>');
       expect(html).toContain('Cookie Consent Sync');
       expect(html).toContain('example.com');
-      expect(html).toContain("['app', 'www', 'shop']");
+      expect(html).toContain('app.example.com');
+      expect(html).toContain('shop.example.com');
+      expect(html).toContain('ALLOWED_DOMAINS');
     });
   });
 
