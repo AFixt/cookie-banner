@@ -33,6 +33,14 @@
   let syncInterval = null;
 
   /**
+   * Get the current hostname (separated for testability)
+   * @returns {string} The current hostname
+   */
+  let getCurrentHostname = function() {
+    return window.location.hostname;
+  };
+
+  /**
    * Initialize subdomain consent synchronization
    * @param {SubdomainSyncConfig} userConfig - Configuration options
    * @returns {void}
@@ -67,7 +75,7 @@
    * @returns {boolean} Whether the current domain is allowed
    */
   function isAllowedDomain() {
-    const currentDomain = window.location.hostname;
+    const currentDomain = getCurrentHostname();
     const primaryDomain = config.primaryDomain;
     
     // Check if we're on the primary domain
@@ -172,7 +180,7 @@
     
     const message = {
       type: 'CONSENT_SYNC_REQUEST',
-      domain: window.location.hostname
+      domain: getCurrentHostname()
     };
     
     syncFrame.contentWindow.postMessage(message, `https://${config.primaryDomain}`);
@@ -191,7 +199,7 @@
       const message = {
         type: 'CONSENT_SYNC_UPDATE',
         consent: consent,
-        domain: window.location.hostname
+        domain: getCurrentHostname()
       };
       
       syncFrame.contentWindow.postMessage(message, `https://${config.primaryDomain}`);
@@ -279,7 +287,7 @@
         },
         body: JSON.stringify({
           consent: consent,
-          domain: window.location.hostname
+          domain: getCurrentHostname()
         })
       });
     } catch (error) {
@@ -382,7 +390,7 @@
     return {
       enabled: config.enabled,
       primaryDomain: config.primaryDomain,
-      currentDomain: window.location.hostname,
+      currentDomain: getCurrentHostname(),
       isAllowed: isAllowedDomain(),
       syncMethod: config.usePostMessage ? 'postMessage' : 'api',
       isActive: !!(syncFrame || syncInterval)
@@ -395,7 +403,9 @@
       init: initSubdomainSync,
       stop: stopSubdomainSync,
       getStatus: getSyncStatus,
-      generateSyncHTML: generateSyncEndpointHTML
+      generateSyncHTML: generateSyncEndpointHTML,
+      _getCurrentHostname: getCurrentHostname,
+      _setGetHostname: function(fn) { getCurrentHostname = fn; }
     };
   }
 
