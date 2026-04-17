@@ -411,7 +411,7 @@ function readFileSync(filePath, options) {
       })();
     `;
   }
-  
+
   return mockFiles[filePath] || '';
 }
 

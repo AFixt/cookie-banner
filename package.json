@@ -1,6 +1,6 @@
 {
   "name": "@afixt/accessible-cookie-banner",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "A customizable, WCAG-conformant cookie consent banner with GDPR, CCPA compliance",
   "type": "module",
   "main": "dist/cookie-banner.js",
@@ -47,7 +47,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore CHANGELOG.md",
+    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore CHANGELOG.md --ignore dist",
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:css:fix": "stylelint 'src/**/*.css' --fix",
     "lint:cpd": "jscpd . --config .jscpd.json",

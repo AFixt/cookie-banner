@@ -4,22 +4,22 @@ A customizable, WCAG-conformant component designed to provide clear, user-friend
 
 ## Features
 
-* **Accessible by Design**
-  * Complies with WCAG 2.2 AA
-  * Fully operable via keyboard
-  * Screen reader-friendly (ARIA roles, live regions, and focus management)
-* **Consent Management**
-  * Supports "Accept All", "Reject All", and "Customize" buttons
-  * Optional granular controls for categories (e.g., functional, analytics, marketing)
-* **Compliance Support**
-  * GDPR-ready with audit logging hooks
-  * CCPA opt-out support
-* **Customizable**
-  * Theming via CSS variables
-  * Optionally include a full preferences modal
-* **Internationalization (i18n)**
-  * Text fully configurable in JSON or via locale files
-  * RTL (Right-To-Left) layout support
+- **Accessible by Design**
+  - Complies with WCAG 2.2 AA
+  - Fully operable via keyboard
+  - Screen reader-friendly (ARIA roles, live regions, and focus management)
+- **Consent Management**
+  - Supports "Accept All", "Reject All", and "Customize" buttons
+  - Optional granular controls for categories (e.g., functional, analytics, marketing)
+- **Compliance Support**
+  - GDPR-ready with audit logging hooks
+  - CCPA opt-out support
+- **Customizable**
+  - Theming via CSS variables
+  - Optionally include a full preferences modal
+- **Internationalization (i18n)**
+  - Text fully configurable in JSON or via locale files
+  - RTL (Right-To-Left) layout support
 
 ## Installation
 
@@ -48,10 +48,10 @@ npm install @afixt/accessible-cookie-banner
 window.CookieBanner.init({
   locale: 'en',
   theme: 'light', // or 'dark'
-  onConsentChange: (consent) => {
+  onConsentChange: consent => {
     // Use to enable/disable analytics or ad scripts
     console.log('Consent changed:', consent);
-    
+
     // Example: Enable Google Analytics if analytics consent is given
     if (consent.analytics) {
       // Initialize analytics
@@ -81,11 +81,11 @@ CookieBanner.init({
   categories: {
     functional: true, // Always required
     analytics: false, // Default state
-    marketing: false  // Default state
+    marketing: false, // Default state
   },
-  onConsentChange: (consent) => {
+  onConsentChange: consent => {
     console.log('Consent changed:', consent);
-  }
+  },
 });
 ```
 
@@ -106,14 +106,14 @@ console.log(consent);
 ### Listening for Consent Changes
 
 ```javascript
-document.addEventListener('cookieConsentChanged', (e) => {
+document.addEventListener('cookieConsentChanged', e => {
   console.log('Consent changed:', e.detail);
-  
+
   // Enable/disable scripts based on consent
   if (e.detail.analytics) {
     // Initialize analytics
   }
-  
+
   if (e.detail.marketing) {
     // Initialize marketing scripts
   }
@@ -128,7 +128,7 @@ The banner comes with three built-in themes: `light`, `dark`, and `high-contrast
 
 ```javascript
 CookieBanner.init({
-  theme: 'dark' // 'light', 'dark', or 'high-contrast'
+  theme: 'dark', // 'light', 'dark', or 'high-contrast'
 });
 ```
 
@@ -150,7 +150,7 @@ You can set the banner language during initialization:
 
 ```javascript
 CookieBanner.init({
-  locale: 'fr' // Uses locales/fr.json
+  locale: 'fr', // Uses locales/fr.json
 });
 ```
 
@@ -158,7 +158,7 @@ To add a new language, create a new JSON file in the `locales` directory with th
 
 ## Project Structure
 
-```
+```text
 accessible-cookie-banner/
 ├── dist/                    # Distribution files
 │   ├── cookie-banner.js     # UMD build
@@ -185,15 +185,15 @@ accessible-cookie-banner/
 
 The package includes various examples to help you implement the cookie banner in different environments:
 
-* **Basic Usage**: Simple implementation with vanilla JavaScript
-* **Framework Integration**: 
-  * [React](src/examples/react-example.jsx)
-  * [Vue](src/examples/vue-example.vue)
-  * [Angular](src/examples/angular-example.ts)
-* **TypeScript**: [Type-safe implementation](src/examples/typescript-example.ts)
-* **Accessibility Features**:
-  * [High Contrast Theme](src/examples/high-contrast.html)
-  * [RTL Support](src/examples/rtl-support.html)
+- **Basic Usage**: Simple implementation with vanilla JavaScript
+- **Framework Integration**:
+  - [React](src/examples/react-example.jsx)
+  - [Vue](src/examples/vue-example.vue)
+  - [Angular](src/examples/angular-example.ts)
+- **TypeScript**: [Type-safe implementation](src/examples/typescript-example.ts)
+- **Accessibility Features**:
+  - [High Contrast Theme](src/examples/high-contrast.html)
+  - [RTL Support](src/examples/rtl-support.html)
 
 ### Running Examples Locally
 
@@ -206,7 +206,7 @@ To view the examples in your browser:
    npm run build
 ```
 
-2. **Start the development server:**
+1. **Start the development server:**
 
 ```bash
    npm start
@@ -214,13 +214,13 @@ To view the examples in your browser:
 
 This will build the project and start a local HTTP server at `http://localhost:8080`
 
-3. **View examples:**
+1. **View examples:**
 
-* Main examples index: `http://localhost:8080/dist/examples/`
-* Vanilla JS example: `http://localhost:8080/dist/examples/vanilla-js.html`
-* High contrast theme: `http://localhost:8080/dist/examples/high-contrast.html`
-* RTL support: `http://localhost:8080/dist/examples/rtl-support.html`
-* Custom categories: `http://localhost:8080/dist/examples/custom-categories.html`
+- Main examples index: `http://localhost:8080/dist/examples/`
+- Vanilla JS example: `http://localhost:8080/dist/examples/vanilla-js.html`
+- High contrast theme: `http://localhost:8080/dist/examples/high-contrast.html`
+- RTL support: `http://localhost:8080/dist/examples/rtl-support.html`
+- Custom categories: `http://localhost:8080/dist/examples/custom-categories.html`
 
 **Note:** If you encounter issues with ad blockers blocking `cookie-banner.min.js`, either disable your ad blocker for localhost or use the unminified version by changing script references from `cookie-banner.min.js` to `cookie-banner.js`.
 
@@ -228,27 +228,27 @@ See the [examples directory](src/examples/) for more detailed examples and imple
 
 ## Accessibility Features
 
-* Proper ARIA roles, states, and properties
-* Focus management in the modal dialog
-* Visible focus indicators
-* Keyboard navigation support
-* High-contrast theme option
-* Readable text with sufficient color contrast
-* No time limits or auto-dismissal
+- Proper ARIA roles, states, and properties
+- Focus management in the modal dialog
+- Visible focus indicators
+- Keyboard navigation support
+- High-contrast theme option
+- Readable text with sufficient color contrast
+- No time limits or auto-dismissal
 
 ## Privacy & Compliance Notes
 
-* GDPR: Includes "Reject All" button and granular consent options
-* CCPA: Can be configured to include "Do Not Sell My Info"
-* Audit logging: Emits consent change events to hook into audit systems
-* Time-to-live: Consent expires after the specified period (default: 365 days)
+- GDPR: Includes "Reject All" button and granular consent options
+- CCPA: Can be configured to include "Do Not Sell My Info"
+- Audit logging: Emits consent change events to hook into audit systems
+- Time-to-live: Consent expires after the specified period (default: 365 days)
 
 ## Browser Support
 
 Supports all modern browsers, including:
 
-* Chrome, Firefox, Safari, Edge (latest versions)
-* IE11 with appropriate polyfills
+- Chrome, Firefox, Safari, Edge (latest versions)
+- IE11 with appropriate polyfills
 
 ## Development
 

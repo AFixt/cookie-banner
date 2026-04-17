@@ -4,16 +4,16 @@
  */
 
 /* Base styles */
-@import "base/_variables.css";
+@import 'base/_variables.css';
 
 /* Mixins */
-@import "mixins/_buttons.css";
-@import "mixins/_layout.css";
+@import 'mixins/_buttons.css';
+@import 'mixins/_layout.css';
 
 /* Components */
-@import "components/_banner.css";
-@import "components/_modal.css";
+@import 'components/_banner.css';
+@import 'components/_modal.css';
 
 /* Themes */
-@import "themes/_dark.css";
-@import "themes/_high-contrast.css";
+@import 'themes/_dark.css';
+@import 'themes/_high-contrast.css';

@@ -44,26 +44,26 @@ When submitting a pull request:
 
 1. Clone the repository:
 
-   ```
+   ```bash
    git clone https://github.com/your-username/accessible-cookie-banner.git
    cd accessible-cookie-banner
    ```
 
 2. Install dependencies:
 
-   ```
+   ```bash
    npm install
    ```
 
 3. Start the development environment:
 
-   ```
+   ```bash
    npm run dev
    ```
 
 ## Project Structure
 
-```
+```text
 accessible-cookie-banner/
 ├── dist/                    # Distribution files
 ├── src/                     # Source code
@@ -79,13 +79,13 @@ accessible-cookie-banner/
 
 Run tests with:
 
-```
+```bash
 npm test
 ```
 
 Run tests with coverage:
 
-```
+```bash
 npm run test:coverage
 ```
 
@@ -106,7 +106,7 @@ See [ACCESSIBILITY.md](ACCESSIBILITY.md) for detailed accessibility requirements
 
 Build the project with:
 
-```
+```bash
 npm run build
 ```
 

@@ -34,7 +34,7 @@ Or, you can view the compiled examples in the `dist/examples/` directory after r
 
 ```html
 <!-- Include the CSS -->
-<link rel="stylesheet" href="path/to/banner.css">
+<link rel="stylesheet" href="path/to/banner.css" />
 
 <!-- Include the JavaScript -->
 <script src="path/to/cookie-banner.min.js"></script>
@@ -44,14 +44,14 @@ Or, you can view the compiled examples in the `dist/examples/` directory after r
   window.CookieBanner.init({
     locale: 'en',
     theme: 'light',
-    onConsentChange: (consent) => {
+    onConsentChange: consent => {
       console.log('Consent changed:', consent);
-      
+
       // Enable/disable functionality based on consent
       if (consent.analytics) {
         // Initialize analytics
       }
-    }
+    },
   });
 </script>
 ```
@@ -66,9 +66,9 @@ import 'accessible-cookie-banner/dist/banner.css';
 CookieBanner.init({
   locale: 'en',
   theme: 'light',
-  onConsentChange: (consent) => {
+  onConsentChange: consent => {
     console.log('Consent changed:', consent);
-  }
+  },
 });
 ```
 
@@ -77,28 +77,29 @@ CookieBanner.init({
 ```javascript
 CookieBanner.init({
   // Required options
-  locale: 'en',                     // Locale code (en, fr, es, etc.)
-  
+  locale: 'en', // Locale code (en, fr, es, etc.)
+
   // Appearance options
-  theme: 'light',                   // 'light', 'dark', or 'high-contrast'
-  showModal: true,                  // Whether to show the preferences modal
-  
+  theme: 'light', // 'light', 'dark', or 'high-contrast'
+  showModal: true, // Whether to show the preferences modal
+
   // Storage options
-  storageMethod: 'localStorage',    // 'localStorage' or 'cookie'
-  expireDays: 365,                  // Days until consent expires
-  
+  storageMethod: 'localStorage', // 'localStorage' or 'cookie'
+  expireDays: 365, // Days until consent expires
+
   // Consent categories with default values
   categories: {
-    functional: true,               // Always required
-    analytics: false,               // Default state
-    marketing: false                // Default state
+    functional: true, // Always required
+    analytics: false, // Default state
+    marketing: false, // Default state
     // Add custom categories here
   },
-  
+
   // Callbacks
-  onConsentChange: (consent) => {   // Called when consent changes
+  onConsentChange: consent => {
+    // Called when consent changes
     console.log('Consent changed:', consent);
-  }
+  },
 });
 ```
 
@@ -120,9 +121,9 @@ if (CookieBanner.hasConsent('analytics')) {
 }
 ```
 
-6. **Respect user choices**: Once a user has made their choice, respect it and do not show the banner again until consent expires.
+1. **Respect user choices**: Once a user has made their choice, respect it and do not show the banner again until consent expires.
 
-7. **Provide a way to update choices**: Add a link in your footer or privacy policy to allow users to update their consent preferences.
+2. **Provide a way to update choices**: Add a link in your footer or privacy policy to allow users to update their consent preferences.
 
 ## Getting Help
 

@@ -17,9 +17,9 @@ class ConsentManager {
     this.options = {
       storageMethod: options.storageMethod || 'localStorage',
       expireDays: options.expireDays || 365,
-      onConsentChange: options.onConsentChange || null
+      onConsentChange: options.onConsentChange || null,
     };
-    
+
     this.consentKey = 'cookieConsent';
   }
 
@@ -52,11 +52,11 @@ class ConsentManager {
     const consentData = {
       ...consent,
       functional: true,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-    
+
     const consentString = JSON.stringify(consentData);
-    
+
     try {
       if (this.options.storageMethod === 'localStorage') {
         localStorage.setItem(this.consentKey, consentString);
@@ -70,10 +70,10 @@ class ConsentManager {
       console.error('Error setting consent:', e);
       return null;
     }
-    
+
     // Dispatch event
     this.dispatchConsentEvent(consentData);
-    
+
     // Call onConsentChange callback if provided
     if (typeof this.options.onConsentChange === 'function') {
       try {
@@ -82,7 +82,7 @@ class ConsentManager {
         console.error('Error in onConsentChange callback:', e);
       }
     }
-    
+
     return consentData;
   }
 
@@ -104,7 +104,7 @@ class ConsentManager {
     try {
       const event = new CustomEvent('cookieConsentChanged', {
         detail: consentData,
-        bubbles: true
+        bubbles: true,
       });
       document.dispatchEvent(event);
     } catch (e) {
@@ -119,11 +119,11 @@ class ConsentManager {
   isConsentExpired() {
     const consent = this.getConsent();
     if (!consent || !consent.timestamp) return true;
-    
+
     const consentDate = new Date(consent.timestamp);
     const expiryDate = new Date(consentDate);
     expiryDate.setDate(expiryDate.getDate() + this.options.expireDays);
-    
+
     return new Date() > expiryDate;
   }
 

@@ -6,15 +6,15 @@
   --bg-primary: #333333;
   --text-primary: #f8f9fa;
   --border-primary: #555555;
-  
+
   --button-primary-bg: #0d6efd;
   --button-primary-text: #ffffff;
   --button-primary-hover-bg: color-mix(in srgb, #0d6efd 90%, white);
-  
+
   --button-secondary-bg: #444444;
   --button-secondary-text: #f8f9fa;
   --button-secondary-border: #666666;
   --button-secondary-hover-bg: color-mix(in srgb, #444444 90%, white);
-  
+
   --focus-outline: 3px solid #4d90fe;
 }
