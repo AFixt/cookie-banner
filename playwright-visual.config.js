@@ -9,18 +9,19 @@ export default {
   testMatch: '**/visual-*.test.js',
   timeout: 60 * 1000, // Longer timeout for screenshot operations
   // Remove platform suffix for cross-platform compatibility, keep project name
-  snapshotPathTemplate: '{testDir}/{testFileDir}/__snapshots__/{testFileName}-snapshots/{projectName}/{arg}{ext}',
+  snapshotPathTemplate:
+    '{testDir}/{testFileDir}/__snapshots__/{testFileName}-snapshots/{projectName}/{arg}{ext}',
   expect: {
     timeout: 10000, // Longer timeout for visual comparisons
     // Configure visual comparison thresholds for cross-platform compatibility
     toMatchSnapshot: {
       threshold: 0.35,
-      maxDiffPixels: 25000
+      maxDiffPixels: 25000,
     },
     toHaveScreenshot: {
       threshold: 0.35, // Allow 35% difference for font rendering variations
-      maxDiffPixels: 25000 // Allow more pixel differences for cross-platform font rendering
-    }
+      maxDiffPixels: 25000, // Allow more pixel differences for cross-platform font rendering
+    },
   },
   fullyParallel: false, // Run visual tests sequentially for consistency
   forbidOnly: !!process.env.CI,
@@ -28,7 +29,7 @@ export default {
   workers: 1, // Single worker for consistent rendering
   reporter: [
     ['html', { outputFolder: 'playwright-visual-report' }],
-    ['junit', { outputFile: 'test-results/visual-regression-results.xml' }]
+    ['junit', { outputFile: 'test-results/visual-regression-results.xml' }],
   ],
   use: {
     // Disable animations for consistent screenshots
@@ -42,31 +43,33 @@ export default {
     // Wait for network to be idle for consistent rendering
     waitForLoadState: 'networkidle',
     // Consistent font rendering
-    fontFamily: 'Arial, sans-serif'
+    fontFamily: 'Arial, sans-serif',
   },
 
   projects: [
     {
       name: 'Desktop Chrome',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         reducedMotion: 'reduce',
         // Force consistent font rendering
-        fontFamily: 'Arial, sans-serif'
+        fontFamily: 'Arial, sans-serif',
       },
     },
     {
       name: 'Mobile Chrome',
-      use: { 
+      use: {
         ...devices['Pixel 5'],
-        reducedMotion: 'reduce'
+        reducedMotion: 'reduce',
       },
-    }
+    },
   ],
 
-  webServer: process.env.CI ? undefined : {
-    command: 'npm run serve',
-    port: 8080,
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: process.env.CI
+    ? undefined
+    : {
+        command: 'npm run serve',
+        port: 8080,
+        reuseExistingServer: !process.env.CI,
+      },
 };

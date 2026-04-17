@@ -65,7 +65,7 @@ if (typeof window !== 'undefined') {
      *   onConsentChange: (consent) => console.log('Consent changed:', consent)
      * });
      */
-    init: (options) => {
+    init: options => {
       // Use function wrapper to ensure initCookieBanner is resolved at call time
       // This fixes timing issues in ESM environments where banner.js IIFE may not
       // have executed by the time this module is evaluated
@@ -87,7 +87,7 @@ if (typeof window !== 'undefined') {
      *   // Analytics cookies are allowed
      * }
      */
-    getConsent: () => window.CookieConsent ? window.CookieConsent.getConsent() : null,
+    getConsent: () => (window.CookieConsent ? window.CookieConsent.getConsent() : null),
 
     /**
      * Set consent status
@@ -101,7 +101,7 @@ if (typeof window !== 'undefined') {
      *   marketing: false
      * });
      */
-    setConsent: (consent) => window.CookieConsent ? window.CookieConsent.setConsent(consent) : null,
+    setConsent: consent => (window.CookieConsent ? window.CookieConsent.setConsent(consent) : null),
 
     /**
      * Check if a specific category has consent
@@ -114,7 +114,8 @@ if (typeof window !== 'undefined') {
      *   // Load analytics scripts
      * }
      */
-    hasConsent: (category) => window.CookieConsent ? window.CookieConsent.hasConsent(category) : false
+    hasConsent: category =>
+      window.CookieConsent ? window.CookieConsent.hasConsent(category) : false,
   };
 }
 

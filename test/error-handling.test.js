@@ -5,24 +5,25 @@
 describe('Error Handling', () => {
   let originalConsoleError;
   let originalConsoleWarn;
-  let originalLocalStorage;
   let mockConsentManager;
 
   beforeEach(() => {
     // Store original console methods
     originalConsoleError = console.error;
     originalConsoleWarn = console.warn;
-    
+
     // Mock console methods to track calls
     console.error = jest.fn();
     console.warn = jest.fn();
     console.log = jest.fn();
-    
+
     // Clear DOM and storage
     document.body.innerHTML = '';
-    if (localStorage.clear) localStorage.clear();
+    if (localStorage.clear) {
+      localStorage.clear();
+    }
     document.cookie = '';
-    
+
     // Reset localStorage to original mock state if it's a jest mock
     if (localStorage.store) {
       localStorage.store = {};
@@ -33,7 +34,7 @@ describe('Error Handling', () => {
       localStorage.removeItem.mockClear();
       localStorage.clear.mockClear();
     }
-    
+
     // Mock consent manager
     mockConsentManager = {
       getConsent: jest.fn(),
@@ -41,9 +42,9 @@ describe('Error Handling', () => {
       hasConsent: jest.fn(),
       clearConsent: jest.fn(),
       isConsentExpired: jest.fn(),
-      dispatchConsentEvent: jest.fn()
+      dispatchConsentEvent: jest.fn(),
     };
-    
+
     window.CookieConsent = mockConsentManager;
   });
 
@@ -51,13 +52,13 @@ describe('Error Handling', () => {
     // Restore original console methods
     console.error = originalConsoleError;
     console.warn = originalConsoleWarn;
-    
+
     // Clean up globals
     delete window.CookieConsent;
     delete window.initCookieBanner;
     delete window.CookieBanner;
     delete window.initCookieBlocker;
-    
+
     // Reset modules
     jest.resetModules();
   });
@@ -69,7 +70,6 @@ describe('Error Handling', () => {
       ConsentManager = require('../src/js/consent-manager');
     });
 
-
     test('should handle invalid JSON in localStorage', () => {
       localStorage.setItem('cookieConsent', '{invalid json}');
 
@@ -77,34 +77,28 @@ describe('Error Handling', () => {
       const result = manager.getConsent();
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        'Error retrieving consent:',
-        expect.any(Error)
-      );
+      expect(console.error).toHaveBeenCalledWith('Error retrieving consent:', expect.any(Error));
     });
 
     test('should handle cookie parsing errors', () => {
       const manager = new ConsentManager({ storageMethod: 'cookie' });
-      
+
       // Set malformed cookie
       const originalCookieDescriptor = Object.getOwnPropertyDescriptor(document, 'cookie');
-      
+
       // Delete the current property first
       delete document.cookie;
-      
+
       Object.defineProperty(document, 'cookie', {
         get: () => 'cookieConsent={malformed',
         set: () => {},
-        configurable: true
+        configurable: true,
       });
 
       const result = manager.getConsent();
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        'Error retrieving consent:',
-        expect.any(Error)
-      );
+      expect(console.error).toHaveBeenCalledWith('Error retrieving consent:', expect.any(Error));
 
       // Restore
       delete document.cookie;
@@ -115,30 +109,27 @@ describe('Error Handling', () => {
 
     test('should handle cookie setting errors', () => {
       const manager = new ConsentManager({ storageMethod: 'cookie' });
-      
+
       // Store original descriptor
       const originalCookieDescriptor = Object.getOwnPropertyDescriptor(document, 'cookie');
-      
+
       // Delete the current property first
       delete document.cookie;
-      
+
       // Mock cookie setter to throw
       Object.defineProperty(document, 'cookie', {
         set: jest.fn().mockImplementation(() => {
           throw new Error('Cookie setting failed');
         }),
         get: () => '',
-        configurable: true
+        configurable: true,
       });
 
       const result = manager.setConsent({ analytics: true });
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        'Error setting consent:',
-        expect.any(Error)
-      );
-      
+      expect(console.error).toHaveBeenCalledWith('Error setting consent:', expect.any(Error));
+
       // Restore
       delete document.cookie;
       if (originalCookieDescriptor) {
@@ -153,7 +144,7 @@ describe('Error Handling', () => {
       });
 
       const manager = new ConsentManager();
-      
+
       // Should not throw
       expect(() => {
         manager.dispatchConsentEvent({ analytics: true });
@@ -173,7 +164,7 @@ describe('Error Handling', () => {
       });
 
       const manager = new ConsentManager({ onConsentChange: errorCallback });
-      
+
       // Should not throw
       expect(() => {
         manager.setConsent({ analytics: true });
@@ -215,7 +206,7 @@ describe('Error Handling', () => {
 
       try {
         await window.initCookieBanner();
-      } catch (error) {
+      } catch {
         // Expected to catch the error
       }
 
@@ -237,7 +228,7 @@ describe('Error Handling', () => {
 
       try {
         await window.initCookieBanner();
-      } catch (error) {
+      } catch {
         // Expected to catch the error
       }
 
@@ -259,7 +250,7 @@ describe('Error Handling', () => {
 
       try {
         await window.initCookieBanner();
-      } catch (error) {
+      } catch {
         // Expected to catch the error
       }
 
@@ -280,7 +271,7 @@ describe('Error Handling', () => {
       await window.initCookieBanner();
 
       const acceptBtn = document.querySelector('[data-action="accept-all"]');
-      
+
       // Should not throw
       expect(() => {
         acceptBtn.click();
@@ -295,7 +286,9 @@ describe('Error Handling', () => {
 
       // Remove banner elements
       const banner = document.querySelector('[role="region"]');
-      if (banner) banner.remove();
+      if (banner) {
+        banner.remove();
+      }
 
       // Should not throw when trying to interact with missing elements
       expect(() => {
@@ -321,7 +314,7 @@ describe('Error Handling', () => {
       mockConsentManager.hasConsent.mockReturnValue(true);
 
       const consentEvent = new CustomEvent('cookieConsentChanged', {
-        detail: { analytics: true }
+        detail: { analytics: true },
       });
 
       // Should not throw
@@ -334,10 +327,10 @@ describe('Error Handling', () => {
 
     test('should handle DOM override errors', () => {
       const originalCreateElement = document.createElement;
-      
+
       // Mock createElement to throw on subsequent calls
       let callCount = 0;
-      document.createElement = jest.fn().mockImplementation((tagName) => {
+      document.createElement = jest.fn().mockImplementation(tagName => {
         callCount++;
         if (callCount > 1 && tagName === 'script') {
           throw new Error('createElement failed');
@@ -387,14 +380,14 @@ describe('Error Handling', () => {
     test('should handle pattern matching errors', () => {
       // Create script with problematic URL
       const script = document.createElement('script');
-      
+
       // Mock URL that might cause regex errors
       Object.defineProperty(script, 'src', {
         get: () => {
           throw new Error('URL access failed');
         },
         set: () => {},
-        configurable: true
+        configurable: true,
       });
 
       // Should not throw
@@ -404,18 +397,13 @@ describe('Error Handling', () => {
     });
   });
 
-  describe('Integration Error Handling', () => {
-  });
+  describe('Integration Error Handling', () => {});
 
-  describe('Network Error Handling', () => {
-  });
+  describe('Network Error Handling', () => {});
 
-  describe('Browser Compatibility Error Handling', () => {
-  });
+  describe('Browser Compatibility Error Handling', () => {});
 
-  describe('Memory and Performance Error Handling', () => {
-  });
+  describe('Memory and Performance Error Handling', () => {});
 
-  describe('Recovery and Cleanup', () => {
-  });
+  describe('Recovery and Cleanup', () => {});
 });

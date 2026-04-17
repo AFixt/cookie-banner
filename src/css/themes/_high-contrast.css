@@ -6,15 +6,15 @@
   --bg-primary: #000000;
   --text-primary: #ffffff;
   --border-primary: #ffffff;
-  
+
   --button-primary-bg: #ffff00;
   --button-primary-text: #000000;
   --button-primary-hover-bg: #e6e600;
-  
+
   --button-secondary-bg: #000000;
   --button-secondary-text: #ffffff;
   --button-secondary-border: #ffffff;
   --button-secondary-hover-bg: #333333;
-  
+
   --focus-outline: 3px solid #ffff00;
 }

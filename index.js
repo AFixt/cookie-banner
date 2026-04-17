@@ -1,9 +1,9 @@
 /**
  * Main entry point for the accessible cookie banner library
- * 
+ *
  * This file is used as the CommonJS entry point for the package.
  * The actual implementation is built to dist/cookie-banner.js during the build process.
- * 
+ *
  * Note: The dist folder is created during 'npm run build' and contains the bundled code.
  * For development, use 'npm run dev' to watch and rebuild on changes.
  */

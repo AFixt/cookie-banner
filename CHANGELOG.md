@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.1](https://github.com/AFixt/cookie-banner/compare/v1.1.0...v1.1.1) (2026-04-17)
+
+
+### Features
+
+* **a11y:** Integrate @afixt/a11y-assert for accessibility testing in UI tests ([0b40a8c](https://github.com/AFixt/cookie-banner/commit/0b40a8cc55fa112e89754b50b69db4f894223c24)), closes [#34](https://github.com/AFixt/cookie-banner/issues/34)
+
 ## [1.1.0](https://github.com/AFixt/cookie-banner/compare/v1.0.7...v1.1.0) (2026-04-07)
 
 
