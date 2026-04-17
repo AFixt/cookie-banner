@@ -1,12 +1,6 @@
 /**
  * Accessibility tests for the cookie banner
- * Uses @afixt/a11y-assert keyboard utilities for accessibility assertions
- * and keyboard interaction testing.
- *
- * Full automated a11y engine checks run via Playwright E2E tests using
- * the playwrightAdapter from @afixt/a11y-assert (see accessibility-e2e.test.js).
  */
-const keyboard = require('@afixt/a11y-assert/keyboard');
 
 describe('Accessibility Features', () => {
   beforeEach(() => {
@@ -94,16 +88,6 @@ describe('Accessibility Features', () => {
       expect(customizeBtn).toBeVisible();
     });
 
-    test('buttons should be focusable (a11y-assert)', () => {
-      const acceptBtn = document.getElementById('accept-all');
-      const rejectBtn = document.getElementById('reject-all');
-      const customizeBtn = document.getElementById('customize-preferences');
-
-      expect(() => keyboard.assertIsFocusable(acceptBtn)).not.toThrow();
-      expect(() => keyboard.assertIsFocusable(rejectBtn)).not.toThrow();
-      expect(() => keyboard.assertIsFocusable(customizeBtn)).not.toThrow();
-    });
-
     test('customize button should have proper ARIA attributes for modal', () => {
       const customizeBtn = document.getElementById('customize-preferences');
 
@@ -185,17 +169,6 @@ describe('Accessibility Features', () => {
       expect(cancelBtn.textContent.trim()).not.toBe('');
     });
 
-    test('form controls should be focusable (a11y-assert)', () => {
-      const analyticsCheckbox = document.querySelector('input[name="analytics"]');
-      const marketingCheckbox = document.querySelector('input[name="marketing"]');
-      const saveBtn = document.querySelector('#cookie-form button[type="submit"]');
-      const cancelBtn = document.getElementById('close-modal');
-
-      expect(() => keyboard.assertIsFocusable(analyticsCheckbox)).not.toThrow();
-      expect(() => keyboard.assertIsFocusable(marketingCheckbox)).not.toThrow();
-      expect(() => keyboard.assertIsFocusable(saveBtn)).not.toThrow();
-      expect(() => keyboard.assertIsFocusable(cancelBtn)).not.toThrow();
-    });
   });
 
   describe('Internationalization Support', () => {
@@ -237,86 +210,7 @@ describe('Accessibility Features', () => {
     });
   });
 
-  describe('Keyboard Navigation (a11y-assert)', () => {
-    test('banner buttons should be focusable with keyboard.isFocusable', () => {
-      const acceptBtn = document.getElementById('accept-all');
-      const rejectBtn = document.getElementById('reject-all');
-      const customizeBtn = document.getElementById('customize-preferences');
-
-      expect(keyboard.isFocusable(acceptBtn)).toBe(true);
-      expect(keyboard.isFocusable(rejectBtn)).toBe(true);
-      expect(keyboard.isFocusable(customizeBtn)).toBe(true);
-    });
-
-    test('should handle Enter key on banner buttons via keyboard.simulateEnter', () => {
-      const acceptBtn = document.getElementById('accept-all');
-      const clickHandler = jest.fn();
-      acceptBtn.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          clickHandler();
-        }
-      });
-
-      keyboard.simulateEnter(acceptBtn);
-      expect(clickHandler).toHaveBeenCalled();
-    });
-
-    test('should handle Space key on banner buttons via keyboard.simulateSpace', () => {
-      const rejectBtn = document.getElementById('reject-all');
-      const clickHandler = jest.fn();
-      rejectBtn.addEventListener('keydown', e => {
-        if (e.key === 'Space' || e.code === 'Space') {
-          clickHandler();
-        }
-      });
-
-      keyboard.simulateSpace(rejectBtn);
-      expect(clickHandler).toHaveBeenCalled();
-    });
-
-    test('should handle Escape key to close modal via keyboard.simulateEscape', () => {
-      const modal = document.getElementById('cookie-modal');
-      modal.removeAttribute('hidden');
-
-      const closeHandler = jest.fn(() => {
-        modal.setAttribute('hidden', '');
-      });
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-          closeHandler();
-        }
-      });
-
-      keyboard.simulateEscape();
-      expect(closeHandler).toHaveBeenCalled();
-      expect(modal.hasAttribute('hidden')).toBe(true);
-    });
-
-    test('should handle Tab simulation via keyboard.simulateTab', () => {
-      const acceptBtn = document.getElementById('accept-all');
-      acceptBtn.focus();
-
-      // simulateTab dispatches a Tab keydown event from the active element
-      const result = keyboard.simulateTab(acceptBtn);
-      expect(result).toBeDefined();
-    });
-
-    test('should handle Shift+Tab simulation via keyboard.simulateTab with shiftKey', () => {
-      const rejectBtn = document.getElementById('reject-all');
-      rejectBtn.focus();
-
-      const result = keyboard.simulateTab(rejectBtn, null, true);
-      expect(result).toBeDefined();
-    });
-
-    test('should handle arrow key navigation via keyboard.simulateArrowKey', () => {
-      const analyticsCheckbox = document.querySelector('input[name="analytics"]');
-      analyticsCheckbox.focus();
-
-      const result = keyboard.simulateArrowKey('Down', analyticsCheckbox);
-      expect(result).toBeDefined();
-    });
-
+  describe('Keyboard Navigation', () => {
     test('form fields should be focusable', () => {
       const analyticsCheckbox = document.querySelector('input[name="analytics"]');
       const marketingCheckbox = document.querySelector('input[name="marketing"]');

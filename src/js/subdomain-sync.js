@@ -63,11 +63,20 @@
   }
 
   /**
+   * Resolve the current hostname. Tests may override by setting
+   * `currentHostname` in the config passed to `init`.
+   * @returns {string}
+   */
+  function getCurrentHostname() {
+    return config.currentHostname || window.location.hostname;
+  }
+
+  /**
    * Check if current domain is allowed for sync
    * @returns {boolean} Whether the current domain is allowed
    */
   function isAllowedDomain() {
-    const currentDomain = window.location.hostname;
+    const currentDomain = getCurrentHostname();
     const primaryDomain = config.primaryDomain;
 
     // Check if we're on the primary domain
@@ -385,7 +394,7 @@
     return {
       enabled: config.enabled,
       primaryDomain: config.primaryDomain,
-      currentDomain: window.location.hostname,
+      currentDomain: getCurrentHostname(),
       isAllowed: isAllowedDomain(),
       syncMethod: config.usePostMessage ? 'postMessage' : 'api',
       isActive: !!(syncFrame || syncInterval),

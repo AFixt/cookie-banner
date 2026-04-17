@@ -3,24 +3,11 @@
  */
 
 describe('Subdomain Consent Synchronization', () => {
-  let originalLocation;
-  let mockPostMessage;
   let messageListeners;
 
   beforeEach(() => {
-    // Clear localStorage
     localStorage.clear();
 
-    // Mock window.location
-    originalLocation = window.location;
-    delete window.location;
-    window.location = {
-      hostname: 'app.example.com',
-      href: 'https://app.example.com',
-      protocol: 'https:',
-    };
-
-    // Mock postMessage
     messageListeners = [];
     window.addEventListener = jest.fn((event, handler) => {
       if (event === 'message') {
@@ -30,22 +17,16 @@ describe('Subdomain Consent Synchronization', () => {
 
     window.removeEventListener = jest.fn();
 
-    // Clear any existing modules
     jest.resetModules();
   });
 
   afterEach(() => {
-    // Restore location
-    window.location = originalLocation;
-
-    // Clear mocks
-    jest.clearAllMocks();
-    messageListeners = [];
-
-    // Stop any active sync
     if (window.CookieConsentSync) {
       window.CookieConsentSync.stop();
     }
+
+    jest.clearAllMocks();
+    messageListeners = [];
   });
 
   describe('Initialization', () => {
@@ -79,6 +60,7 @@ describe('Subdomain Consent Synchronization', () => {
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app', 'www'],
+        currentHostname: 'app.example.com',
       });
 
       const status = window.CookieConsentSync.getStatus();
@@ -88,14 +70,13 @@ describe('Subdomain Consent Synchronization', () => {
     });
 
     test('should reject initialization on unauthorized domain', () => {
-      window.location.hostname = 'evil.com';
-
       require('../src/js/subdomain-sync.js');
 
       window.CookieConsentSync.init({
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app', 'www'],
+        currentHostname: 'evil.com',
       });
 
       const status = window.CookieConsentSync.getStatus();
@@ -110,48 +91,44 @@ describe('Subdomain Consent Synchronization', () => {
     });
 
     test('should allow primary domain', () => {
-      window.location.hostname = 'example.com';
-
       window.CookieConsentSync.init({
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app'],
+        currentHostname: 'example.com',
       });
 
       expect(window.CookieConsentSync.getStatus().isAllowed).toBe(true);
     });
 
     test('should allow www subdomain of primary', () => {
-      window.location.hostname = 'www.example.com';
-
       window.CookieConsentSync.init({
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app'],
+        currentHostname: 'www.example.com',
       });
 
       expect(window.CookieConsentSync.getStatus().isAllowed).toBe(true);
     });
 
     test('should allow configured subdomains', () => {
-      window.location.hostname = 'shop.example.com';
-
       window.CookieConsentSync.init({
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app', 'shop', 'blog'],
+        currentHostname: 'shop.example.com',
       });
 
       expect(window.CookieConsentSync.getStatus().isAllowed).toBe(true);
     });
 
     test('should reject unconfigured subdomains', () => {
-      window.location.hostname = 'malicious.example.com';
-
       window.CookieConsentSync.init({
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app', 'shop'],
+        currentHostname: 'malicious.example.com',
       });
 
       expect(window.CookieConsentSync.getStatus().isAllowed).toBe(false);
@@ -189,6 +166,7 @@ describe('Subdomain Consent Synchronization', () => {
         primaryDomain: 'example.com',
         allowedSubdomains: ['app'],
         usePostMessage: true,
+        currentHostname: 'app.example.com',
       });
 
       expect(document.createElement).toHaveBeenCalledWith('iframe');
@@ -207,6 +185,7 @@ describe('Subdomain Consent Synchronization', () => {
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app'],
+        currentHostname: 'app.example.com',
       });
 
       // Simulate iframe load
@@ -243,6 +222,7 @@ describe('Subdomain Consent Synchronization', () => {
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app'],
+        currentHostname: 'app.example.com',
       });
 
       mockIframe.onload();
@@ -292,6 +272,7 @@ describe('Subdomain Consent Synchronization', () => {
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app'],
+        currentHostname: 'app.example.com',
       });
 
       // Simulate receiving newer consent
@@ -329,6 +310,7 @@ describe('Subdomain Consent Synchronization', () => {
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app'],
+        currentHostname: 'app.example.com',
       });
 
       // Simulate receiving older consent
@@ -384,6 +366,7 @@ describe('Subdomain Consent Synchronization', () => {
         enabled: true,
         primaryDomain: 'example.com',
         allowedSubdomains: ['app'],
+        currentHostname: 'app.example.com',
       });
 
       window.CookieConsentSync.stop();
