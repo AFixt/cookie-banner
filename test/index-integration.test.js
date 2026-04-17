@@ -3,9 +3,6 @@
  */
 
 describe('Index.js Integration', () => {
-  let mockConsentManager;
-  let originalWindow;
-
   beforeEach(() => {
     // Clear DOM and localStorage
     document.body.innerHTML = '';
@@ -16,16 +13,6 @@ describe('Index.js Integration', () => {
     console.warn = jest.fn();
     console.error = jest.fn();
     console.log = jest.fn();
-
-    // Mock consent manager
-    mockConsentManager = {
-      getConsent: jest.fn(),
-      setConsent: jest.fn(),
-      hasConsent: jest.fn(),
-      clearConsent: jest.fn(),
-      isConsentExpired: jest.fn(),
-      dispatchConsentEvent: jest.fn(),
-    };
 
     // Clean up any existing globals
     delete window.CookieConsent;

@@ -47,7 +47,7 @@
       const consent = window.CookieConsent
         ? window.CookieConsent.getConsent()
         : getConsentFromStorage();
-      if (consent && consent.hasOwnProperty('functional')) {
+      if (consent && Object.prototype.hasOwnProperty.call(consent, 'functional')) {
         // User has already made a choice
         dispatchConsentEvent(consent);
         return Promise.resolve();
@@ -447,7 +447,9 @@
    * Open the preferences modal
    */
   function openModal() {
-    if (!modal) return;
+    if (!modal) {
+      return;
+    }
 
     // Store the element that had focus before opening the modal (if not already set)
     if (!previouslyFocusedElement) {
@@ -480,7 +482,9 @@
    * Close the preferences modal
    */
   function closeModal() {
-    if (!modal) return;
+    if (!modal) {
+      return;
+    }
 
     // Hide the modal
     modal.setAttribute('hidden', '');

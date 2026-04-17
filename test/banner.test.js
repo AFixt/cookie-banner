@@ -4,12 +4,6 @@
 
 describe('Banner Functionality', () => {
   let originalFetch;
-  let originalDocumentBody;
-  let originalCreateElement;
-  let originalAppendChild;
-  let originalQuerySelector;
-  let originalAddEventListener;
-  let originalRemoveEventListener;
   let mockConsentManager;
 
   beforeEach(() => {
@@ -259,7 +253,6 @@ describe('Banner Functionality', () => {
       const modal = document.querySelector('[role="dialog"]');
       expect(modal).toBeNull();
     });
-
   });
 
   describe('Modal Creation', () => {
@@ -301,7 +294,6 @@ describe('Banner Functionality', () => {
       expect(analyticsCheckbox).toBeTruthy();
       expect(marketingCheckbox).toBeTruthy();
     });
-
   });
 
   describe('Button Actions', () => {

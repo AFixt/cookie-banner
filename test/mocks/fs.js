@@ -10,7 +10,7 @@ function __setMockFiles(newMockFiles) {
 }
 
 // Mock of readFileSync
-function readFileSync(filePath, options) {
+function readFileSync(filePath, _options) {
   if (filePath.includes('index.js')) {
     return `
       // Mock index.js for testing

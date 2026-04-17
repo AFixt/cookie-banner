@@ -264,7 +264,6 @@ describe('Cookie Blocker', () => {
 
     test('should clean existing blocked cookies', () => {
       // Set some cookies before blocker initialization
-      const originalCookie = document.cookie;
       document.cookie = '_ga=test; path=/';
       document.cookie = '_fbp=test; path=/';
 

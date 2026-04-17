@@ -5,7 +5,6 @@
 describe('Error Handling', () => {
   let originalConsoleError;
   let originalConsoleWarn;
-  let originalLocalStorage;
   let mockConsentManager;
 
   beforeEach(() => {
@@ -20,7 +19,9 @@ describe('Error Handling', () => {
 
     // Clear DOM and storage
     document.body.innerHTML = '';
-    if (localStorage.clear) localStorage.clear();
+    if (localStorage.clear) {
+      localStorage.clear();
+    }
     document.cookie = '';
 
     // Reset localStorage to original mock state if it's a jest mock
@@ -205,7 +206,7 @@ describe('Error Handling', () => {
 
       try {
         await window.initCookieBanner();
-      } catch (error) {
+      } catch {
         // Expected to catch the error
       }
 
@@ -227,7 +228,7 @@ describe('Error Handling', () => {
 
       try {
         await window.initCookieBanner();
-      } catch (error) {
+      } catch {
         // Expected to catch the error
       }
 
@@ -249,7 +250,7 @@ describe('Error Handling', () => {
 
       try {
         await window.initCookieBanner();
-      } catch (error) {
+      } catch {
         // Expected to catch the error
       }
 
@@ -285,7 +286,9 @@ describe('Error Handling', () => {
 
       // Remove banner elements
       const banner = document.querySelector('[role="region"]');
-      if (banner) banner.remove();
+      if (banner) {
+        banner.remove();
+      }
 
       // Should not throw when trying to interact with missing elements
       expect(() => {
