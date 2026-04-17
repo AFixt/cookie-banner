@@ -168,7 +168,6 @@ describe('Accessibility Features', () => {
       expect(cancelBtn).toBeTruthy();
       expect(cancelBtn.textContent.trim()).not.toBe('');
     });
-
   });
 
   describe('Internationalization Support', () => {

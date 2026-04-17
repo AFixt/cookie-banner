@@ -118,7 +118,9 @@ class ConsentManager {
    */
   isConsentExpired() {
     const consent = this.getConsent();
-    if (!consent || !consent.timestamp) return true;
+    if (!consent || !consent.timestamp) {
+      return true;
+    }
 
     const consentDate = new Date(consent.timestamp);
     const expiryDate = new Date(consentDate);

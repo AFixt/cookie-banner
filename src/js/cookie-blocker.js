@@ -77,8 +77,12 @@
    * window.CookieBlocker.init();
    */
   function initCookieBlocker() {
-    if (typeof window === 'undefined') return;
-    if (isInitialized) return; // Prevent multiple initializations
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (isInitialized) {
+      return;
+    } // Prevent multiple initializations
 
     isInitialized = true;
 
@@ -127,7 +131,9 @@
    * const shouldBlock = shouldBlockCookie('_ga');
    */
   function shouldBlockCookie(cookieName) {
-    if (!isBlocking) return false;
+    if (!isBlocking) {
+      return false;
+    }
 
     const consentManager =
       typeof window !== 'undefined' && window.CookieConsent ? window.CookieConsent : null;
@@ -162,7 +168,9 @@
    * const shouldBlock = shouldBlockScript('https://www.google-analytics.com/analytics.js');
    */
   function shouldBlockScript(src) {
-    if (!isBlocking || !src) return false;
+    if (!isBlocking || !src) {
+      return false;
+    }
 
     const consentManager =
       typeof window !== 'undefined' && window.CookieConsent ? window.CookieConsent : null;
@@ -196,7 +204,9 @@
    * @returns {boolean} Whether the script should be blocked
    */
   function shouldBlockInlineScript(content) {
-    if (!isBlocking || !content) return false;
+    if (!isBlocking || !content) {
+      return false;
+    }
 
     const inlineTrackingPatterns = [
       /ga\s*\(/,
@@ -240,7 +250,9 @@
    * @returns {string} The script category ('analytics' or 'marketing')
    */
   function getScriptCategory(src) {
-    if (!src) return 'analytics';
+    if (!src) {
+      return 'analytics';
+    }
 
     if (src.match(/google-analytics|googletagmanager|_ga|_gid|_gat/i)) {
       return 'analytics';
@@ -502,17 +514,16 @@
               return; // Don't actually set the cookie
             }
 
-            return originalSet.call(this, value);
+            originalSet.call(this, value);
           } catch (error) {
             // Log error but don't throw to handle gracefully
             console.error('[Cookie Banner] Error setting cookie:', error.message);
             // Try to set cookie anyway in case of error
             try {
-              return originalSet.call(this, value);
-            } catch (e) {
+              originalSet.call(this, value);
+            } catch {
               // Silently fail
             }
-            return;
           }
         },
       });
@@ -531,29 +542,16 @@
    */
   function handleConsentChange(event) {
     const consent = event.detail;
-    const consentManager = window.CookieConsent;
 
-    // Update blocking state based on consent
-    // If any tracking category has consent, disable blocking for those categories
-    if (consentManager && consentManager.hasConsent) {
-      // Check if we should stop blocking based on new consent
-      const hasAnyTrackingConsent =
-        consentManager.hasConsent('analytics') ||
-        consentManager.hasConsent('marketing') ||
-        consentManager.hasConsent('social');
-
-      // Note: We keep blocking enabled per category, not globally
-      // isBlocking remains true but we check per-category consent
-    }
+    // Blocking remains enabled globally; per-category consent is checked
+    // below when deciding whether to unblock each previously blocked script.
 
     // Load previously blocked scripts based on new consent
     blockedScripts.forEach(blockedItem => {
       const { element, src, innerHTML, type } = blockedItem;
 
-      // Check if this script type is now allowed
-      let shouldUnblock = false;
-
-      // Only unblock if explicit consent is granted
+      // Only unblock if explicit consent is granted for this script type
+      let shouldUnblock;
       if (type === 'analytics') {
         shouldUnblock = consent.analytics === true;
       } else if (type === 'marketing') {
@@ -595,8 +593,12 @@
 
     // Clear blocked scripts that have been unblocked
     blockedScripts = blockedScripts.filter(item => {
-      if (item.type === 'analytics' && consent.analytics) return false;
-      if (item.type === 'marketing' && consent.marketing) return false;
+      if (item.type === 'analytics' && consent.analytics) {
+        return false;
+      }
+      if (item.type === 'marketing' && consent.marketing) {
+        return false;
+      }
       return true;
     });
   }
