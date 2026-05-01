@@ -25,18 +25,18 @@ const options: ConsentOptions = {
   storageMethod: 'localStorage',
   expireDays: 365,
   categories: {
-    functional: true,  // Always required
-    analytics: false,  // Default state
-    marketing: false   // Default state
+    functional: true, // Always required
+    analytics: false, // Default state
+    marketing: false, // Default state
   },
   onConsentChange: (consent: ConsentData) => {
     console.log('Consent changed:', consent);
-    
+
     // Type-safe consent data
     if (consent.analytics) {
       // Initialize analytics
     }
-  }
+  },
 };
 
 // Initialize the banner
@@ -87,34 +87,32 @@ import CookieBanner, { ConsentData, ConsentManager } from 'accessible-cookie-ban
 
 class AppConsentManager {
   private consent: ConsentData | null = null;
-  
+
   constructor() {
     // Initialize the banner
     CookieBanner.init({
       locale: 'en',
       theme: 'light',
-      onConsentChange: this.handleConsentChange.bind(this)
+      onConsentChange: this.handleConsentChange.bind(this),
     });
-    
+
     // Get initial consent
     this.consent = CookieBanner.getConsent();
-    
+
     // Listen for consent changes
-    document.addEventListener('cookieConsentChanged', 
-      ((e: CustomEvent<ConsentData>) => {
-        this.consent = e.detail;
-      }) as EventListener
-    );
+    document.addEventListener('cookieConsentChanged', ((e: CustomEvent<ConsentData>) => {
+      this.consent = e.detail;
+    }) as EventListener);
   }
-  
+
   private handleConsentChange(consent: ConsentData): void {
     this.consent = consent;
     this.updateFeatures();
   }
-  
+
   private updateFeatures(): void {
     if (!this.consent) return;
-    
+
     // Type-safe feature enablement
     if (this.consent.analytics) {
       this.enableAnalytics();
@@ -122,15 +120,15 @@ class AppConsentManager {
       this.disableAnalytics();
     }
   }
-  
+
   private enableAnalytics(): void {
     // Enable analytics
   }
-  
+
   private disableAnalytics(): void {
     // Disable analytics
   }
-  
+
   public resetConsent(): void {
     const manager = new ConsentManager();
     manager.clearConsent();
@@ -156,7 +154,7 @@ declare global {
 // Now you can use them in a type-safe way
 window.CookieBanner.init({
   locale: 'en',
-  theme: 'light'
+  theme: 'light',
 });
 ```
 
@@ -179,21 +177,21 @@ CookieBanner.init({
     functional: true,
     analytics: false,
     marketing: false,
-    preferences: false,    // Custom category
-    personalization: false // Custom category
+    preferences: false, // Custom category
+    personalization: false, // Custom category
   },
-  onConsentChange: (consent) => {
+  onConsentChange: consent => {
     // You may need to cast if using the extended interface
     const myConsent = consent as MyConsentData;
-    
+
     if (myConsent.preferences) {
       // Enable preferences features
     }
-    
+
     if (myConsent.personalization) {
       // Enable personalization features
     }
-  }
+  },
 });
 ```
 

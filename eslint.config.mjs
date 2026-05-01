@@ -16,8 +16,8 @@ export default [
     },
     rules: {
       // Code quality
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      'no-console': 'warn',
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      'no-console': 'off',
       'prefer-const': 'error',
       'no-var': 'error',
       'no-prototype-builtins': 'warn',

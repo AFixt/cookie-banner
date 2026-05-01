@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-(function() {
+(function () {
   'use strict';
 
   /**
@@ -25,10 +25,11 @@
   /** Strict domain name pattern */
   const DOMAIN_REGEX = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
 
-  /** Allowed config keys to prevent prototype pollution */
+  /** Allowed config keys to prevent prototype pollution. `currentHostname` is a
+   *  documented test-only override consumed by `getCurrentHostname()`. */
   const ALLOWED_SYNC_CONFIG_KEYS = [
     'enabled', 'primaryDomain', 'allowedSubdomains',
-    'syncEndpoint', 'syncInterval', 'usePostMessage'
+    'syncEndpoint', 'syncInterval', 'usePostMessage', 'currentHostname'
   ];
 
   const defaultConfig = {
@@ -37,7 +38,7 @@
     allowedSubdomains: [],
     syncEndpoint: null,
     syncInterval: 5000,
-    usePostMessage: true
+    usePostMessage: true,
   };
 
   let config = { ...defaultConfig };
@@ -74,7 +75,7 @@
    * @returns {Object|null} Validated consent or null
    */
   function validateConsentSchema(obj) {
-    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) return null;
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {return null;}
     return {
       functional: obj.functional === true,
       analytics: obj.analytics === true,
@@ -164,23 +165,32 @@
   }
 
   /**
+   * Resolve the current hostname. Tests may override by setting
+   * `currentHostname` in the config passed to `init`.
+   * @returns {string}
+   */
+  function getCurrentHostname() {
+    return config.currentHostname || window.location.hostname;
+  }
+
+  /**
    * Check if current domain is allowed for sync
    * @returns {boolean} Whether the current domain is allowed
    */
   function isAllowedDomain() {
-    const currentDomain = window.location.hostname;
+    const currentDomain = getCurrentHostname();
     const primaryDomain = config.primaryDomain;
-    
+
     // Check if we're on the primary domain
     if (currentDomain === primaryDomain) {
       return true;
     }
-    
+
     // Always allow www subdomain
     if (currentDomain === `www.${primaryDomain}`) {
       return true;
     }
-    
+
     // Check if we're on an allowed subdomain
     return config.allowedSubdomains.some(subdomain => {
       const fullSubdomain = subdomain + '.' + primaryDomain;
@@ -195,24 +205,24 @@
   function setupPostMessageSync() {
     // Register message handler immediately
     window.addEventListener('message', handleSyncMessage);
-    
+
     // Create hidden iframe for cross-domain communication
     syncFrame = document.createElement('iframe');
     syncFrame.style.display = 'none';
     syncFrame.src = `https://${config.primaryDomain}/cookie-consent-sync.html`;
     syncFrame.sandbox = 'allow-scripts allow-same-origin';
-    
+
     // Wait for iframe to load
     syncFrame.onload = () => {
       // Request current consent from primary domain
       requestConsentSync();
-      
+
       // Set up periodic sync checks
       if (config.syncInterval > 0) {
         syncInterval = setInterval(requestConsentSync, config.syncInterval);
       }
     };
-    
+
     document.body.appendChild(syncFrame);
   }
 
@@ -223,7 +233,7 @@
   function setupAPISync() {
     // Initial sync
     fetchConsentFromAPI();
-    
+
     // Set up periodic sync
     if (config.syncInterval > 0) {
       syncInterval = setInterval(fetchConsentFromAPI, config.syncInterval);
@@ -241,21 +251,21 @@
     if (event.origin !== expectedOrigin) {
       return;
     }
-    
+
     // Validate message structure
     if (!event.data || !event.data.type) {
       return;
     }
-    
+
     switch (event.data.type) {
       case 'CONSENT_SYNC_RESPONSE':
         handleRemoteConsent(event.data.consent);
         break;
-        
+
       case 'CONSENT_SYNC_UPDATE':
         handleRemoteConsent(event.data.consent);
         break;
-        
+
       default:
         // Unknown message type
         break;
@@ -270,12 +280,12 @@
     if (!syncFrame || !syncFrame.contentWindow) {
       return;
     }
-    
+
     const message = {
       type: 'CONSENT_SYNC_REQUEST',
-      domain: window.location.hostname
+      domain: window.location.hostname,
     };
-    
+
     syncFrame.contentWindow.postMessage(message, `https://${config.primaryDomain}`);
   }
 
@@ -286,15 +296,15 @@
    */
   function handleLocalConsentChange(event) {
     const consent = event.detail;
-    
+
     if (config.usePostMessage && syncFrame && syncFrame.contentWindow) {
       // Send update via postMessage
       const message = {
         type: 'CONSENT_SYNC_UPDATE',
         consent: consent,
-        domain: window.location.hostname
+        domain: window.location.hostname,
       };
-      
+
       syncFrame.contentWindow.postMessage(message, `https://${config.primaryDomain}`);
     } else if (config.syncEndpoint) {
       // Send update via API
@@ -318,9 +328,12 @@
     const localConsent = window.CookieConsent ? window.CookieConsent.getConsent() : null;
 
     // Compare timestamps - use most recent
-    if (!localConsent || !localConsent.timestamp ||
-        (validated.timestamp && new Date(validated.timestamp) > new Date(localConsent.timestamp))) {
-
+    if (
+      !localConsent ||
+      !localConsent.timestamp ||
+      (validated.timestamp &&
+        new Date(validated.timestamp) > new Date(localConsent.timestamp))
+    ) {
       // Update local consent with remote data
       if (window.CookieConsent && window.CookieConsent.setConsent) {
         // Temporarily remove listener to avoid loops
@@ -350,8 +363,8 @@
         method: 'GET',
         credentials: 'same-origin',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       if (response.ok) {
@@ -378,12 +391,12 @@
         method: 'POST',
         credentials: 'same-origin',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           consent: consent,
-          domain: window.location.hostname
-        })
+          domain: window.location.hostname,
+        }),
       });
     } catch (error) {
       console.error('[Cookie Banner] Failed to push consent to API:', error);
@@ -474,13 +487,13 @@
       clearInterval(syncInterval);
       syncInterval = null;
     }
-    
+
     // Remove iframe
     if (syncFrame && syncFrame.parentNode) {
       syncFrame.parentNode.removeChild(syncFrame);
       syncFrame = null;
     }
-    
+
     // Remove event listeners
     window.removeEventListener('message', handleSyncMessage);
     document.removeEventListener('cookieConsentChanged', handleLocalConsentChange);
@@ -494,10 +507,10 @@
     return {
       enabled: config.enabled,
       primaryDomain: config.primaryDomain,
-      currentDomain: window.location.hostname,
+      currentDomain: getCurrentHostname(),
       isAllowed: isAllowedDomain(),
       syncMethod: config.usePostMessage ? 'postMessage' : 'api',
-      isActive: !!(syncFrame || syncInterval)
+      isActive: !!(syncFrame || syncInterval),
     };
   }
 
@@ -507,7 +520,7 @@
       init: initSubdomainSync,
       stop: stopSubdomainSync,
       getStatus: getSyncStatus,
-      generateSyncHTML: generateSyncEndpointHTML
+      generateSyncHTML: generateSyncEndpointHTML,
     };
   }
 
@@ -517,8 +530,7 @@
       initSubdomainSync,
       stopSubdomainSync,
       getSyncStatus,
-      generateSyncEndpointHTML
+      generateSyncEndpointHTML,
     };
   }
-
 })();
