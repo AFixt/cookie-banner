@@ -8,8 +8,8 @@ describe('Banner Functionality', () => {
 
   beforeEach(() => {
     // Reset cookie-blocker if it exists (before clearing DOM)
-    if (window.CookieBlocker && window.CookieBlocker.reset) {
-      window.CookieBlocker.reset();
+    if (window.CookieBlocker && window.CookieBlocker._reset) {
+      window.CookieBlocker._reset();
     }
 
     // Clear DOM and localStorage
@@ -38,8 +38,8 @@ describe('Banner Functionality', () => {
 
   afterEach(() => {
     // Reset cookie-blocker if it exists (important to do this first)
-    if (window.CookieBlocker && window.CookieBlocker.reset) {
-      window.CookieBlocker.reset();
+    if (window.CookieBlocker && window.CookieBlocker._reset) {
+      window.CookieBlocker._reset();
     }
 
     // Restore original fetch
@@ -74,8 +74,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
@@ -149,8 +149,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
@@ -210,8 +210,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
@@ -263,8 +263,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
@@ -304,8 +304,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
@@ -417,8 +417,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
@@ -493,8 +493,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
@@ -542,8 +542,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
@@ -579,8 +579,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
@@ -630,8 +630,8 @@ describe('Banner Functionality', () => {
       jest.resetModules();
 
       // Reset cookie-blocker if it exists
-      if (window.CookieBlocker && window.CookieBlocker.reset) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
 
       require('../src/js/banner.js');
