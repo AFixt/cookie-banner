@@ -334,9 +334,6 @@
           ) {
             console.log('Blocked tracking script:', child.src || 'inline script');
             // Debug: check data-category scripts
-            if (child.src && child.src.includes('facebook')) {
-              console.warn(`[Debug] Blocking Facebook script with type: ${dataCategory}`);
-            }
             blockedScripts.push({
               element: child,
               src: child.src,
@@ -516,14 +513,9 @@
 
             originalSet.call(this, value);
           } catch (error) {
-            // Log error but don't throw to handle gracefully
-            console.error('[Cookie Banner] Error setting cookie:', error.message);
-            // Try to set cookie anyway in case of error
-            try {
-              originalSet.call(this, value);
-            } catch {
-              // Silently fail
-            }
+            // Fail closed: do not set the cookie if blocking logic errors (L4)
+            console.error('[Cookie Banner] Error in cookie blocking logic:', error.message);
+            return;
           }
         },
       });
@@ -611,30 +603,6 @@
    */
 
   /**
-   * Disable script and cookie blocking
-   * @function
-   * @returns {void}
-   * @example
-   * // Disable all blocking
-   * window.CookieBlocker.disable();
-   */
-  function disableBlocking() {
-    isBlocking = false;
-  }
-
-  /**
-   * Enable script and cookie blocking
-   * @function
-   * @returns {void}
-   * @example
-   * // Enable all blocking
-   * window.CookieBlocker.enable();
-   */
-  function enableBlocking() {
-    isBlocking = true;
-  }
-
-  /**
    * Get list of currently blocked scripts
    * @function
    * @returns {BlockedScript[]} Array of blocked script objects
@@ -695,13 +663,13 @@
      * @property {Function} enable - Enable script and cookie blocking
      * @property {Function} getBlocked - Get list of blocked scripts
      */
-    window.CookieBlocker = {
+    window.CookieBlocker = Object.freeze({
       init: initCookieBlocker,
-      disable: disableBlocking,
-      enable: enableBlocking,
       getBlocked: getBlockedScripts,
-      reset: resetCookieBlocker,
-    };
+      // Internal method for testing - not part of public API contract
+      _reset: resetCookieBlocker,
+    });
+
 
     /**
      * Initialize the cookie blocker (backward compatibility)
