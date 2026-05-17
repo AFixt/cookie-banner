@@ -5,7 +5,11 @@
  * @version 1.0.0
  */
 
-(function () {
+// See banner.js for why the IIFE result is captured into a module-level
+// binding and re-exported: Rollup tree-shakes side-effect-only IIFE imports
+// out of the published bundle. The exported binding below is what guarantees
+// this module survives bundling.
+const _blockerAPI = (function () {
   'use strict';
 
   // Common tracking script patterns to block
@@ -653,37 +657,47 @@
     document.removeEventListener('cookieConsentChanged', handleConsentChange);
   }
 
-  // Export functions to global scope
-  if (typeof window !== 'undefined') {
-    /**
-     * Cookie blocker API
-     * @namespace window.CookieBlocker
-     * @property {Function} init - Initialize the cookie blocker
-     * @property {Function} disable - Disable script and cookie blocking
-     * @property {Function} enable - Enable script and cookie blocking
-     * @property {Function} getBlocked - Get list of blocked scripts
-     */
-    window.CookieBlocker = Object.freeze({
-      init: initCookieBlocker,
-      getBlocked: getBlockedScripts,
-      // Internal method for testing - not part of public API contract
-      _reset: resetCookieBlocker,
-    });
-
-
-    /**
-     * Initialize the cookie blocker (backward compatibility)
-     * @function
-     * @memberof window
-     * @deprecated Use window.CookieBlocker.init() instead
-     */
-    window.initCookieBlocker = initCookieBlocker;
-
-    // Auto-initialize when script loads
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initCookieBlocker);
-    } else {
-      initCookieBlocker();
-    }
-  }
+  // Return the public API; globals + auto-init are wired up outside the IIFE
+  // so the bindings stay live for the bundler.
+  return {
+    initCookieBlocker,
+    getBlockedScripts,
+    resetCookieBlocker,
+  };
 })();
+
+// Expose the cookie blocker API on `window` for script-tag consumers.
+if (typeof window !== 'undefined') {
+  /**
+   * Cookie blocker API
+   * @namespace window.CookieBlocker
+   */
+  window.CookieBlocker = Object.freeze({
+    init: _blockerAPI.initCookieBlocker,
+    getBlocked: _blockerAPI.getBlockedScripts,
+    // Internal method for testing - not part of public API contract
+    _reset: _blockerAPI.resetCookieBlocker,
+  });
+
+  /**
+   * @deprecated Use window.CookieBlocker.init() instead
+   */
+  window.initCookieBlocker = _blockerAPI.initCookieBlocker;
+
+  // Auto-initialize when script loads. Best-effort: never let init failures
+  // propagate out of the module evaluation (tests mock Object.defineProperty
+  // to throw at load time, and the consent UI should still load).
+  try {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', _blockerAPI.initCookieBlocker);
+    } else {
+      _blockerAPI.initCookieBlocker();
+    }
+  } catch (err) {
+    console.warn('[Cookie Banner] Cookie blocker auto-init failed:', err && err.message);
+  }
+}
+
+// ES-module exports — referenced from `src/js/index.js` to defeat tree-shaking.
+export const initCookieBlocker = _blockerAPI.initCookieBlocker;
+export const getBlockedScripts = _blockerAPI.getBlockedScripts;

@@ -5,7 +5,9 @@
  * @version 1.0.0
  */
 
-(function () {
+// See banner.js for why the IIFE result is captured into a module-level
+// binding and re-exported.
+const _subdomainSyncAPI = (function () {
   'use strict';
 
   /**
@@ -514,23 +516,26 @@
     };
   }
 
-  // Export API
-  if (typeof window !== 'undefined') {
-    window.CookieConsentSync = {
-      init: initSubdomainSync,
-      stop: stopSubdomainSync,
-      getStatus: getSyncStatus,
-      generateSyncHTML: generateSyncEndpointHTML,
-    };
-  }
-
-  // CommonJS export for Node.js environments
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-      initSubdomainSync,
-      stopSubdomainSync,
-      getSyncStatus,
-      generateSyncEndpointHTML,
-    };
-  }
+  return {
+    initSubdomainSync,
+    stopSubdomainSync,
+    getSyncStatus,
+    generateSyncEndpointHTML,
+  };
 })();
+
+// Expose API on `window` for script-tag consumers.
+if (typeof window !== 'undefined') {
+  window.CookieConsentSync = {
+    init: _subdomainSyncAPI.initSubdomainSync,
+    stop: _subdomainSyncAPI.stopSubdomainSync,
+    getStatus: _subdomainSyncAPI.getSyncStatus,
+    generateSyncHTML: _subdomainSyncAPI.generateSyncEndpointHTML,
+  };
+}
+
+// ES-module exports — referenced from `src/js/index.js` to defeat tree-shaking.
+export const initSubdomainSync = _subdomainSyncAPI.initSubdomainSync;
+export const stopSubdomainSync = _subdomainSyncAPI.stopSubdomainSync;
+export const getSyncStatus = _subdomainSyncAPI.getSyncStatus;
+export const generateSyncEndpointHTML = _subdomainSyncAPI.generateSyncEndpointHTML;
