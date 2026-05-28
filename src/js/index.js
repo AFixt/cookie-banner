@@ -7,9 +7,15 @@
 
 // Import required modules
 import ConsentManager from './consent-manager.js';
-import './banner.js';
-import './cookie-blocker.js';
-import './subdomain-sync.js';
+// Importing a binding from each side-effect module (instead of a bare
+// `import './banner.js'`) is what keeps the renderer in the bundle. Rollup's
+// tree-shaker drops IIFE-only modules that have no referenced exports, so
+// without this the previously published `dist/` contained only the wrapper
+// below and `window.initCookieBanner` was never defined. Reproduces with
+// rollup@4 and the default treeshake options.
+import { initCookieBanner } from './banner.js';
+import { initCookieBlocker } from './cookie-blocker.js';
+import { initSubdomainSync } from './subdomain-sync.js';
 
 /**
  * @namespace CookieBanner
@@ -38,8 +44,10 @@ import './subdomain-sync.js';
  * @property {boolean} [categories.marketing=false] - Marketing cookies default
  */
 
-// Export the ConsentManager class for advanced usage
-export { ConsentManager };
+// Re-export the side-module entry points so the bindings are referenced
+// (which forces Rollup to keep cookie-blocker.js and subdomain-sync.js in the
+// published bundle) and so advanced consumers can call them directly.
+export { ConsentManager, initCookieBanner, initCookieBlocker, initSubdomainSync };
 
 // For UMD builds, expose the API on the global object after the modules are loaded
 if (typeof window !== 'undefined') {
@@ -65,16 +73,7 @@ if (typeof window !== 'undefined') {
      *   onConsentChange: (consent) => console.log('Consent changed:', consent)
      * });
      */
-    init: options => {
-      // Use function wrapper to ensure initCookieBanner is resolved at call time
-      // This fixes timing issues in ESM environments where banner.js IIFE may not
-      // have executed by the time this module is evaluated
-      if (typeof window.initCookieBanner === 'function') {
-        return window.initCookieBanner(options);
-      }
-      console.error('CookieBanner: initCookieBanner not available. Ensure banner.js is loaded.');
-      return Promise.reject(new Error('initCookieBanner not available'));
-    },
+    init: options => initCookieBanner(options),
 
     /**
      * Get current consent status

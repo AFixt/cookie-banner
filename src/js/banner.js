@@ -5,7 +5,12 @@
  * @version 1.0.0
  */
 
-(function () {
+// Wrapped in an IIFE so the existing internal helpers, state, and indentation
+// stay untouched while still surfacing the public API as ES-module exports.
+// Without the explicit export+import chain in index.js, Rollup's tree-shaker
+// previously dropped this entire module from the published bundle and left
+// `window.initCookieBanner` undefined. See AFixt/cookie-banner#... for context.
+const _bannerAPI = (function () {
   'use strict';
 
   // Default configuration
@@ -680,15 +685,29 @@
     document.dispatchEvent(event);
   }
 
-  // Export public API
-  window.initCookieBanner = initCookieBanner;
+  // Return the public API so it survives Rollup tree-shaking via the module
+  // binding below. Globals are set outside the IIFE for the same reason.
+  return { initCookieBanner, getConsent, setConsent, hasConsent };
+})();
+
+// Expose the renderer on `window` for script-tag and ESM consumers alike.
+if (typeof window !== 'undefined') {
+  window.initCookieBanner = _bannerAPI.initCookieBanner;
 
   // Only create CookieConsent if it doesn't already exist
   if (!window.CookieConsent) {
     window.CookieConsent = {
-      getConsent,
-      setConsent,
-      hasConsent,
+      getConsent: _bannerAPI.getConsent,
+      setConsent: _bannerAPI.setConsent,
+      hasConsent: _bannerAPI.hasConsent,
     };
   }
-})();
+}
+
+// ES-module exports. The fact that these are imported from `src/js/index.js`
+// is what guarantees Rollup keeps `_bannerAPI` (and therefore the entire IIFE)
+// in the published bundle.
+export const initCookieBanner = _bannerAPI.initCookieBanner;
+export const getConsent = _bannerAPI.getConsent;
+export const setConsent = _bannerAPI.setConsent;
+export const hasConsent = _bannerAPI.hasConsent;
