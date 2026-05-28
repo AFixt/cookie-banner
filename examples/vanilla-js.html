@@ -82,11 +82,8 @@
       </div>
     </div>
 
-    <!-- Include the scripts directly from source -->
-    <script src="../src/js/consent-manager.js"></script>
-    <script src="../src/js/banner.js"></script>
-    <script src="../src/js/cookie-blocker.js"></script>
-    <script src="../src/js/subdomain-sync.js"></script>
+    <!-- Include the built UMD bundle (exposes window.initCookieBanner, window.CookieConsent, etc.) -->
+    <script src="../dist/cookie-banner.js"></script>
     <script>
       // Wait for scripts to load then initialize
       setTimeout(() => {
