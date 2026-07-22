@@ -109,7 +109,7 @@
     "husky": "^9.1.7",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
-    "jscpd": "^4.0.8",
+    "jscpd": "^5.0.12",
     "jsdoc": "^4.0.4",
     "jsdoc-to-markdown": "^9.1.1",
     "lint-staged": "17.1.1",
