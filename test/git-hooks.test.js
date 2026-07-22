@@ -47,6 +47,17 @@ describe('Husky hooks', () => {
     expect(commands).toMatch(/npm test/);
   });
 
+  it('scans staged changes for secrets before each commit', () => {
+    const commands = hookCommands('pre-commit').join('\n');
+    expect(commands).toMatch(/gitleaks protect --staged/);
+  });
+
+  it('warns rather than silently skipping when gitleaks is absent', () => {
+    const commands = hookCommands('pre-commit').join('\n');
+    expect(commands).toMatch(/command -v gitleaks/);
+    expect(commands).toMatch(/WARNING: gitleaks is not installed/);
+  });
+
   it('runs the full check suite and tests before each push', () => {
     const commands = hookCommands('pre-push').join('\n');
     expect(commands).toMatch(/npm run check/);
