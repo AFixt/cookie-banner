@@ -36,7 +36,7 @@ jobs:
         run: npm audit --json > npm-audit-results.json || true
 
       - name: Upload audit results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: npm-audit-results
           path: npm-audit-results.json
@@ -75,7 +75,7 @@ jobs:
             --nodePackageSkipDevDependencies false
 
       - name: Upload OWASP results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: owasp-dependency-check-report
           path: reports/
@@ -118,7 +118,7 @@ jobs:
           license-checker --failOn 'GPL;AGPL;UNKNOWN' || echo "Review licenses above"
 
       - name: Upload license report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: license-report
           path: licenses.json
