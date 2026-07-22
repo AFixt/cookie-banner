@@ -36,7 +36,7 @@ npm install @afixt/accessible-cookie-banner
 
 ```html
 <link rel="stylesheet" href="path/to/dist/banner.css" />
-<script src="path/to/dist/cookie-banner.min.js"></script>
+<script src="path/to/dist/consent.min.js"></script>
 ```
 
 ## Usage
@@ -161,9 +161,10 @@ To add a new language, create a new JSON file in the `locales` directory with th
 ```text
 accessible-cookie-banner/
 ├── dist/                    # Distribution files
-│   ├── cookie-banner.js     # UMD build
-│   ├── cookie-banner.min.js # Minified UMD build
-│   ├── cookie-banner.esm.js # ES module
+│   ├── consent.js           # UMD build
+│   ├── consent.min.js       # Minified UMD build
+│   ├── consent.esm.js       # ES module
+│   ├── cookie-banner.*.js   # Deprecated aliases (see Ad blockers below)
 │   ├── banner.css           # Styles
 │   ├── locales/             # Localization files
 │   ├── types/               # TypeScript declarations
@@ -222,7 +223,34 @@ This will build the project and start a local HTTP server at `http://localhost:8
 - RTL support: `http://localhost:8080/dist/examples/rtl-support.html`
 - Custom categories: `http://localhost:8080/dist/examples/custom-categories.html`
 
-**Note:** If you encounter issues with ad blockers blocking `cookie-banner.min.js`, either disable your ad blocker for localhost or use the unminified version by changing script references from `cookie-banner.min.js` to `cookie-banner.js`.
+### Ad blockers
+
+Ad blockers subscribe to anti-annoyance filter lists (EasyList Cookie List,
+Fanboy's Annoyance List) whose entire purpose is suppressing cookie consent
+UI. Those lists match the substring `cookie-banner` in a request path, so a
+script with that name can be cancelled before it ever executes — and the
+blocked resource is the consent mechanism itself, so no banner renders and no
+consent is recorded.
+
+For this reason the bundles are named `consent.js`, `consent.min.js` and
+`consent.esm.js`. **Use those names.**
+
+The old `cookie-banner.*.js` filenames are still published as copies so
+existing integrations keep working, but they are deprecated, they are subject
+to blocking, and they will be removed in the next major release.
+
+Two further recommendations:
+
+- **Self-host the bundle rather than loading it from a CDN.** The package name
+  contains `cookie-banner` too, so a CDN URL such as
+  `unpkg.com/@afixt/accessible-cookie-banner/dist/consent.min.js` still carries
+  the blocked substring in its path even with the renamed file.
+- **Avoid putting `cookie-banner`, `cookie-consent`, or `cookie-notice` in the
+  path you serve the script from**, for the same reason.
+
+If the script fails to load during local development, check your blocker's
+logger before assuming a build problem — a blocked request usually surfaces as
+`ERR_BLOCKED_BY_CLIENT` or `ERR_FAILED` rather than a 404.
 
 See the [examples directory](src/examples/) for more detailed examples and implementation guides.
 

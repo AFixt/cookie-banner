@@ -3,8 +3,8 @@
   "version": "1.1.1",
   "description": "A customizable, WCAG-conformant cookie consent banner with GDPR, CCPA compliance",
   "type": "module",
-  "main": "dist/cookie-banner.js",
-  "module": "dist/cookie-banner.esm.js",
+  "main": "dist/consent.js",
+  "module": "dist/consent.esm.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist",
@@ -33,7 +33,7 @@
     "docs:build": "npm run docs:clean && npm run docs && npm run docs:md",
     "size": "size-limit",
     "size:analyze": "npm run build && size-limit && npm run analyze",
-    "analyze": "npx webpack-bundle-analyzer dist/cookie-banner.js --mode static --report bundle-report.html --no-open",
+    "analyze": "npx webpack-bundle-analyzer dist/consent.js --mode static --report bundle-report.html --no-open",
     "prepublishOnly": "npm run test:all && npm run build",
     "install:playwright": "playwright install",
     "prepare": "husky",
@@ -137,12 +137,12 @@
   },
   "size-limit": [
     {
-      "path": "./dist/cookie-banner.min.js",
+      "path": "./dist/consent.min.js",
       "limit": "15kb",
       "gzip": true
     },
     {
-      "path": "./dist/cookie-banner.js",
+      "path": "./dist/consent.js",
       "limit": "35kb"
     },
     {

@@ -13,18 +13,36 @@ import analyzer from 'rollup-plugin-analyzer';
 const production = !process.env.ROLLUP_WATCH;
 const outputDir = 'dist';
 
+/**
+ * Bundles are emitted as `consent.*` rather than `cookie-banner.*`.
+ *
+ * Ad-blocker annoyance lists (EasyList Cookie List, Fanboy's Annoyance List)
+ * match the substring `cookie-banner` in request paths, so a script by that
+ * name can be cancelled before it executes — taking the consent UI with it.
+ * See https://github.com/AFixt/cookie-banner/issues/66.
+ *
+ * The legacy `cookie-banner.*` names are still emitted as copies so existing
+ * `<script src>` references keep working. They are deprecated and will be
+ * removed in the next major version.
+ */
+const LEGACY_ALIASES = [
+  ['consent.js', 'cookie-banner.js'],
+  ['consent.min.js', 'cookie-banner.min.js'],
+  ['consent.esm.js', 'cookie-banner.esm.js'],
+];
+
 export default {
   input: 'src/js/index.js',
   output: [
     {
-      file: `${outputDir}/cookie-banner.js`,
+      file: `${outputDir}/consent.js`,
       format: 'umd',
       name: 'CookieBanner',
       exports: 'named',
       sourcemap: !production,
     },
     {
-      file: `${outputDir}/cookie-banner.min.js`,
+      file: `${outputDir}/consent.min.js`,
       format: 'umd',
       name: 'CookieBanner',
       exports: 'named',
@@ -32,7 +50,7 @@ export default {
       sourcemap: !production,
     },
     {
-      file: `${outputDir}/cookie-banner.esm.js`,
+      file: `${outputDir}/consent.esm.js`,
       format: 'es',
       exports: 'named',
       sourcemap: !production,
@@ -59,6 +77,16 @@ export default {
         { src: 'README.md', dest: outputDir },
         { src: 'LICENSE', dest: outputDir },
       ],
+    }),
+    // Deprecated `cookie-banner.*` aliases. Runs at writeBundle so the renamed
+    // bundles exist on disk by the time they are copied.
+    copy({
+      hook: 'writeBundle',
+      targets: LEGACY_ALIASES.map(([from, to]) => ({
+        src: `${outputDir}/${from}`,
+        dest: outputDir,
+        rename: to,
+      })),
     }),
     // Add bundle analyzer only in development or when explicitly requested
     process.env.ANALYZE &&
