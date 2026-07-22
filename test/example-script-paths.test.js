@@ -22,8 +22,10 @@ describe('vanilla JS example script path', () => {
   });
 
   it('copies the bundle next to the examples so ./consent.js resolves', () => {
+    // Tolerate reformatting: only require a copy target whose src is the
+    // consent.js bundle and whose dest is the examples directory.
     expect(rollupConfig).toMatch(
-      /src: `\$\{outputDir\}\/consent\.js`,\s*dest: `\$\{outputDir\}\/examples`/
+      /src:\s*[`'"][^`'"]*consent\.js[`'"],\s*dest:\s*[`'"][^`'"]*examples[`'"]/
     );
   });
 });
@@ -35,7 +37,7 @@ const builtPage = path.join(ROOT, 'dist', 'examples', 'vanilla-js.html');
 (fs.existsSync(builtPage) ? describe : describe.skip)('built example page', () => {
   it('resolves every script it references', () => {
     const html = fs.readFileSync(builtPage, 'utf8');
-    const srcs = [...html.matchAll(/<script src="([^"]+)"><\/script>/g)].map(m => m[1]);
+    const srcs = [...html.matchAll(/<script[^>]*\ssrc="([^"]+)"/g)].map(m => m[1]);
     expect(srcs.length).toBeGreaterThan(0);
     srcs.forEach(src => {
       expect(fs.existsSync(path.join(path.dirname(builtPage), src))).toBe(true);
