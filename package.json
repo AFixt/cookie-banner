@@ -87,7 +87,7 @@
   ],
   "sideEffects": false,
   "devDependencies": {
-    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-env": "^8.0.2",
     "@commitlint/cli": "^20.4.0",
     "@commitlint/config-conventional": "^20.4.0",
     "@eslint/js": "^10.0.1",
