@@ -33,8 +33,13 @@ const _bannerAPI = (function () {
 
   /** Allowed config keys to prevent prototype pollution (H5) */
   const ALLOWED_BANNER_CONFIG_KEYS = [
-    'locale', 'theme', 'showModal', 'onConsentChange',
-    'storageMethod', 'expireDays', 'categories'
+    'locale',
+    'theme',
+    'showModal',
+    'onConsentChange',
+    'storageMethod',
+    'expireDays',
+    'categories',
   ];
 
   /** Locale format pattern (M4) */
@@ -46,12 +51,14 @@ const _bannerAPI = (function () {
    * @returns {Object|null} Validated consent or null
    */
   function validateConsentData(obj) {
-    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {return null;}
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+      return null;
+    }
     return {
       functional: obj.functional === true,
       analytics: obj.analytics === true,
       marketing: obj.marketing === true,
-      timestamp: typeof obj.timestamp === 'string' ? obj.timestamp : null
+      timestamp: typeof obj.timestamp === 'string' ? obj.timestamp : null,
     };
   }
 
@@ -648,7 +655,11 @@ const _bannerAPI = (function () {
         // Cookie method - Set expiry date
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + config.expireDays);
-        document.cookie = buildSecureCookie('cookieConsent', encodeURIComponent(consentString), expiryDate.toUTCString());
+        document.cookie = buildSecureCookie(
+          'cookieConsent',
+          encodeURIComponent(consentString),
+          expiryDate.toUTCString()
+        );
       }
 
       // Dispatch event
