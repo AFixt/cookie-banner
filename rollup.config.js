@@ -82,11 +82,16 @@ export default {
     // bundles exist on disk by the time they are copied.
     copy({
       hook: 'writeBundle',
-      targets: LEGACY_ALIASES.map(([from, to]) => ({
-        src: `${outputDir}/${from}`,
-        dest: outputDir,
-        rename: to,
-      })),
+      targets: [
+        ...LEGACY_ALIASES.map(([from, to]) => ({
+          src: `${outputDir}/${from}`,
+          dest: outputDir,
+          rename: to,
+        })),
+        // The examples load `./consent.js`, so the copy under dist/examples/
+        // is self-contained wherever it is served from. See issue #72.
+        { src: `${outputDir}/consent.js`, dest: `${outputDir}/examples` },
+      ],
     }),
     // Add bundle analyzer only in development or when explicitly requested
     process.env.ANALYZE &&
