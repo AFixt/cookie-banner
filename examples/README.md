@@ -37,7 +37,7 @@ Or, you can view the compiled examples in the `dist/examples/` directory after r
 <link rel="stylesheet" href="path/to/banner.css" />
 
 <!-- Include the JavaScript -->
-<script src="path/to/cookie-banner.min.js"></script>
+<script src="path/to/consent.min.js"></script>
 
 <script>
   // Initialize the cookie banner

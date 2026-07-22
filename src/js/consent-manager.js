@@ -7,6 +7,35 @@
 
 class ConsentManager {
   /**
+   * Validate a consent object against expected schema (M1)
+   * @param {Object} obj - Object to validate
+   * @returns {Object|null} Validated consent or null
+   */
+  static validateConsent(obj) {
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+      return null;
+    }
+    return {
+      functional: obj.functional === true,
+      analytics: obj.analytics === true,
+      marketing: obj.marketing === true,
+      timestamp: typeof obj.timestamp === 'string' ? obj.timestamp : null,
+    };
+  }
+
+  /**
+   * Build a cookie string with proper security attributes (H1)
+   * @param {string} name - Cookie name
+   * @param {string} value - Cookie value
+   * @param {string} expires - Expiry date string
+   * @returns {string} Complete cookie string
+   */
+  static buildSecureCookie(name, value, expires) {
+    const secureFlag = window.location.protocol === 'https:' ? '; Secure' : '';
+    return `${name}=${value}; expires=${expires}; path=/; SameSite=Lax${secureFlag}`;
+  }
+
+  /**
    * Create a new ConsentManager instance
    * @param {Object} options - Configuration options
    * @param {string} options.storageMethod - 'localStorage' or 'cookie'
@@ -21,6 +50,8 @@ class ConsentManager {
     };
 
     this.consentKey = 'cookieConsent';
+    // Escape consentKey for safe use in RegExp (M2)
+    this._escapedConsentKey = this.consentKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   /**
@@ -29,14 +60,17 @@ class ConsentManager {
    */
   getConsent() {
     try {
+      let parsed = null;
       if (this.options.storageMethod === 'localStorage') {
         const storedConsent = localStorage.getItem(this.consentKey);
-        return storedConsent ? JSON.parse(storedConsent) : null;
+        parsed = storedConsent ? JSON.parse(storedConsent) : null;
       } else {
-        // Cookie method
-        const match = document.cookie.match(new RegExp(`${this.consentKey}=([^;]+)`));
-        return match ? JSON.parse(decodeURIComponent(match[1])) : null;
+        // Cookie method - use escaped key for RegExp safety (M2)
+        const match = document.cookie.match(new RegExp(`${this._escapedConsentKey}=([^;]+)`));
+        parsed = match ? JSON.parse(decodeURIComponent(match[1])) : null;
       }
+      // Validate parsed consent against expected schema (M1)
+      return parsed ? ConsentManager.validateConsent(parsed) : null;
     } catch (e) {
       console.error('Error retrieving consent:', e);
       return null;
@@ -64,7 +98,11 @@ class ConsentManager {
         // Cookie method - Set expiry date
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + this.options.expireDays);
-        document.cookie = `${this.consentKey}=${encodeURIComponent(consentString)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+        document.cookie = ConsentManager.buildSecureCookie(
+          this.consentKey,
+          encodeURIComponent(consentString),
+          expiryDate.toUTCString()
+        );
       }
     } catch (e) {
       console.error('Error setting consent:', e);
@@ -138,7 +176,11 @@ class ConsentManager {
         localStorage.removeItem(this.consentKey);
       } else {
         // Cookie method - Set expiry in the past
-        document.cookie = `${this.consentKey}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`;
+        document.cookie = ConsentManager.buildSecureCookie(
+          this.consentKey,
+          '',
+          'Thu, 01 Jan 1970 00:00:00 UTC'
+        );
       }
     } catch (e) {
       console.error('Error clearing consent:', e);

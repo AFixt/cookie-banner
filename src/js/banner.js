@@ -5,7 +5,12 @@
  * @version 1.0.0
  */
 
-(function () {
+// Wrapped in an IIFE so the existing internal helpers, state, and indentation
+// stay untouched while still surfacing the public API as ES-module exports.
+// Without the explicit export+import chain in index.js, Rollup's tree-shaker
+// previously dropped this entire module from the published bundle and left
+// `window.initCookieBanner` undefined. See AFixt/cookie-banner#... for context.
+const _bannerAPI = (function () {
   'use strict';
 
   // Default configuration
@@ -22,6 +27,52 @@
       marketing: false,
     },
   };
+
+  /** Theme name validation pattern - alphanumeric and hyphens only (C2) */
+  const THEME_REGEX = /^[a-z0-9-]+$/i;
+
+  /** Allowed config keys to prevent prototype pollution (H5) */
+  const ALLOWED_BANNER_CONFIG_KEYS = [
+    'locale',
+    'theme',
+    'showModal',
+    'onConsentChange',
+    'storageMethod',
+    'expireDays',
+    'categories',
+  ];
+
+  /** Locale format pattern (M4) */
+  const LOCALE_REGEX = /^[a-z]{2}(-[A-Z]{2})?$/;
+
+  /**
+   * Validate a consent object against expected schema (M1)
+   * @param {Object} obj - Object to validate
+   * @returns {Object|null} Validated consent or null
+   */
+  function validateConsentData(obj) {
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+      return null;
+    }
+    return {
+      functional: obj.functional === true,
+      analytics: obj.analytics === true,
+      marketing: obj.marketing === true,
+      timestamp: typeof obj.timestamp === 'string' ? obj.timestamp : null,
+    };
+  }
+
+  /**
+   * Build a cookie string with proper security attributes (H1)
+   * @param {string} name - Cookie name
+   * @param {string} value - Cookie value
+   * @param {string} expires - Expiry date string
+   * @returns {string} Complete cookie string
+   */
+  function buildSecureCookie(name, value, expires) {
+    const secureFlag = window.location.protocol === 'https:' ? '; Secure' : '';
+    return `${name}=${value}; expires=${expires}; path=/; SameSite=Lax${secureFlag}`;
+  }
 
   // State
   let config = {};
@@ -40,8 +91,14 @@
    */
   function initCookieBanner(userConfig = {}) {
     try {
-      // Merge user configuration with defaults
-      config = { ...defaultConfig, ...userConfig };
+      // Merge user configuration with defaults using allowlisted keys (H5)
+      const sanitized = {};
+      for (const key of ALLOWED_BANNER_CONFIG_KEYS) {
+        if (Object.prototype.hasOwnProperty.call(userConfig, key)) {
+          sanitized[key] = userConfig[key];
+        }
+      }
+      config = { ...defaultConfig, ...sanitized };
 
       // Check if consent is already given
       const consent = window.CookieConsent
@@ -107,6 +164,11 @@
 
       // Try to load locale file if not English
       if (locale !== 'en') {
+        // Validate locale format to prevent path traversal (M4)
+        if (!LOCALE_REGEX.test(locale)) {
+          console.warn(`Invalid locale format '${locale}', using default English.`);
+          return resolve();
+        }
         fetch(`locales/${locale}.json`)
           .then(response => {
             if (!response.ok) {
@@ -180,8 +242,10 @@
     banner.appendChild(description);
     banner.appendChild(buttons);
 
-    // Apply theme
-    banner.classList.add(`theme-${config.theme}`);
+    // Apply theme (validated against allowlist - C2)
+    if (config.theme && THEME_REGEX.test(config.theme)) {
+      banner.classList.add(`theme-${config.theme}`);
+    }
 
     // Add to the DOM
     document.body.appendChild(banner);
@@ -310,8 +374,10 @@
     modal.appendChild(title);
     modal.appendChild(form);
 
-    // Apply theme
-    modal.classList.add(`theme-${config.theme}`);
+    // Apply theme (validated against allowlist - C2)
+    if (config.theme && THEME_REGEX.test(config.theme)) {
+      modal.classList.add(`theme-${config.theme}`);
+    }
 
     // Add to the DOM
     document.body.appendChild(modal);
@@ -543,14 +609,17 @@
    */
   function getConsentFromStorage() {
     try {
+      let parsed = null;
       if (config.storageMethod === 'localStorage') {
         const storedConsent = localStorage.getItem('cookieConsent');
-        return storedConsent ? JSON.parse(storedConsent) : null;
+        parsed = storedConsent ? JSON.parse(storedConsent) : null;
       } else {
         // Cookie method
         const match = document.cookie.match(/cookieConsent=([^;]+)/);
-        return match ? JSON.parse(decodeURIComponent(match[1])) : null;
+        parsed = match ? JSON.parse(decodeURIComponent(match[1])) : null;
       }
+      // Validate parsed consent against expected schema (M1)
+      return parsed ? validateConsentData(parsed) : null;
     } catch (e) {
       console.error('Error retrieving consent:', e);
       return null;
@@ -586,7 +655,11 @@
         // Cookie method - Set expiry date
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + config.expireDays);
-        document.cookie = `cookieConsent=${encodeURIComponent(consentString)}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+        document.cookie = buildSecureCookie(
+          'cookieConsent',
+          encodeURIComponent(consentString),
+          expiryDate.toUTCString()
+        );
       }
 
       // Dispatch event
@@ -623,15 +696,29 @@
     document.dispatchEvent(event);
   }
 
-  // Export public API
-  window.initCookieBanner = initCookieBanner;
+  // Return the public API so it survives Rollup tree-shaking via the module
+  // binding below. Globals are set outside the IIFE for the same reason.
+  return { initCookieBanner, getConsent, setConsent, hasConsent };
+})();
+
+// Expose the renderer on `window` for script-tag and ESM consumers alike.
+if (typeof window !== 'undefined') {
+  window.initCookieBanner = _bannerAPI.initCookieBanner;
 
   // Only create CookieConsent if it doesn't already exist
   if (!window.CookieConsent) {
     window.CookieConsent = {
-      getConsent,
-      setConsent,
-      hasConsent,
+      getConsent: _bannerAPI.getConsent,
+      setConsent: _bannerAPI.setConsent,
+      hasConsent: _bannerAPI.hasConsent,
     };
   }
-})();
+}
+
+// ES-module exports. The fact that these are imported from `src/js/index.js`
+// is what guarantees Rollup keeps `_bannerAPI` (and therefore the entire IIFE)
+// in the published bundle.
+export const initCookieBanner = _bannerAPI.initCookieBanner;
+export const getConsent = _bannerAPI.getConsent;
+export const setConsent = _bannerAPI.setConsent;
+export const hasConsent = _bannerAPI.hasConsent;

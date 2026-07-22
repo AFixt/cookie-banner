@@ -1,1 +1,13 @@
+npx lint-staged
+
+# Scan staged changes for committed secrets. gitleaks is an external binary, so
+# it may not be present on every machine; say so loudly rather than skipping
+# silently, since a gate that quietly does nothing is worse than no gate.
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --no-banner
+else
+  echo "WARNING: gitleaks is not installed - staged changes were NOT scanned for secrets."
+  echo "         Install it with 'brew install gitleaks'."
+fi
+
 npm test

@@ -112,8 +112,8 @@ describe('Cookie Blocker', () => {
     });
 
     test('should override DOM methods on initialization', () => {
-      if (window.CookieBlocker) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
       jest.resetModules();
       require('../src/js/cookie-blocker.js');
@@ -130,8 +130,8 @@ describe('Cookie Blocker', () => {
 
   describe('Script Blocking', () => {
     beforeEach(() => {
-      if (window.CookieBlocker) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
       jest.resetModules();
       require('../src/js/cookie-blocker.js');
@@ -280,7 +280,9 @@ describe('Cookie Blocker', () => {
 
   describe('Consent Change Handling', () => {
     beforeEach(() => {
-      // Clean up any previous state
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
+      }
       delete document._cookieBlockerOverridden;
       document.cookie = '';
 
@@ -471,8 +473,8 @@ describe('Cookie Blocker', () => {
 
   describe('Integration with ConsentManager', () => {
     beforeEach(() => {
-      if (window.CookieBlocker) {
-        window.CookieBlocker.reset();
+      if (window.CookieBlocker && window.CookieBlocker._reset) {
+        window.CookieBlocker._reset();
       }
       jest.resetModules();
       require('../src/js/cookie-blocker.js');

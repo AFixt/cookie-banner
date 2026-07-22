@@ -1,10 +1,10 @@
 {
   "name": "@afixt/accessible-cookie-banner",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A customizable, WCAG-conformant cookie consent banner with GDPR, CCPA compliance",
   "type": "module",
-  "main": "dist/cookie-banner.js",
-  "module": "dist/cookie-banner.esm.js",
+  "main": "dist/consent.js",
+  "module": "dist/consent.esm.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist",
@@ -33,7 +33,7 @@
     "docs:build": "npm run docs:clean && npm run docs && npm run docs:md",
     "size": "size-limit",
     "size:analyze": "npm run build && size-limit && npm run analyze",
-    "analyze": "npx webpack-bundle-analyzer dist/cookie-banner.js --mode static --report bundle-report.html --no-open",
+    "analyze": "npx webpack-bundle-analyzer dist/consent.js --mode static --report bundle-report.html --no-open",
     "prepublishOnly": "npm run test:all && npm run build",
     "install:playwright": "playwright install",
     "prepare": "husky",
@@ -43,6 +43,7 @@
     "release:patch": "commit-and-tag-version --release-as patch",
     "release:first": "commit-and-tag-version --first-release",
     "release:dry-run": "commit-and-tag-version --dry-run",
+    "check": "npm run lint && npm run format:check && npm run lint:css && npm run lint:md",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -101,6 +102,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "autoprefixer": "^10.4.21",
     "babel-jest": "^30.2.0",
+    "commit-and-tag-version": "^12.7.1",
     "eslint": "^10.0.0",
     "globals": "^17.3.0",
     "http-server": "^14.1.1",
@@ -110,6 +112,7 @@
     "jscpd": "^4.0.8",
     "jsdoc": "^4.0.4",
     "jsdoc-to-markdown": "^9.1.1",
+    "lint-staged": "17.1.1",
     "markdownlint-cli": "^0.48.0",
     "playwright": "^1.52.0",
     "postcss": "^8.5.6",
@@ -125,7 +128,6 @@
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-copy": "^3.5.0",
     "size-limit": "^12.0.1",
-    "commit-and-tag-version": "^12.7.1",
     "stylelint": "^17.1.1",
     "stylelint-config-standard": "^40.0.0",
     "webpack-bundle-analyzer": "^5.2.0"
@@ -137,12 +139,12 @@
   },
   "size-limit": [
     {
-      "path": "./dist/cookie-banner.min.js",
+      "path": "./dist/consent.min.js",
       "limit": "15kb",
       "gzip": true
     },
     {
-      "path": "./dist/cookie-banner.js",
+      "path": "./dist/consent.js",
       "limit": "35kb"
     },
     {

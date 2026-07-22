@@ -348,22 +348,28 @@ describe('Error Handling', () => {
     });
 
     test('should handle cookie property override errors', () => {
-      // Mock defineProperty to throw
+      // Re-require the module BEFORE mocking defineProperty. Babel's CJS
+      // transform of the new `export const ...` statements emits its own
+      // `Object.defineProperty(exports, "__esModule", ...)` at the top of
+      // the file, so a mock that throws on any defineProperty call would
+      // crash module evaluation before the test body runs.
+      jest.resetModules();
+      require('../src/js/cookie-blocker.js');
+
       const originalDefineProperty = Object.defineProperty;
       Object.defineProperty = jest.fn().mockImplementation(() => {
         throw new Error('Property definition failed');
       });
 
-      // Reinitialize blocker
-      jest.resetModules();
-      require('../src/js/cookie-blocker.js');
-
-      // Should not throw
-      expect(() => {
-        window.initCookieBlocker();
-      }).not.toThrow();
-
-      Object.defineProperty = originalDefineProperty;
+      try {
+        // Calling init now hits the mocked defineProperty inside
+        // overrideCookieProperty; the try/catch there should swallow it.
+        expect(() => {
+          window.initCookieBlocker();
+        }).not.toThrow();
+      } finally {
+        Object.defineProperty = originalDefineProperty;
+      }
     });
 
     test('should handle consent manager unavailability', () => {
