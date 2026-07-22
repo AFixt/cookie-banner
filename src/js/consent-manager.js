@@ -12,12 +12,14 @@ class ConsentManager {
    * @returns {Object|null} Validated consent or null
    */
   static validateConsent(obj) {
-    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {return null;}
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+      return null;
+    }
     return {
       functional: obj.functional === true,
       analytics: obj.analytics === true,
       marketing: obj.marketing === true,
-      timestamp: typeof obj.timestamp === 'string' ? obj.timestamp : null
+      timestamp: typeof obj.timestamp === 'string' ? obj.timestamp : null,
     };
   }
 
@@ -96,7 +98,11 @@ class ConsentManager {
         // Cookie method - Set expiry date
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + this.options.expireDays);
-        document.cookie = ConsentManager.buildSecureCookie(this.consentKey, encodeURIComponent(consentString), expiryDate.toUTCString());
+        document.cookie = ConsentManager.buildSecureCookie(
+          this.consentKey,
+          encodeURIComponent(consentString),
+          expiryDate.toUTCString()
+        );
       }
     } catch (e) {
       console.error('Error setting consent:', e);
@@ -170,7 +176,11 @@ class ConsentManager {
         localStorage.removeItem(this.consentKey);
       } else {
         // Cookie method - Set expiry in the past
-        document.cookie = ConsentManager.buildSecureCookie(this.consentKey, '', 'Thu, 01 Jan 1970 00:00:00 UTC');
+        document.cookie = ConsentManager.buildSecureCookie(
+          this.consentKey,
+          '',
+          'Thu, 01 Jan 1970 00:00:00 UTC'
+        );
       }
     } catch (e) {
       console.error('Error clearing consent:', e);

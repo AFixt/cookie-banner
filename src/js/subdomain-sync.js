@@ -30,8 +30,13 @@ const _subdomainSyncAPI = (function () {
   /** Allowed config keys to prevent prototype pollution. `currentHostname` is a
    *  documented test-only override consumed by `getCurrentHostname()`. */
   const ALLOWED_SYNC_CONFIG_KEYS = [
-    'enabled', 'primaryDomain', 'allowedSubdomains',
-    'syncEndpoint', 'syncInterval', 'usePostMessage', 'currentHostname'
+    'enabled',
+    'primaryDomain',
+    'allowedSubdomains',
+    'syncEndpoint',
+    'syncInterval',
+    'usePostMessage',
+    'currentHostname',
   ];
 
   const defaultConfig = {
@@ -77,12 +82,14 @@ const _subdomainSyncAPI = (function () {
    * @returns {Object|null} Validated consent or null
    */
   function validateConsentSchema(obj) {
-    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {return null;}
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+      return null;
+    }
     return {
       functional: obj.functional === true,
       analytics: obj.analytics === true,
       marketing: obj.marketing === true,
-      timestamp: typeof obj.timestamp === 'string' ? obj.timestamp : null
+      timestamp: typeof obj.timestamp === 'string' ? obj.timestamp : null,
     };
   }
 
@@ -100,7 +107,7 @@ const _subdomainSyncAPI = (function () {
       }
       const validDomains = [
         config.primaryDomain,
-        ...config.allowedSubdomains.map(s => s + '.' + config.primaryDomain)
+        ...config.allowedSubdomains.map(s => s + '.' + config.primaryDomain),
       ];
       if (!validDomains.some(d => url.hostname === d)) {
         console.error('[Cookie Banner] Sync endpoint must be on an allowed domain');
@@ -134,8 +141,8 @@ const _subdomainSyncAPI = (function () {
 
     // Validate allowedSubdomains entries
     if (Array.isArray(config.allowedSubdomains)) {
-      config.allowedSubdomains = config.allowedSubdomains.filter(s =>
-        typeof s === 'string' && /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i.test(s)
+      config.allowedSubdomains = config.allowedSubdomains.filter(
+        s => typeof s === 'string' && /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i.test(s)
       );
     }
 
@@ -333,8 +340,7 @@ const _subdomainSyncAPI = (function () {
     if (
       !localConsent ||
       !localConsent.timestamp ||
-      (validated.timestamp &&
-        new Date(validated.timestamp) > new Date(localConsent.timestamp))
+      (validated.timestamp && new Date(validated.timestamp) > new Date(localConsent.timestamp))
     ) {
       // Update local consent with remote data
       if (window.CookieConsent && window.CookieConsent.setConsent) {
@@ -417,8 +423,8 @@ const _subdomainSyncAPI = (function () {
     }
 
     // Build the allowed domains list safely using only validated values
-    const validSubdomains = (config.allowedSubdomains || []).filter(s =>
-      typeof s === 'string' && /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i.test(s)
+    const validSubdomains = (config.allowedSubdomains || []).filter(
+      s => typeof s === 'string' && /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i.test(s)
     );
     const allowedDomains = validSubdomains.map(s => s + '.' + config.primaryDomain);
     allowedDomains.push(config.primaryDomain);
