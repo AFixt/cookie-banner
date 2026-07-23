@@ -5,6 +5,13 @@
  * @version 1.0.0
  */
 
+import {
+  prepareSyncConfig,
+  validateConsentSchema,
+  isValidSyncEndpoint,
+} from './subdomain-sync-validation.js';
+import { buildSyncEndpointHTML } from './subdomain-sync-html.js';
+
 // See banner.js for why the IIFE result is captured into a module-level
 // binding and re-exported.
 const _subdomainSyncAPI = (function () {
@@ -21,24 +28,6 @@ const _subdomainSyncAPI = (function () {
    * @property {boolean} usePostMessage - Use postMessage for iframe communication
    */
 
-  /** Minimum allowed sync interval in ms */
-  const MIN_SYNC_INTERVAL = 1000;
-
-  /** Strict domain name pattern */
-  const DOMAIN_REGEX = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-
-  /** Allowed config keys to prevent prototype pollution. `currentHostname` is a
-   *  documented test-only override consumed by `getCurrentHostname()`. */
-  const ALLOWED_SYNC_CONFIG_KEYS = [
-    'enabled',
-    'primaryDomain',
-    'allowedSubdomains',
-    'syncEndpoint',
-    'syncInterval',
-    'usePostMessage',
-    'currentHostname',
-  ];
-
   const defaultConfig = {
     enabled: false,
     primaryDomain: null,
@@ -53,107 +42,22 @@ const _subdomainSyncAPI = (function () {
   let syncInterval = null;
 
   /**
-   * Validate a domain name against a strict pattern
-   * @param {string} domain - Domain to validate
-   * @returns {boolean} Whether the domain is valid
-   */
-  function isValidDomain(domain) {
-    return typeof domain === 'string' && DOMAIN_REGEX.test(domain) && domain.length <= 253;
-  }
-
-  /**
-   * Sanitize config by allowlisting known keys and validating values
-   * @param {Object} userConfig - User-provided configuration
-   * @returns {Object} Sanitized configuration
-   */
-  function sanitizeConfig(userConfig) {
-    const sanitized = {};
-    for (const key of ALLOWED_SYNC_CONFIG_KEYS) {
-      if (Object.prototype.hasOwnProperty.call(userConfig, key)) {
-        sanitized[key] = userConfig[key];
-      }
-    }
-    return sanitized;
-  }
-
-  /**
-   * Validate a consent object against expected schema
-   * @param {Object} obj - Object to validate
-   * @returns {Object|null} Validated consent or null
-   */
-  function validateConsentSchema(obj) {
-    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
-      return null;
-    }
-    return {
-      functional: obj.functional === true,
-      analytics: obj.analytics === true,
-      marketing: obj.marketing === true,
-      timestamp: typeof obj.timestamp === 'string' ? obj.timestamp : null,
-    };
-  }
-
-  /**
-   * Validate that a sync endpoint URL is safe
-   * @param {string} endpoint - URL to validate
-   * @returns {boolean} Whether the endpoint is valid
-   */
-  function isValidSyncEndpoint(endpoint) {
-    try {
-      const url = new URL(endpoint);
-      if (url.protocol !== 'https:') {
-        console.error('[Cookie Banner] Sync endpoint must use HTTPS');
-        return false;
-      }
-      const validDomains = [
-        config.primaryDomain,
-        ...config.allowedSubdomains.map(s => s + '.' + config.primaryDomain),
-      ];
-      if (!validDomains.some(d => url.hostname === d)) {
-        console.error('[Cookie Banner] Sync endpoint must be on an allowed domain');
-        return false;
-      }
-      return true;
-    } catch (e) {
-      console.error('[Cookie Banner] Invalid sync endpoint URL:', e.message);
-      return false;
-    }
-  }
-
-  /**
    * Initialize subdomain consent synchronization
    * @param {SubdomainSyncConfig} userConfig - Configuration options
    * @returns {void}
    */
   function initSubdomainSync(userConfig = {}) {
-    config = { ...defaultConfig, ...sanitizeConfig(userConfig) };
+    const prepared = prepareSyncConfig(userConfig, defaultConfig);
+    config = prepared.config;
 
-    if (!config.enabled || !config.primaryDomain) {
+    if (prepared.status === 'disabled') {
       console.log('[Cookie Banner] Subdomain sync disabled or no primary domain configured');
       return;
     }
 
-    // Validate primaryDomain format
-    if (!isValidDomain(config.primaryDomain)) {
+    if (prepared.status === 'invalid-domain') {
       console.error('[Cookie Banner] Invalid primaryDomain format');
       return;
-    }
-
-    // Validate allowedSubdomains entries
-    if (Array.isArray(config.allowedSubdomains)) {
-      config.allowedSubdomains = config.allowedSubdomains.filter(
-        s => typeof s === 'string' && /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i.test(s)
-      );
-    }
-
-    // Enforce minimum sync interval
-    if (typeof config.syncInterval === 'number' && config.syncInterval < MIN_SYNC_INTERVAL) {
-      config.syncInterval = MIN_SYNC_INTERVAL;
-    }
-
-    // Validate sync endpoint if provided
-    if (config.syncEndpoint && !isValidSyncEndpoint(config.syncEndpoint)) {
-      config.syncEndpoint = null;
     }
 
     // Validate current domain is allowed
@@ -358,11 +262,19 @@ const _subdomainSyncAPI = (function () {
   }
 
   /**
+   * Check the configured endpoint is present and still valid before use
+   * @returns {boolean}
+   */
+  function hasValidEndpoint() {
+    return !!config.syncEndpoint && isValidSyncEndpoint(config.syncEndpoint, config);
+  }
+
+  /**
    * Fetch consent from API endpoint
    * @returns {Promise<void>}
    */
   async function fetchConsentFromAPI() {
-    if (!config.syncEndpoint || !isValidSyncEndpoint(config.syncEndpoint)) {
+    if (!hasValidEndpoint()) {
       return;
     }
 
@@ -390,7 +302,7 @@ const _subdomainSyncAPI = (function () {
    * @returns {Promise<void>}
    */
   async function pushConsentToAPI(consent) {
-    if (!config.syncEndpoint || !isValidSyncEndpoint(config.syncEndpoint)) {
+    if (!hasValidEndpoint()) {
       return;
     }
 
@@ -416,73 +328,7 @@ const _subdomainSyncAPI = (function () {
    * @returns {string} HTML content for the sync endpoint
    */
   function generateSyncEndpointHTML() {
-    // Validate all config values before embedding in HTML to prevent XSS (C1)
-    if (!isValidDomain(config.primaryDomain)) {
-      console.error('[Cookie Banner] Cannot generate sync HTML: invalid primaryDomain');
-      return '';
-    }
-
-    // Build the allowed domains list safely using only validated values
-    const validSubdomains = (config.allowedSubdomains || []).filter(
-      s => typeof s === 'string' && /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i.test(s)
-    );
-    const allowedDomains = validSubdomains.map(s => s + '.' + config.primaryDomain);
-    allowedDomains.push(config.primaryDomain);
-
-    // Use JSON.stringify for safe injection into script context
-    const domainsJSON = JSON.stringify(allowedDomains);
-
-    return `<!DOCTYPE html>
-<html>
-<head>
-  <title>Cookie Consent Sync</title>
-  <meta charset="utf-8">
-</head>
-<body>
-<script>
-(function() {
-  'use strict';
-
-  var ALLOWED_DOMAINS = ${domainsJSON};
-
-  var CONSENT_KEY = 'cookieConsent';
-
-  window.addEventListener('message', function(event) {
-    var origin;
-    try {
-      origin = new URL(event.origin).hostname;
-    } catch (e) {
-      return;
-    }
-    // Use exact domain matching only (H4)
-    if (ALLOWED_DOMAINS.indexOf(origin) === -1) {
-      return;
-    }
-
-    if (!event.data || !event.data.type) {
-      return;
-    }
-
-    switch (event.data.type) {
-      case 'CONSENT_SYNC_REQUEST':
-        var consent = localStorage.getItem(CONSENT_KEY);
-        event.source.postMessage({
-          type: 'CONSENT_SYNC_RESPONSE',
-          consent: consent ? JSON.parse(consent) : null
-        }, event.origin);
-        break;
-
-      case 'CONSENT_SYNC_UPDATE':
-        if (event.data.consent) {
-          localStorage.setItem(CONSENT_KEY, JSON.stringify(event.data.consent));
-        }
-        break;
-    }
-  });
-})();
-</script>
-</body>
-</html>`;
+    return buildSyncEndpointHTML(config);
   }
 
   /**
