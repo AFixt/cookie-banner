@@ -264,6 +264,11 @@ See the [examples directory](src/examples/) for more detailed examples and imple
 - Readable text with sufficient color contrast
 - No time limits or auto-dismissal
 
+Accessibility is verified automatically: `@afixt/a11y-assert` scans the
+rendered banner and preferences modal during `npm test`, and
+`@afixt/a11y-assert-reporter` writes an HTML/JSON/Markdown report to
+`reports/a11y/` on every run.
+
 ## Privacy & Compliance Notes
 
 - GDPR: Includes "Reject All" button and granular consent options
