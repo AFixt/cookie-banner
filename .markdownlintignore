@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+coverage
+docs
+CHANGELOG.md
+playwright-report
+playwright-visual-report
+test-results
+reports
