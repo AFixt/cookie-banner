@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cookie Banner - High Contrast Example</title>
-    <link rel="stylesheet" href="../css/banner.css" />
+    <link rel="stylesheet" href="./banner.css" />
     <style>
       body {
         font-family: system-ui, sans-serif;
@@ -85,9 +85,8 @@
       </div>
     </div>
 
-    <!-- Include the scripts -->
-    <script src="../js/consent-manager.js"></script>
-    <script src="../js/banner.js"></script>
+    <!-- Include the built UMD bundle (exposes window.initCookieBanner, window.CookieConsent, etc.) -->
+    <script src="./consent.js"></script>
     <script>
       // Initialize the cookie banner with high-contrast theme
       window.initCookieBanner({
@@ -116,8 +115,9 @@
 
       // Reset consent button
       document.getElementById('reset-consent').addEventListener('click', () => {
-        const manager = new ConsentManager();
-        manager.clearConsent();
+        // Clear consent from localStorage and cookies
+        localStorage.removeItem('cookieConsent');
+        document.cookie = 'cookieConsent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         location.reload();
       });
 

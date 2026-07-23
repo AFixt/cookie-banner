@@ -69,6 +69,9 @@ export default {
     copy({
       targets: [
         { src: 'src/css/banner.css', dest: outputDir },
+        // The examples link `./banner.css`, so the stylesheet has to sit next
+        // to them for the same reason consent.js does. See issue #72.
+        { src: 'src/css/banner.css', dest: `${outputDir}/examples` },
         { src: 'src/locales/*', dest: `${outputDir}/locales` },
         { src: 'src/html/banner.html', dest: `${outputDir}/examples` },
         { src: 'src/html/preferences-modal.html', dest: `${outputDir}/examples` },
