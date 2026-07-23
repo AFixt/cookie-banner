@@ -1,5 +1,5 @@
 /**
- * @fileoverview Consent Manager - Handles storage, retrieval, and validation of cookie consent
+ * @file Consent Manager - Handles storage, retrieval, and validation of cookie consent
  * @module consent-manager
  * @author Karl Groves <karlgroves@gmail.com>
  * @version 1.0.0
@@ -8,8 +8,8 @@
 class ConsentManager {
   /**
    * Validate a consent object against expected schema (M1)
-   * @param {Object} obj - Object to validate
-   * @returns {Object|null} Validated consent or null
+   * @param {object} obj - Object to validate
+   * @returns {object | null} Validated consent or null
    */
   static validateConsent(obj) {
     if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
@@ -37,7 +37,7 @@ class ConsentManager {
 
   /**
    * Create a new ConsentManager instance
-   * @param {Object} options - Configuration options
+   * @param {object} options - Configuration options
    * @param {string} options.storageMethod - 'localStorage' or 'cookie'
    * @param {number} options.expireDays - Number of days before consent expires
    * @param {Function} options.onConsentChange - Callback for consent changes
@@ -56,7 +56,7 @@ class ConsentManager {
 
   /**
    * Get current consent settings
-   * @returns {Object|null} - Consent object or null if no consent is stored
+   * @returns {object | null} - Consent object or null if no consent is stored
    */
   getConsent() {
     try {
@@ -79,7 +79,7 @@ class ConsentManager {
 
   /**
    * Set consent settings
-   * @param {Object} consent - Consent object with boolean values
+   * @param {object} consent - Consent object with boolean values
    */
   setConsent(consent) {
     // Ensure functional cookies are always enabled
@@ -136,7 +136,7 @@ class ConsentManager {
 
   /**
    * Dispatch a custom event with consent data
-   * @param {Object} consentData - Consent data
+   * @param {object} consentData - Consent data
    */
   dispatchConsentEvent(consentData) {
     try {

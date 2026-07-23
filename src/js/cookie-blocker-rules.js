@@ -1,5 +1,5 @@
 /**
- * @fileoverview Pattern tables and pure classification rules for the cookie
+ * @file Pattern tables and pure classification rules for the cookie
  * blocker: which cookies, script URLs, and inline snippets count as tracking,
  * and whether the current consent state allows them. Extracted from
  * cookie-blocker.js (see AFixt/cookie-banner#69).
@@ -114,7 +114,7 @@ export function getScriptCategory(src) {
  * manager. Pure with respect to module state — the caller supplies the
  * consent manager (or null when consent has not been given yet).
  * @param {string} cookieName - Name of the cookie to check
- * @param {Object|null} consentManager - window.CookieConsent or null
+ * @param {object | null} consentManager - window.CookieConsent or null
  * @returns {boolean} Whether the cookie should be blocked
  */
 export function cookieBlockDecision(cookieName, consentManager) {
@@ -138,7 +138,7 @@ export function cookieBlockDecision(cookieName, consentManager) {
  * Decide whether a script URL should be blocked given the current consent
  * manager. Pure with respect to module state.
  * @param {string} src - Script source URL to check
- * @param {Object|null} consentManager - window.CookieConsent or null
+ * @param {object | null} consentManager - window.CookieConsent or null
  * @returns {boolean} Whether the script should be blocked
  */
 export function scriptBlockDecision(src, consentManager) {

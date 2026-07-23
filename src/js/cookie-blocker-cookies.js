@@ -1,5 +1,5 @@
 /**
- * @fileoverview document.cookie override for the cookie blocker: wraps the
+ * @file document.cookie override for the cookie blocker: wraps the
  * native cookie accessor so writes are vetted against the blocking rules,
  * with a simulated fallback for environments (like jsdom) where the native
  * descriptor is missing. Extracted from cookie-blocker.js (see
@@ -12,7 +12,7 @@
  * string, for environments where document.cookie is a simple value property
  * (e.g. some test environments).
  * @param {string} initialValue - Current document.cookie value
- * @returns {Object} Property descriptor with get/set
+ * @returns {object} Property descriptor with get/set
  */
 function createSimulatedCookieDescriptor(initialValue) {
   let cookieStorage = initialValue || '';
@@ -42,7 +42,7 @@ function createSimulatedCookieDescriptor(initialValue) {
 /**
  * Locate the original document.cookie accessor descriptor, falling back to a
  * simulated one when the environment exposes cookie as a plain value.
- * @returns {Object|null} A descriptor with get/set, or null when unusable
+ * @returns {object | null} A descriptor with get/set, or null when unusable
  */
 function resolveOriginalCookieDescriptor() {
   // Get the original cookie descriptor - try different locations

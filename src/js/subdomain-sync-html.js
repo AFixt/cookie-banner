@@ -1,5 +1,5 @@
 /**
- * @fileoverview Generator for the static sync-endpoint HTML page that the
+ * @file Generator for the static sync-endpoint HTML page that the
  * primary domain hosts for postMessage-based consent synchronization.
  * Extracted from subdomain-sync.js (see AFixt/cookie-banner#69).
  * @module subdomain-sync-html
@@ -9,7 +9,7 @@ import { isValidDomain, filterValidSubdomains } from './subdomain-sync-validatio
 
 /**
  * Create sync endpoint HTML file content
- * @param {Object} config - Sync configuration (primaryDomain, allowedSubdomains)
+ * @param {object} config - Sync configuration (primaryDomain, allowedSubdomains)
  * @returns {string} HTML content for the sync endpoint
  */
 export function buildSyncEndpointHTML(config) {

@@ -1,5 +1,5 @@
 /**
- * @fileoverview DOM API overrides for the cookie blocker: intercepts script
+ * @file DOM API overrides for the cookie blocker: intercepts script
  * creation (document.createElement), insertion (appendChild/insertBefore),
  * and src assignment (setAttribute) so tracking scripts can be held back
  * until consent is granted. Extracted from cookie-blocker.js (see
@@ -42,10 +42,10 @@ export function appendChildBypassingBlock(parent, child) {
  * block record when the node must be held back, or null to let it through.
  * Shared by the appendChild and insertBefore overrides.
  * @param {Element} node - Node being inserted
- * @param {Object} handlers - Blocking predicates from the coordinator
+ * @param {object} handlers - Blocking predicates from the coordinator
  * @param {Function} handlers.shouldBlockScript - (src) => boolean
  * @param {Function} handlers.shouldBlockInlineScript - (content) => boolean
- * @returns {Object|null} Block record or null
+ * @returns {object | null} Block record or null
  */
 function classifyScriptInsertion(node, handlers) {
   // A manual data-category attribute takes precedence over pattern matching
@@ -61,7 +61,7 @@ function classifyScriptInsertion(node, handlers) {
  * unless the consent manager grants that category.
  * @param {Element} node - Script node
  * @param {string} dataCategory - Declared category
- * @returns {Object|null} Block record or null
+ * @returns {object | null} Block record or null
  */
 function classifyByDeclaredCategory(node, dataCategory) {
   const consentManager = window.CookieConsent;
@@ -81,8 +81,8 @@ function classifyByDeclaredCategory(node, dataCategory) {
  * Classify a script by its src URL or inline content against the blocking
  * predicates.
  * @param {Element} node - Script node
- * @param {Object} handlers - Blocking predicates from the coordinator
- * @returns {Object|null} Block record or null
+ * @param {object} handlers - Blocking predicates from the coordinator
+ * @returns {object | null} Block record or null
  */
 function classifyByContent(node, handlers) {
   // Check both external scripts and inline scripts
@@ -110,7 +110,7 @@ function classifyByContent(node, handlers) {
 /**
  * Override document.createElement to intercept script creation. Each created
  * script gets a guarded `src` setter that consults the blocking predicate.
- * @param {Object} handlers - Callbacks from the coordinator
+ * @param {object} handlers - Callbacks from the coordinator
  * @param {Function} handlers.shouldBlockScript - (src) => boolean
  * @param {Function} handlers.onBlocked - (record) => void
  */
@@ -133,7 +133,7 @@ export function overrideCreateElement(handlers) {
 /**
  * Install a src accessor on a script element that refuses blocked URLs.
  * @param {HTMLScriptElement} element - Script element to guard
- * @param {Object} handlers - Callbacks from the coordinator
+ * @param {object} handlers - Callbacks from the coordinator
  */
 function installGuardedSrcSetter(element, handlers) {
   // Store reference to the original src descriptor to properly set src on non-blocked scripts
@@ -168,7 +168,7 @@ function installGuardedSrcSetter(element, handlers) {
 
 /**
  * Override appendChild and insertBefore to intercept script insertion.
- * @param {Object} handlers - Callbacks from the coordinator
+ * @param {object} handlers - Callbacks from the coordinator
  * @param {Function} handlers.shouldBlockScript - (src) => boolean
  * @param {Function} handlers.shouldBlockInlineScript - (content) => boolean
  * @param {Function} handlers.onBlocked - (record) => void
@@ -202,7 +202,7 @@ export function overrideAppendMethods(handlers) {
 
 /**
  * Override setAttribute to catch dynamic src changes.
- * @param {Object} handlers - Callbacks from the coordinator
+ * @param {object} handlers - Callbacks from the coordinator
  * @param {Function} handlers.shouldBlockScript - (src) => boolean
  * @param {Function} handlers.onBlocked - (record) => void
  */
