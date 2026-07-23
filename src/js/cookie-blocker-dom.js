@@ -19,7 +19,7 @@ let originalSetAttribute = null;
  * Create an element bypassing the createElement override (used to execute
  * previously blocked scripts once consent arrives).
  * @param {string} tagName - Tag to create
- * @returns {Element}
+ * @returns {Element} The element created via the original createElement
  */
 export function createElementBypassingBlock(tagName) {
   const create = originalCreateElement || document.createElement;
@@ -30,7 +30,7 @@ export function createElementBypassingBlock(tagName) {
  * Append a child bypassing the appendChild override.
  * @param {Element} parent - Parent element
  * @param {Element} child - Child to append
- * @returns {Element}
+ * @returns {Element} The appended child
  */
 export function appendChildBypassingBlock(parent, child) {
   const append = originalAppendChild || Element.prototype.appendChild;
@@ -43,8 +43,8 @@ export function appendChildBypassingBlock(parent, child) {
  * Shared by the appendChild and insertBefore overrides.
  * @param {Element} node - Node being inserted
  * @param {object} handlers - Blocking predicates from the coordinator
- * @param {Function} handlers.shouldBlockScript - (src) => boolean
- * @param {Function} handlers.shouldBlockInlineScript - (content) => boolean
+ * @param {function(string): boolean} handlers.shouldBlockScript - (src) => boolean
+ * @param {function(string): boolean} handlers.shouldBlockInlineScript - (content) => boolean
  * @returns {object | null} Block record or null
  */
 function classifyScriptInsertion(node, handlers) {
@@ -111,8 +111,8 @@ function classifyByContent(node, handlers) {
  * Override document.createElement to intercept script creation. Each created
  * script gets a guarded `src` setter that consults the blocking predicate.
  * @param {object} handlers - Callbacks from the coordinator
- * @param {Function} handlers.shouldBlockScript - (src) => boolean
- * @param {Function} handlers.onBlocked - (record) => void
+ * @param {function(string): boolean} handlers.shouldBlockScript - (src) => boolean
+ * @param {function(object): void} handlers.onBlocked - (record) => void
  */
 export function overrideCreateElement(handlers) {
   originalCreateElement = document.createElement;
@@ -169,9 +169,9 @@ function installGuardedSrcSetter(element, handlers) {
 /**
  * Override appendChild and insertBefore to intercept script insertion.
  * @param {object} handlers - Callbacks from the coordinator
- * @param {Function} handlers.shouldBlockScript - (src) => boolean
- * @param {Function} handlers.shouldBlockInlineScript - (content) => boolean
- * @param {Function} handlers.onBlocked - (record) => void
+ * @param {function(string): boolean} handlers.shouldBlockScript - (src) => boolean
+ * @param {function(string): boolean} handlers.shouldBlockInlineScript - (content) => boolean
+ * @param {function(object): void} handlers.onBlocked - (record) => void
  */
 export function overrideAppendMethods(handlers) {
   originalAppendChild = Element.prototype.appendChild;
@@ -203,8 +203,8 @@ export function overrideAppendMethods(handlers) {
 /**
  * Override setAttribute to catch dynamic src changes.
  * @param {object} handlers - Callbacks from the coordinator
- * @param {Function} handlers.shouldBlockScript - (src) => boolean
- * @param {Function} handlers.onBlocked - (record) => void
+ * @param {function(string): boolean} handlers.shouldBlockScript - (src) => boolean
+ * @param {function(object): void} handlers.onBlocked - (record) => void
  */
 export function overrideSetAttribute(handlers) {
   originalSetAttribute = Element.prototype.setAttribute;

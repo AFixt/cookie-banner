@@ -80,7 +80,7 @@ const _subdomainSyncAPI = (function () {
   /**
    * Resolve the current hostname. Tests may override by setting
    * `currentHostname` in the config passed to `init`.
-   * @returns {string}
+   * @returns {string} The effective hostname
    */
   function getCurrentHostname() {
     return config.currentHostname || window.location.hostname;
@@ -265,7 +265,7 @@ const _subdomainSyncAPI = (function () {
 
   /**
    * Check the configured endpoint is present and still valid before use
-   * @returns {boolean}
+   * @returns {boolean} True when an endpoint is configured and passes validation
    */
   function hasValidEndpoint() {
     return !!config.syncEndpoint && isValidSyncEndpoint(config.syncEndpoint, config);

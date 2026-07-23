@@ -3,9 +3,9 @@ import globals from 'globals';
 import sonarjs from 'eslint-plugin-sonarjs';
 import security from 'eslint-plugin-security';
 import unicorn from 'eslint-plugin-unicorn';
-import importX from 'eslint-plugin-import-x';
+import { importX } from 'eslint-plugin-import-x';
 import promise from 'eslint-plugin-promise';
-import jsdoc from 'eslint-plugin-jsdoc';
+import jsdocPlugin from 'eslint-plugin-jsdoc';
 import noSecrets from 'eslint-plugin-no-secrets';
 
 /** @type {import('eslint').Linter.Config[]} */
@@ -79,7 +79,7 @@ export default [
     plugins: {
       security,
       unicorn,
-      jsdoc,
+      jsdoc: jsdocPlugin,
     },
     rules: {
       // Size and complexity limits (see #62/#69). Source only — test files
@@ -108,7 +108,7 @@ export default [
       'unicorn/explicit-length-check': 'off',
 
       // Documentation: every exported/public function keeps meaningful JSDoc
-      ...jsdoc.configs['flat/recommended'].rules,
+      ...jsdocPlugin.configs['flat/recommended'].rules,
       'jsdoc/require-jsdoc': [
         'warn',
         { publicOnly: false, require: { FunctionDeclaration: true } },
