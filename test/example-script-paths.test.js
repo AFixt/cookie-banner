@@ -12,9 +12,14 @@
  * https://github.com/AFixt/cookie-banner/issues/72 and
  * https://github.com/AFixt/cookie-banner/issues/86.
  *
- * banner.html and preferences-modal.html are also copied into dist/examples/
- * from src/html/, where their relative paths do resolve; they are markup
- * references rather than runnable examples, so they are not covered here.
+ * The bundle also fetches `locales/<locale>.json` relative to the page, so
+ * the build copies src/locales/ next to the pages as dist/examples/locales/;
+ * without it the language-switch demos silently fall back to English.
+ *
+ * src/html/banner.html and preferences-modal.html are markup references, not
+ * runnable examples: their `../js/*.js` and `../css/banner.css` references
+ * only resolve inside the source tree, so they are no longer copied into
+ * dist/examples/.
  */
 
 const fs = require('fs');
@@ -80,6 +85,18 @@ describe('rollup copies the assets next to the examples', () => {
       /src:\s*[`'"][^`'"]*banner\.css[`'"],\s*dest:\s*[`'"][^`'"]*examples[`'"]/
     );
   });
+
+  it('copies the locales so locales/<locale>.json resolves from the pages', () => {
+    expect(rollupConfig).toMatch(
+      /src:\s*[`'"][^`'"]*locales\/\*[`'"],\s*dest:\s*[`'"][^`'"]*examples\/locales[`'"]/
+    );
+  });
+
+  it('does not ship the src/html markup references as examples', () => {
+    // Their ../js and ../css references only resolve from src/html/, so a
+    // copy under dist/examples/ 404s every asset it loads.
+    expect(rollupConfig).not.toMatch(/src:\s*[`'"]src\/html\//);
+  });
 });
 
 // Only meaningful after `npm run build`; dist/ is gitignored and absent on a
@@ -104,5 +121,18 @@ const BUILT_DIR = path.join(ROOT, 'dist', 'examples');
       scriptSrcs(fs.readFileSync(path.join(BUILT_DIR, page), 'utf8'))
     );
     expect(all.length).toBeGreaterThan(0);
+  });
+
+  it('ships every locale next to the pages so the language switchers work', () => {
+    const sourceLocales = fs.readdirSync(path.join(ROOT, 'src', 'locales'));
+    expect(sourceLocales.length).toBeGreaterThan(0);
+    sourceLocales.forEach(locale => {
+      expect(fs.existsSync(path.join(BUILT_DIR, 'locales', locale))).toBe(true);
+    });
+  });
+
+  it('does not ship the src/html markup references', () => {
+    expect(fs.existsSync(path.join(BUILT_DIR, 'banner.html'))).toBe(false);
+    expect(fs.existsSync(path.join(BUILT_DIR, 'preferences-modal.html'))).toBe(false);
   });
 });
