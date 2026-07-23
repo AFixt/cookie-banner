@@ -1,5 +1,5 @@
 /**
- * @fileoverview Accessible Cookie Banner - Entry point for the library
+ * @file Accessible Cookie Banner - Entry point for the library
  * @module cookie-banner
  * @author Karl Groves <karlgroves@gmail.com>
  * @version 1.0.0
@@ -23,7 +23,7 @@ import { initSubdomainSync } from './subdomain-sync.js';
  */
 
 /**
- * @typedef {Object} ConsentObject
+ * @typedef {object} ConsentObject
  * @property {boolean} functional - Always true, functional cookies are required
  * @property {boolean} analytics - Whether analytics cookies are allowed
  * @property {boolean} marketing - Whether marketing cookies are allowed
@@ -31,14 +31,14 @@ import { initSubdomainSync } from './subdomain-sync.js';
  */
 
 /**
- * @typedef {Object} CookieBannerConfig
+ * @typedef {object} CookieBannerConfig
  * @property {string} [locale='en'] - Language locale for the banner
  * @property {string} [theme='light'] - Theme for the banner ('light' or 'dark')
  * @property {boolean} [showModal=true] - Whether to show the preferences modal
  * @property {Function} [onConsentChange] - Callback function called when consent changes
  * @property {string} [storageMethod='localStorage'] - Storage method ('localStorage' or 'cookie')
  * @property {number} [expireDays=365] - Number of days before consent expires
- * @property {Object} [categories] - Default consent categories
+ * @property {object} [categories] - Default consent categories
  * @property {boolean} [categories.functional=true] - Functional cookies (always required)
  * @property {boolean} [categories.analytics=false] - Analytics cookies default
  * @property {boolean} [categories.marketing=false] - Marketing cookies default
@@ -120,6 +120,6 @@ if (typeof window !== 'undefined') {
 
 /**
  * Default export - the CookieBanner API or null in non-browser environments
- * @type {Object|null}
+ * @type {object | null}
  */
 export default typeof window !== 'undefined' ? window.CookieBanner : null;

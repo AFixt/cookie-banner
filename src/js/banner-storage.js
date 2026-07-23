@@ -1,5 +1,5 @@
 /**
- * @fileoverview Consent storage helpers for the cookie banner — validation,
+ * @file Consent storage helpers for the cookie banner — validation,
  * secure cookie construction, and reading/writing consent from localStorage
  * or cookies. Extracted from banner.js (see AFixt/cookie-banner#69).
  * @module banner-storage
@@ -7,8 +7,8 @@
 
 /**
  * Validate a consent object against expected schema (M1)
- * @param {Object} obj - Object to validate
- * @returns {Object|null} Validated consent or null
+ * @param {object} obj - Object to validate
+ * @returns {object | null} Validated consent or null
  */
 export function validateConsentData(obj) {
   if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
@@ -37,7 +37,7 @@ export function buildSecureCookie(name, value, expires) {
 /**
  * Read consent from the configured storage backend.
  * @param {string} storageMethod - 'localStorage' or 'cookie'
- * @returns {Object|null} Validated consent object or null
+ * @returns {object | null} Validated consent object or null
  */
 export function readStoredConsent(storageMethod) {
   try {
@@ -61,11 +61,11 @@ export function readStoredConsent(storageMethod) {
 /**
  * Persist consent to the configured storage backend. Functional cookies are
  * always forced on and a timestamp is stamped onto the stored value.
- * @param {Object} consent - Consent object with boolean values
- * @param {Object} options - Storage options
+ * @param {object} consent - Consent object with boolean values
+ * @param {object} options - Storage options
  * @param {string} options.storageMethod - 'localStorage' or 'cookie'
  * @param {number} options.expireDays - Cookie lifetime in days
- * @returns {Object} The consent object as stored (with timestamp)
+ * @returns {object} The consent object as stored (with timestamp)
  */
 export function writeStoredConsent(consent, { storageMethod, expireDays }) {
   const consentData = {

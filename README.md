@@ -281,8 +281,15 @@ Supports all modern browsers, including:
 ## Development
 
 ```bash
+# Use the pinned Node version (matches CI)
+nvm use
+
 # Install dependencies
 npm install
+
+# Optional: install external scanner binaries (gitleaks, semgrep,
+# osv-scanner, lychee) used by local gates and scheduled scans
+npm run bootstrap
 
 # Run development server
 npm run dev
@@ -290,9 +297,18 @@ npm run dev
 # Run tests
 npm test
 
+# Full local quality gate: lint, formatting, CSS/Markdown lint,
+# duplication, license allowlist, and the test suite. The pre-push
+# hook runs exactly this, so run it before pushing.
+npm run check:all
+
 # Build for production
 npm run build
 ```
+
+Tooling decisions (what is enforced locally vs. in CI, and why) are
+documented in [docs/adr/](docs/adr/). Templates for new READMEs and ADRs
+live in [docs/templates/](docs/templates/).
 
 ## License
 

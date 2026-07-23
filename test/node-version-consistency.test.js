@@ -37,9 +37,9 @@ describe('Node version consistency', () => {
       .filter(f => /\.ya?ml$/.test(f))
       .forEach(file => {
         const yaml = fs.readFileSync(path.join(workflowDir, file), 'utf8');
-        const versions = [...yaml.matchAll(/node-version:\s*\[?\s*['"]?([^'"\]\s]+)/g)].map(
-          m => m[1]
-        );
+        const versions = [
+          ...yaml.matchAll(/node-version:[ \t]*(?:\[[ \t]*)?['"]?([^'"\]\s]+)/g),
+        ].map(m => m[1]);
         versions.forEach(version => {
           // Accept forms like 22, 22.x, ${{ matrix.node-version }} (resolved
           // from a matrix that is itself checked by this loop).

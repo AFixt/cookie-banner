@@ -1,5 +1,5 @@
 /**
- * @fileoverview Subdomain Consent Synchronization - Enterprise feature for cross-subdomain consent sharing
+ * @file Subdomain Consent Synchronization - Enterprise feature for cross-subdomain consent sharing
  * @module subdomain-sync
  * @author Karl Groves <karlgroves@gmail.com>
  * @version 1.0.0
@@ -19,7 +19,7 @@ const _subdomainSyncAPI = (function () {
 
   /**
    * Configuration for subdomain sync
-   * @typedef {Object} SubdomainSyncConfig
+   * @typedef {object} SubdomainSyncConfig
    * @property {boolean} enabled - Whether subdomain sync is enabled
    * @property {string} primaryDomain - The primary domain for consent storage
    * @property {string[]} allowedSubdomains - List of allowed subdomains
@@ -125,7 +125,9 @@ const _subdomainSyncAPI = (function () {
     syncFrame.src = `https://${config.primaryDomain}/cookie-consent-sync.html`;
     syncFrame.sandbox = 'allow-scripts allow-same-origin';
 
-    // Wait for iframe to load
+    // Wait for iframe to load. The onload property (not addEventListener) is
+    // part of the module's tested contract — the suite invokes it directly.
+    // eslint-disable-next-line unicorn/prefer-add-event-listener
     syncFrame.onload = () => {
       // Request current consent from primary domain
       requestConsentSync();
@@ -227,7 +229,7 @@ const _subdomainSyncAPI = (function () {
 
   /**
    * Handle remote consent data
-   * @param {Object} remoteConsent - Consent data from remote domain
+   * @param {object} remoteConsent - Consent data from remote domain
    * @returns {void}
    */
   function handleRemoteConsent(remoteConsent) {
@@ -298,7 +300,7 @@ const _subdomainSyncAPI = (function () {
 
   /**
    * Push consent to API endpoint
-   * @param {Object} consent - Consent data to push
+   * @param {object} consent - Consent data to push
    * @returns {Promise<void>}
    */
   async function pushConsentToAPI(consent) {
@@ -355,7 +357,7 @@ const _subdomainSyncAPI = (function () {
 
   /**
    * Get sync status information
-   * @returns {Object} Sync status
+   * @returns {object} Sync status
    */
   function getSyncStatus() {
     return {

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Accessible Cookie Banner - Main functionality for banner and preference modal
+ * @file Accessible Cookie Banner - Main functionality for banner and preference modal
  * @module banner
  * @author Karl Groves <karlgroves@gmail.com>
  * @version 1.0.0
@@ -56,7 +56,7 @@ const _bannerAPI = (function () {
 
   /**
    * Initialize the cookie banner
-   * @param {Object} userConfig - Configuration options
+   * @param {object} userConfig - Configuration options
    */
   function initCookieBanner(userConfig = {}) {
     try {
@@ -79,7 +79,9 @@ const _bannerAPI = (function () {
         return Promise.resolve();
       }
 
-      // Load locale strings
+      // Load locale strings. The chain resolves with no value by contract;
+      // callers only await completion.
+      /* eslint-disable promise/always-return */
       return loadLocaleStrings(config.locale)
         .then(() => {
           try {
@@ -104,6 +106,7 @@ const _bannerAPI = (function () {
           console.error('Failed to initialize cookie banner:', error);
           throw error;
         });
+      /* eslint-enable promise/always-return */
     } catch (error) {
       console.error('Failed to initialize cookie banner:', error);
       throw error;
@@ -172,6 +175,8 @@ const _bannerAPI = (function () {
 
   /**
    * Add keyboard event handler to button
+   * @param button
+   * @param callback
    */
   function addKeyboardHandler(button, callback) {
     button.addEventListener('keydown', e => {
@@ -186,7 +191,7 @@ const _bannerAPI = (function () {
    * Route a consent decision through an external CookieConsent manager when
    * one is installed, otherwise store it directly. Shared by the accept,
    * reject, and save-preferences paths.
-   * @param {Object} consentData - Consent object with boolean values
+   * @param {object} consentData - Consent object with boolean values
    */
   function applyConsent(consentData) {
     if (window.CookieConsent && window.CookieConsent.setConsent !== setConsent) {
@@ -215,7 +220,7 @@ const _bannerAPI = (function () {
       }
     };
 
-    const acceptBtn = document.getElementById('accept-all');
+    const acceptBtn = document.querySelector('#accept-all');
     acceptBtn.addEventListener('click', acceptAllHandler);
     addKeyboardHandler(acceptBtn, acceptAllHandler);
 
@@ -229,12 +234,12 @@ const _bannerAPI = (function () {
       }
     };
 
-    const rejectBtn = document.getElementById('reject-all');
+    const rejectBtn = document.querySelector('#reject-all');
     rejectBtn.addEventListener('click', rejectAllHandler);
     addKeyboardHandler(rejectBtn, rejectAllHandler);
 
     // Customize button
-    const customizeBtn = document.getElementById('customize-preferences');
+    const customizeBtn = document.querySelector('#customize-preferences');
     if (customizeBtn && config.showModal) {
       customizeBtn.addEventListener('click', e => {
         // Store the element that triggered the modal opening
@@ -246,10 +251,10 @@ const _bannerAPI = (function () {
     // Modal events (if enabled)
     if (config.showModal) {
       // Close button
-      document.getElementById('close-modal').addEventListener('click', closeModal);
+      document.querySelector('#close-modal').addEventListener('click', closeModal);
 
       // Form submission
-      document.getElementById('cookie-form').addEventListener('submit', e => {
+      document.querySelector('#cookie-form').addEventListener('submit', e => {
         e.preventDefault();
         try {
           const form = e.target;
@@ -313,7 +318,7 @@ const _bannerAPI = (function () {
     isModalOpen = false;
 
     // Remove overlay
-    const overlay = document.getElementById('cookie-modal-overlay');
+    const overlay = document.querySelector('#cookie-modal-overlay');
     if (overlay) {
       overlay.remove();
     }
@@ -334,7 +339,7 @@ const _bannerAPI = (function () {
 
   /**
    * Get current consent settings from storage directly
-   * @returns {Object|null} - Consent object or null if no consent is stored
+   * @returns {object | null} - Consent object or null if no consent is stored
    */
   function getConsentFromStorage() {
     return readStoredConsent(config.storageMethod);
@@ -342,7 +347,7 @@ const _bannerAPI = (function () {
 
   /**
    * Get current consent settings (public API)
-   * @returns {Object|null} - Consent object or null if no consent is stored
+   * @returns {object | null} - Consent object or null if no consent is stored
    */
   function getConsent() {
     return getConsentFromStorage();
@@ -350,7 +355,7 @@ const _bannerAPI = (function () {
 
   /**
    * Set consent settings
-   * @param {Object} consent - Consent object with boolean values
+   * @param {object} consent - Consent object with boolean values
    */
   function setConsent(consent) {
     try {
@@ -383,7 +388,7 @@ const _bannerAPI = (function () {
 
   /**
    * Dispatch a custom event with consent data
-   * @param {Object} consentData - Consent data
+   * @param {object} consentData - Consent data
    */
   function dispatchConsentEvent(consentData) {
     const event = new CustomEvent('cookieConsentChanged', {

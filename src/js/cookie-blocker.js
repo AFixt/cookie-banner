@@ -1,5 +1,5 @@
 /**
- * @fileoverview Cookie Auto-blocking Module - Prevents tracking scripts and cookies from loading before user consent
+ * @file Cookie Auto-blocking Module - Prevents tracking scripts and cookies from loading before user consent
  * @module cookie-blocker
  * @author Karl Groves <karlgroves@gmail.com>
  * @version 1.0.0
@@ -34,7 +34,7 @@ const _blockerAPI = (function () {
 
   /**
    * Get the installed consent manager, if any
-   * @returns {Object|null} window.CookieConsent or null
+   * @returns {object | null} window.CookieConsent or null
    */
   function getConsentManager() {
     return typeof window !== 'undefined' && window.CookieConsent ? window.CookieConsent : null;
@@ -132,7 +132,7 @@ const _blockerAPI = (function () {
   /**
    * Check whether a consent object allows scripts of the given type
    * @param {string} type - Blocked script category
-   * @param {Object} consent - Consent detail from the change event
+   * @param {object} consent - Consent detail from the change event
    * @returns {boolean} True when the script may now execute
    */
   function consentAllowsType(type, consent) {
@@ -151,7 +151,7 @@ const _blockerAPI = (function () {
   /**
    * Re-create and execute a previously blocked script, copying its
    * attributes, using the original DOM methods so the override is bypassed.
-   * @param {Object} blockedItem - Record captured when the script was blocked
+   * @param {object} blockedItem - Record captured when the script was blocked
    */
   function executeBlockedScript(blockedItem) {
     const { element, src, innerHTML } = blockedItem;
@@ -214,7 +214,7 @@ const _blockerAPI = (function () {
   }
 
   /**
-   * @typedef {Object} BlockedScript
+   * @typedef {object} BlockedScript
    * @property {HTMLScriptElement} element - The blocked script element
    * @property {string} src - The source URL of the blocked script
    * @property {string} type - The type of script (e.g., 'analytics', 'marketing')

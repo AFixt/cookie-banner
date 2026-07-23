@@ -1,5 +1,5 @@
 /**
- * @fileoverview DOM construction for the cookie banner and preferences modal.
+ * @file DOM construction for the cookie banner and preferences modal.
  * Builders receive configuration and locale strings and return detached
  * elements; the caller owns insertion into the document. Extracted from
  * banner.js (see AFixt/cookie-banner#69).
@@ -37,8 +37,8 @@ function buildBannerButton(id, action, label) {
 
 /**
  * Create the cookie banner element (detached)
- * @param {Object} config - Banner configuration
- * @param {Object} strings - Locale strings
+ * @param {object} config - Banner configuration
+ * @param {object} strings - Locale strings
  * @returns {HTMLDivElement} The banner element
  */
 export function createBannerElement(config, strings) {
@@ -77,7 +77,7 @@ export function createBannerElement(config, strings) {
 /**
  * Create one cookie-category row: a labelled checkbox with optional
  * description paragraph.
- * @param {Object} options - Category options
+ * @param {object} options - Category options
  * @param {string} options.name - Checkbox name attribute
  * @param {boolean} options.checked - Initial checked state
  * @param {boolean} options.disabled - Whether the checkbox is locked
@@ -114,8 +114,8 @@ function buildCategoryRow({ name, checked, disabled, label, description }) {
 
 /**
  * Create the fieldset grouping all cookie-category checkboxes
- * @param {Object} config - Banner configuration
- * @param {Object} strings - Locale strings
+ * @param {object} config - Banner configuration
+ * @param {object} strings - Locale strings
  * @returns {HTMLFieldSetElement}
  */
 function buildCategoryFieldset(config, strings) {
@@ -157,7 +157,7 @@ function buildCategoryFieldset(config, strings) {
 
 /**
  * Create the modal action buttons (save / cancel)
- * @param {Object} strings - Locale strings
+ * @param {object} strings - Locale strings
  * @returns {HTMLDivElement}
  */
 function buildModalActions(strings) {
@@ -183,8 +183,8 @@ function buildModalActions(strings) {
 
 /**
  * Create the preferences modal element (detached, hidden)
- * @param {Object} config - Banner configuration
- * @param {Object} strings - Locale strings
+ * @param {object} config - Banner configuration
+ * @param {object} strings - Locale strings
  * @returns {HTMLDivElement} The modal element
  */
 export function createModalElement(config, strings) {

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Validation and configuration preparation for subdomain
+ * @file Validation and configuration preparation for subdomain
  * consent synchronization: domain/subdomain patterns, consent schema checks,
  * endpoint vetting, and config sanitization. Extracted from
  * subdomain-sync.js (see AFixt/cookie-banner#69).
@@ -15,8 +15,10 @@ const DOMAIN_REGEX = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-
 /** Single-label subdomain pattern */
 const SUBDOMAIN_REGEX = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i;
 
-/** Allowed config keys to prevent prototype pollution. `currentHostname` is a
- *  documented test-only override consumed by `getCurrentHostname()`. */
+/**
+ * Allowed config keys to prevent prototype pollution. `currentHostname` is a
+ *  documented test-only override consumed by `getCurrentHostname()`.
+ */
 const ALLOWED_SYNC_CONFIG_KEYS = [
   'enabled',
   'primaryDomain',
@@ -47,8 +49,8 @@ export function filterValidSubdomains(subdomains) {
 
 /**
  * Sanitize config by allowlisting known keys and validating values
- * @param {Object} userConfig - User-provided configuration
- * @returns {Object} Sanitized configuration
+ * @param {object} userConfig - User-provided configuration
+ * @returns {object} Sanitized configuration
  */
 export function sanitizeConfig(userConfig) {
   const sanitized = {};
@@ -62,8 +64,8 @@ export function sanitizeConfig(userConfig) {
 
 /**
  * Validate a consent object against expected schema
- * @param {Object} obj - Object to validate
- * @returns {Object|null} Validated consent or null
+ * @param {object} obj - Object to validate
+ * @returns {object | null} Validated consent or null
  */
 export function validateConsentSchema(obj) {
   if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
@@ -81,7 +83,7 @@ export function validateConsentSchema(obj) {
  * Validate that a sync endpoint URL is safe: HTTPS and on the primary domain
  * or an allowed subdomain of it.
  * @param {string} endpoint - URL to validate
- * @param {Object} config - Sync configuration (primaryDomain, allowedSubdomains)
+ * @param {object} config - Sync configuration (primaryDomain, allowedSubdomains)
  * @returns {boolean} Whether the endpoint is valid
  */
 export function isValidSyncEndpoint(endpoint, config) {
@@ -111,9 +113,9 @@ export function isValidSyncEndpoint(endpoint, config) {
  * Normalizes the subdomain list, clamps the sync interval, and drops an
  * invalid endpoint. Reports a status the initializer maps to its logging
  * and early-return behavior.
- * @param {Object} userConfig - User-provided configuration
- * @param {Object} defaultConfig - Module defaults
- * @returns {{config: Object, status: string}} Prepared config and one of
+ * @param {object} userConfig - User-provided configuration
+ * @param {object} defaultConfig - Module defaults
+ * @returns {{config: object, status: string}} Prepared config and one of
  *   'disabled' | 'invalid-domain' | 'ok'
  */
 export function prepareSyncConfig(userConfig, defaultConfig) {

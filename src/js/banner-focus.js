@@ -1,5 +1,5 @@
 /**
- * @fileoverview Focus management for the preferences modal: capturing focus
+ * @file Focus management for the preferences modal: capturing focus
  * on open, trapping Tab/Shift+Tab inside the dialog, and restoring focus on
  * close (WCAG 2.2 focus management). Extracted from banner.js (see
  * AFixt/cookie-banner#69).
@@ -12,7 +12,7 @@ const FOCUSABLE_SELECTOR =
 /**
  * Create a focus manager for a modal dialog. Each manager instance owns the
  * focus bookkeeping that previously lived as module state in banner.js.
- * @returns {Object} Focus manager API
+ * @returns {object} Focus manager API
  */
 export function createFocusManager() {
   let firstFocusableElement = null;

@@ -1,0 +1,40 @@
+name: Link Check
+
+on:
+  schedule:
+    # Weekly, Monday 06:30 UTC — external links rot on their own schedule,
+    # not per-commit, so this is not a PR gate.
+    - cron: '30 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  lychee:
+    name: Check Markdown links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run lychee
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --exclude-path node_modules
+            --exclude-path dist
+            --exclude-path CHANGELOG.md
+            './**/*.md'
+          fail: false
+
+      - name: Open an issue when links are broken
+        if: steps.lychee.outputs.exit_code != 0
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: 'Link check: broken links found'
+          content-filepath: ./lychee/out.md
+          labels: documentation
