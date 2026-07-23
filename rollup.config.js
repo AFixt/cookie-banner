@@ -73,8 +73,10 @@ export default {
         // to them for the same reason consent.js does. See issue #72.
         { src: 'src/css/banner.css', dest: `${outputDir}/examples` },
         { src: 'src/locales/*', dest: `${outputDir}/locales` },
-        { src: 'src/html/banner.html', dest: `${outputDir}/examples` },
-        { src: 'src/html/preferences-modal.html', dest: `${outputDir}/examples` },
+        // The bundle fetches `locales/<locale>.json` relative to the page, so
+        // the language-switch demos need a copy under dist/examples/ too.
+        // See issue #86.
+        { src: 'src/locales/*', dest: `${outputDir}/examples/locales` },
         { src: 'examples/*', dest: `${outputDir}/examples` },
         { src: 'src/types', dest: `${outputDir}` },
         { src: 'README.md', dest: outputDir },
