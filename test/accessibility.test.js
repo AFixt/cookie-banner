@@ -245,3 +245,42 @@ describe('Accessibility Features', () => {
     });
   });
 });
+
+describe('Automated accessibility scan (@afixt/a11y-assert)', () => {
+  const { expectAccessible } = require('./helpers/a11y.js');
+
+  beforeEach(async () => {
+    document.body.innerHTML = '';
+    localStorage.clear();
+    delete window.CookieConsent;
+    delete window.initCookieBanner;
+    console.error = jest.fn();
+    console.warn = jest.fn();
+    jest.resetModules();
+    require('../src/js/banner.js');
+    await window.initCookieBanner({ locale: 'en', showModal: true });
+  });
+
+  // KEYBOARD-01 (visible focus indication) is defined by banner.css, which
+  // jsdom neither loads nor can evaluate (no pseudo-class computed styles).
+  // The stylesheet ships :focus outlines for every control and the
+  // Playwright visual suite exercises them in a real browser.
+  const JSDOM_UNEVALUABLE_RULES = ['KEYBOARD-01'];
+
+  test('rendered banner passes automated accessibility checks', async () => {
+    await expect(
+      expectAccessible(() => document.getElementById('cookie-banner'), {
+        ignoreRules: JSDOM_UNEVALUABLE_RULES,
+      })
+    ).resolves.toBeUndefined();
+  });
+
+  test('rendered preferences modal passes automated accessibility checks', async () => {
+    document.getElementById('customize-preferences').click();
+    await expect(
+      expectAccessible(() => document.getElementById('cookie-modal'), {
+        ignoreRules: JSDOM_UNEVALUABLE_RULES,
+      })
+    ).resolves.toBeUndefined();
+  });
+});

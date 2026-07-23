@@ -1,6 +1,12 @@
 // Import testing-library extensions
 require('@testing-library/jest-dom');
 
+// Register @afixt/a11y-assert matchers (toBeAccessible, toHaveAriaAttributes,
+// etc.) so accessibility assertions are available in every suite. Violations
+// are picked up by @afixt/a11y-assert-reporter (see jest.config.cjs).
+const { setupJestAccessibility } = require('@afixt/a11y-assert/integrations/jest');
+setupJestAccessibility();
+
 // Mock localStorage using jest functions for easier testing
 const localStorageMock = {
   store: {},

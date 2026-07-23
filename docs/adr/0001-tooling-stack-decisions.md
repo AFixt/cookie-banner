@@ -33,10 +33,19 @@ remainder.
   itself excludes it).
 - **markdownlint-cli** over `markdownlint-cli2` — same engine, config
   already in place; no quality difference for this repo's needs.
-- **Playwright visual/a11y tests** and the axe-based accessibility suite
-  remain the a11y layers. `@afix/a11y-assert` is a private scoped package;
-  adopting it is deferred until it is available to this repo's CI without
-  friction (tracked in #62).
+- **Playwright visual/a11y tests** and the manual-assertion accessibility
+  suite remain the a11y layers. `@afixt/a11y-assert` adoption was deferred
+  here while the package was unpublished; that changed — see the update
+  below.
+
+  **Update (2026-07-22, #56):** `@afixt/a11y-assert` 2.x and
+  `@afixt/a11y-assert-reporter` are published again and are now integrated:
+  automated scans of the rendered banner and modal run in the Jest suite
+  (`test/accessibility.test.js` via `test/helpers/a11y.js`), and the
+  reporter writes HTML/JSON/Markdown results to `reports/a11y/` on every
+  test run. Rules jsdom cannot evaluate (computed-style focus indication,
+  KEYBOARD-01) are excluded with justification at the call site and remain
+  covered by the stylesheet plus the Playwright browser runs.
 
 ### Added (gaps closed by this change)
 
