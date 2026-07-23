@@ -8,5 +8,11 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 docs
+playwright-report
 playwright-visual-report
+test-results
+reports
+npm-audit-results.json
+bundle-analysis.txt
+licenses.json
 CHANGELOG.md
