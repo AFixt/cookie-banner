@@ -126,7 +126,7 @@ describe('Accessibility Features', () => {
       const form = document.getElementById('cookie-form');
       const fieldsets = form.querySelectorAll('fieldset');
 
-      expect(fieldsets.length).toBe(3);
+      expect(fieldsets).toHaveLength(3);
 
       fieldsets.forEach(fieldset => {
         const legend = fieldset.querySelector('legend');
@@ -138,7 +138,7 @@ describe('Accessibility Features', () => {
     test('should have descriptive text for each cookie category', () => {
       const descriptions = document.querySelectorAll('.cookie-description');
 
-      expect(descriptions.length).toBe(3);
+      expect(descriptions).toHaveLength(3);
 
       descriptions.forEach(description => {
         expect(description.textContent.length).toBeGreaterThan(10);

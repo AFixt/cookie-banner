@@ -69,9 +69,14 @@ export default {
     copy({
       targets: [
         { src: 'src/css/banner.css', dest: outputDir },
+        // The examples link `./banner.css`, so the stylesheet has to sit next
+        // to them for the same reason consent.js does. See issue #72.
+        { src: 'src/css/banner.css', dest: `${outputDir}/examples` },
         { src: 'src/locales/*', dest: `${outputDir}/locales` },
-        { src: 'src/html/banner.html', dest: `${outputDir}/examples` },
-        { src: 'src/html/preferences-modal.html', dest: `${outputDir}/examples` },
+        // The bundle fetches `locales/<locale>.json` relative to the page, so
+        // the language-switch demos need a copy under dist/examples/ too.
+        // See issue #86.
+        { src: 'src/locales/*', dest: `${outputDir}/examples/locales` },
         { src: 'examples/*', dest: `${outputDir}/examples` },
         { src: 'src/types', dest: `${outputDir}` },
         { src: 'README.md', dest: outputDir },
@@ -82,11 +87,16 @@ export default {
     // bundles exist on disk by the time they are copied.
     copy({
       hook: 'writeBundle',
-      targets: LEGACY_ALIASES.map(([from, to]) => ({
-        src: `${outputDir}/${from}`,
-        dest: outputDir,
-        rename: to,
-      })),
+      targets: [
+        ...LEGACY_ALIASES.map(([from, to]) => ({
+          src: `${outputDir}/${from}`,
+          dest: outputDir,
+          rename: to,
+        })),
+        // The examples load `./consent.js`, so the copy under dist/examples/
+        // is self-contained wherever it is served from. See issue #72.
+        { src: `${outputDir}/consent.js`, dest: `${outputDir}/examples` },
+      ],
     }),
     // Add bundle analyzer only in development or when explicitly requested
     process.env.ANALYZE &&

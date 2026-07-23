@@ -49,13 +49,26 @@ When submitting a pull request:
    cd accessible-cookie-banner
    ```
 
-2. Install dependencies:
+2. Use the pinned Node version (matches CI — see `.nvmrc`):
+
+   ```bash
+   nvm use
+   ```
+
+3. Install dependencies:
 
    ```bash
    npm install
    ```
 
-3. Start the development environment:
+   When changing dependencies, always update `package-lock.json`
+   incrementally (`npm install <pkg>` / `npm update <pkg>`). Never delete
+   and regenerate the lockfile from scratch: regeneration drops the
+   platform-specific optional packages recorded for other operating
+   systems (such as `@rollup/rollup-linux-x64-gnu`, which the Linux CI
+   runners need), producing a lockfile that works locally but fails in CI.
+
+4. Start the development environment:
 
    ```bash
    npm run dev

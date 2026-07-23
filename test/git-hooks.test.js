@@ -60,8 +60,12 @@ describe('Husky hooks', () => {
 
   it('runs the full check suite and tests before each push', () => {
     const commands = hookCommands('pre-push').join('\n');
-    expect(commands).toMatch(/npm run check/);
-    expect(commands).toMatch(/npm test/);
+    expect(commands).toMatch(/npm run check:all/);
+
+    // check:all must keep the test suite inside the push gate
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+    expect(pkg.scripts['check:all']).toMatch(/npm run check/);
+    expect(pkg.scripts['check:all']).toMatch(/npm test/);
   });
 
   it('validates commit messages against commitlint', () => {

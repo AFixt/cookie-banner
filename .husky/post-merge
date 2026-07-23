@@ -1,0 +1,5 @@
+# Keep node_modules in sync after pulls that change the lockfile.
+if git diff --name-only HEAD@{1} HEAD 2>/dev/null | grep -q '^package-lock.json$'; then
+  echo "package-lock.json changed — running npm install to sync node_modules."
+  npm install
+fi

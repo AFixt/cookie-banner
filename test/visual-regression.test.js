@@ -5,7 +5,9 @@
 import { test, expect } from '@playwright/test';
 
 // Test configuration
-const TEST_URL = 'http://localhost:8080/examples/vanilla-js.html';
+// The built copy is the page users are pointed at (see README) and the only
+// place ./consent.js and ./banner.css resolve, so it needs `npm run build`.
+const TEST_URL = 'http://localhost:8080/dist/examples/vanilla-js.html';
 const VIEWPORT_SIZES = [
   { width: 1280, height: 720, name: 'desktop' },
   { width: 768, height: 1024, name: 'tablet' },
