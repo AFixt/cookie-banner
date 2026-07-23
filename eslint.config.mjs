@@ -34,6 +34,19 @@ export default [
     },
   },
   {
+    // Size and complexity limits (see #62/#69). Source only — test files
+    // legitimately hold long describe blocks and fixture-heavy functions.
+    files: ['src/**/*.js'],
+    rules: {
+      'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
+      'max-lines-per-function': ['error', { max: 75, skipBlankLines: true, skipComments: true }],
+      complexity: ['error', 10],
+      'max-depth': ['error', 4],
+      'max-params': ['error', 4],
+      'max-nested-callbacks': ['error', 3],
+    },
+  },
+  {
     ignores: [
       'node_modules/**',
       'dist/**',
