@@ -39,6 +39,18 @@ describe('subdomain-sync-validation', () => {
       expect(isValidDomain('a'.repeat(254))).toBe(false);
       expect(isValidDomain(42)).toBe(false);
     });
+
+    // Pins the label-by-label validation that replaced the single
+    // nested-repetition pattern (security/detect-unsafe-regex cleanup).
+    test('handles label edge cases like the original pattern', () => {
+      expect(isValidDomain('a.io')).toBe(true);
+      expect(isValidDomain('my-app.example.com')).toBe(true);
+      expect(isValidDomain('')).toBe(false);
+      expect(isValidDomain('a..b')).toBe(false);
+      expect(isValidDomain('example.com.')).toBe(false);
+      expect(isValidDomain('bad-.com')).toBe(false);
+      expect(isValidDomain('.example.com')).toBe(false);
+    });
   });
 
   describe('filterValidSubdomains', () => {
@@ -48,6 +60,10 @@ describe('subdomain-sync-validation', () => {
         'www2',
       ]);
       expect(filterValidSubdomains(undefined)).toEqual([]);
+    });
+
+    test('keeps single-character labels and rejects hyphen edges', () => {
+      expect(filterValidSubdomains(['a', 'my-app', '-app', 'app-', ''])).toEqual(['a', 'my-app']);
     });
   });
 

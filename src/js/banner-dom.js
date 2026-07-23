@@ -25,7 +25,7 @@ function applyTheme(element, theme) {
  * @param {string} id - Element id
  * @param {string} action - data-action value
  * @param {string} label - Visible button text
- * @returns {HTMLButtonElement}
+ * @returns {HTMLButtonElement} The configured action button
  */
 function buildBannerButton(id, action, label) {
   const button = document.createElement('button');
@@ -83,7 +83,7 @@ export function createBannerElement(config, strings) {
  * @param {boolean} options.disabled - Whether the checkbox is locked
  * @param {string} options.label - Visible label text
  * @param {string} [options.description] - Optional description text
- * @returns {HTMLDivElement}
+ * @returns {HTMLDivElement} The category row container
  */
 function buildCategoryRow({ name, checked, disabled, label, description }) {
   const container = document.createElement('div');
@@ -116,7 +116,7 @@ function buildCategoryRow({ name, checked, disabled, label, description }) {
  * Create the fieldset grouping all cookie-category checkboxes
  * @param {object} config - Banner configuration
  * @param {object} strings - Locale strings
- * @returns {HTMLFieldSetElement}
+ * @returns {HTMLFieldSetElement} The fieldset grouping all category checkboxes
  */
 function buildCategoryFieldset(config, strings) {
   const fieldset = document.createElement('fieldset');
@@ -158,7 +158,7 @@ function buildCategoryFieldset(config, strings) {
 /**
  * Create the modal action buttons (save / cancel)
  * @param {object} strings - Locale strings
- * @returns {HTMLDivElement}
+ * @returns {HTMLDivElement} The container holding the save and cancel buttons
  */
 function buildModalActions(strings) {
   const actions = document.createElement('div');

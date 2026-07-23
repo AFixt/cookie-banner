@@ -40,7 +40,7 @@ class ConsentManager {
    * @param {object} options - Configuration options
    * @param {string} options.storageMethod - 'localStorage' or 'cookie'
    * @param {number} options.expireDays - Number of days before consent expires
-   * @param {Function} options.onConsentChange - Callback for consent changes
+   * @param {function(object): void} options.onConsentChange - Callback for consent changes
    */
   constructor(options = {}) {
     this.options = {
@@ -80,6 +80,7 @@ class ConsentManager {
   /**
    * Set consent settings
    * @param {object} consent - Consent object with boolean values
+   * @returns {object | null} The stored consent data, or null when storage failed
    */
   setConsent(consent) {
     // Ensure functional cookies are always enabled

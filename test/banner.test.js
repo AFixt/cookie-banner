@@ -202,6 +202,24 @@ describe('Banner Functionality', () => {
         "Invalid locale format 'invalid', using default English."
       );
     });
+
+    // Pins the locale pattern rewritten without nested quantifiers
+    // (security/detect-unsafe-regex cleanup): ll or ll-CC only.
+    test('accepts region-qualified locales and rejects near-misses', async () => {
+      global.fetch = jest.fn().mockResolvedValue({ ok: false });
+      mockConsentManager.getConsent.mockReturnValue(null);
+
+      await window.initCookieBanner({ locale: 'en-US' });
+      expect(global.fetch).toHaveBeenCalledWith('locales/en-US.json');
+
+      for (const locale of ['EN', 'en-us', 'eng', 'e']) {
+        console.warn.mockClear();
+        await window.initCookieBanner({ locale });
+        expect(console.warn).toHaveBeenCalledWith(
+          `Invalid locale format '${locale}', using default English.`
+        );
+      }
+    });
   });
 
   describe('Banner Creation', () => {
