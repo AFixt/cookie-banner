@@ -1,8 +1,12 @@
 name: Security Scanning
 
+# The OWASP Dependency Check and licence jobs below are gated on
+# `schedule`/`workflow_dispatch`. Until this schedule was added they could
+# never run, because the workflow had no schedule trigger at all.
 on:
-  push:
-    branches: [main, develop]
+  schedule:
+    # Weekly, Monday 06:00 UTC.
+    - cron: '0 6 * * 1'
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
