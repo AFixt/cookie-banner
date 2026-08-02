@@ -49,43 +49,48 @@
     </style>
   </head>
   <body>
-    <h1>مثال عن دعم RTL في شريط ملفات تعريف الارتباط</h1>
+    <main>
+      <h1>مثال عن دعم RTL في شريط ملفات تعريف الارتباط</h1>
 
-    <p>
-      يوضح هذا المثال كيفية استخدام الشريط مع اللغات التي تُكتب من اليمين إلى اليسار مثل العربية.
-    </p>
+      <p>
+        يوضح هذا المثال كيفية استخدام الشريط مع اللغات التي تُكتب من اليمين إلى اليسار مثل العربية.
+      </p>
 
-    <h2>طريقة التنفيذ</h2>
-    <div class="ltr-example">
-      <code
-        >// Add RTL attribute to your HTML &lt;html lang="ar" dir="rtl"&gt; // The banner will
-        automatically adjust to RTL layout window.CookieBanner.init({ locale: 'ar', // Use Arabic
-        locale (you would need to create this file) theme: 'light', onConsentChange: (consent) => {
-        console.log('Consent changed:', consent); } });</code
-      >
-    </div>
-
-    <div class="demo-controls">
-      <h3>أدوات التجربة</h3>
-      <div>
-        <button id="reset-consent">إعادة تعيين الموافقة</button>
-        <button id="toggle-theme">تبديل السمة</button>
-        <select id="language-selector">
-          <option value="en">الإنجليزية</option>
-          <option value="fr">الفرنسية</option>
-          <option value="es">الإسبانية</option>
-        </select>
+      <h2>طريقة التنفيذ</h2>
+      <div class="ltr-example">
+        <code
+          >// Add RTL attribute to your HTML &lt;html lang="ar" dir="rtl"&gt; // The banner will
+          automatically adjust to RTL layout window.CookieBanner.init({ locale: 'ar', // Use Arabic
+          locale (you would need to create this file) theme: 'light', onConsentChange: (consent) =>
+          { console.log('Consent changed:', consent); } });</code
+        >
       </div>
-      <div>
-        <h4>حالة الموافقة الحالية:</h4>
-        <pre id="consent-status" dir="ltr">لم يتم العثور على بيانات الموافقة</pre>
-      </div>
-    </div>
 
-    <p>
-      ملاحظة: هذا مجرد مثال توضيحي. لدعم العربية بشكل كامل، ستحتاج إلى إضافة ملف ترجمة عربي في مجلد
-      locales.
-    </p>
+      <div class="demo-controls">
+        <h3>أدوات التجربة</h3>
+        <div>
+          <button id="reset-consent">إعادة تعيين الموافقة</button>
+          <button id="toggle-theme">تبديل السمة</button>
+          <label for="language-selector">لغة الشريط</label>
+          <select id="language-selector">
+            <option value="en">الإنجليزية</option>
+            <option value="de">الألمانية</option>
+            <option value="es">الإسبانية</option>
+            <option value="fr">الفرنسية</option>
+            <option value="it">الإيطالية</option>
+          </select>
+        </div>
+        <div>
+          <h4>حالة الموافقة الحالية:</h4>
+          <pre id="consent-status" dir="ltr">لم يتم العثور على بيانات الموافقة</pre>
+        </div>
+      </div>
+
+      <p>
+        ملاحظة: هذا مجرد مثال توضيحي. لدعم العربية بشكل كامل، ستحتاج إلى إضافة ملف ترجمة عربي في
+        مجلد locales.
+      </p>
+    </main>
 
     <!-- Include the built UMD bundle (exposes window.initCookieBanner, window.CookieConsent, etc.) -->
     <script src="./consent.js"></script>

@@ -34,12 +34,13 @@
     </style>
   </head>
   <body>
-    <h1>Cookie Banner - Vanilla JS Example</h1>
+    <main>
+      <h1>Cookie Banner - Vanilla JS Example</h1>
 
-    <p>This example shows how to implement the cookie banner with vanilla JavaScript.</p>
+      <p>This example shows how to implement the cookie banner with vanilla JavaScript.</p>
 
-    <h2>Implementation</h2>
-    <pre><code>&lt;!-- Include the CSS --&gt;
+      <h2>Implementation</h2>
+      <pre><code>&lt;!-- Include the CSS --&gt;
 &lt;link rel="stylesheet" href="path/to/banner.css"&gt;
 
 &lt;!-- Include the JavaScript --&gt;
@@ -65,22 +66,26 @@
   });
 &lt;/script&gt;</code></pre>
 
-    <div class="demo-controls">
-      <h3>Demo Controls</h3>
-      <div>
-        <button id="reset-consent">Reset Consent</button>
-        <button id="toggle-theme">Toggle Theme</button>
-        <select id="language-selector">
-          <option value="en">English</option>
-          <option value="fr">French</option>
-          <option value="es">Spanish</option>
-        </select>
+      <div class="demo-controls">
+        <h3>Demo Controls</h3>
+        <div>
+          <button id="reset-consent">Reset Consent</button>
+          <button id="toggle-theme">Toggle Theme</button>
+          <label for="language-selector">Banner language</label>
+          <select id="language-selector">
+            <option value="en">English</option>
+            <option value="de">German</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="it">Italian</option>
+          </select>
+        </div>
+        <div>
+          <h4>Current Consent Status:</h4>
+          <pre id="consent-status">No consent data found</pre>
+        </div>
       </div>
-      <div>
-        <h4>Current Consent Status:</h4>
-        <pre id="consent-status">No consent data found</pre>
-      </div>
-    </div>
+    </main>
 
     <!-- Include the built UMD bundle (exposes window.initCookieBanner, window.CookieConsent, etc.) -->
     <script src="./consent.js"></script>
