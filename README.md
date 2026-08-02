@@ -315,6 +315,49 @@ Tooling decisions (what is enforced locally vs. in CI, and why) are
 documented in [docs/adr/](docs/adr/). Templates for new READMEs and ADRs
 live in [docs/templates/](docs/templates/).
 
+### Scripts
+
+| Script                  | What it does                                                                           |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| `npm run dev`           | Build the CSS and watch the bundle for changes                                         |
+| `npm run build`         | Clean, build the CSS, and produce the production bundles in `dist/`                    |
+| `npm start`             | Build, then serve the project at <http://localhost:8080>                               |
+| `npm test`              | Jest unit, integration and accessibility suites                                        |
+| `npm run test:coverage` | The same suites with a coverage report                                                 |
+| `npm run test:a11y`     | Playwright accessibility scans of the built pages (needs `npm run build` and a server) |
+| `npm run test:visual`   | Playwright visual regression suite                                                     |
+| `npm run lint`          | ESLint over the whole repo                                                             |
+| `npm run lint:css`      | Stylelint over `src/**/*.css`                                                          |
+| `npm run lint:md`       | markdownlint over the Markdown files                                                   |
+| `npm run lint:cpd`      | jscpd duplication report                                                               |
+| `npm run lint:licenses` | Fail on a production dependency outside the licence allowlist                          |
+| `npm run format`        | Prettier write; `format:check` to verify only                                          |
+| `npm run check`         | Lint, format check, CSS and Markdown lint                                              |
+| `npm run check:all`     | `check` plus duplication, licences and tests — what the pre-push hook runs             |
+| `npm run size`          | Enforce the bundle budgets declared in `package.json`                                  |
+| `npm run docs:build`    | Regenerate the API documentation from JSDoc comments                                   |
+
+Accessibility scans and duplication reports are written to `reports/`.
+
+## Contributing
+
+Contributions are welcome. [CONTRIBUTING.md](CONTRIBUTING.md) has the full
+guide; the short version:
+
+1. Branch from `develop` using a `feature/*` name — `main` and `develop` do
+   not take direct commits.
+2. Write tests for the change. Nothing lands without them, and the suite must
+   be green.
+3. Use [Conventional Commits](https://www.conventionalcommits.org/) for commit
+   messages — the changelog is generated from them.
+4. Run `npm run check:all` before pushing. The pre-push hook runs it for you;
+   do not bypass it with `--no-verify`.
+5. Open a pull request against `develop`.
+
+Accessibility is the point of this project: keyboard support, focus
+management, ARIA correctness and WCAG 2.2 AA conformance are requirements, not
+nice-to-haves. See [ACCESSIBILITY.md](ACCESSIBILITY.md).
+
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).
