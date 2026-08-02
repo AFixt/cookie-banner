@@ -104,6 +104,29 @@ describe('release.yml', () => {
   });
 });
 
+describe('npm authentication', () => {
+  // @afixt/a11y-assert depends on the restricted @afixt/test-utils, so an
+  // unauthenticated `npm ci` 404s on its tarball and the whole job dies before
+  // any gate runs. That is what broke CI on develop the moment #96 landed.
+  // setup-node only writes the auth line into .npmrc when registry-url is set,
+  // so the token and the registry-url have to travel together.
+  it.each(['ci.yml', 'release.yml', 'security.yml'])(
+    '%s authenticates every npm ci against the registry',
+    name => {
+      const contents = workflow(name);
+      const installs = contents.split('run: npm ci').length - 1;
+
+      expect(installs).toBeGreaterThan(0);
+      expect(contents.split('NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}').length - 1).toBe(
+        name === 'release.yml' ? installs + 1 : installs // release also publishes
+      );
+      expect(contents.split("registry-url: 'https://registry.npmjs.org'").length - 1).toBe(
+        installs
+      );
+    }
+  );
+});
+
 describe('scheduled workflows', () => {
   it.each(['security.yml', 'link-check.yml'])('%s has a cron schedule', name => {
     const lines = workflow(name).split('\n');

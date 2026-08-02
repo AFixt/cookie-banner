@@ -38,6 +38,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+        env:
+          # @afixt/a11y-assert pulls in the restricted @afixt/test-utils, so an
+          # unauthenticated `npm ci` 404s on its tarball. Authentication comes
+          # from the organisation-level NPM_TOKEN secret — see CLAUDE.md.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run tests
         run: npm test
