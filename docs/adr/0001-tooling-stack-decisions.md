@@ -47,6 +47,23 @@ remainder.
   KEYBOARD-01) are excluded with justification at the call site and remain
   covered by the stylesheet plus the Playwright browser runs.
 
+  **Update (2026-08-02):** the browser-level layers now exist too.
+  `test/accessibility-e2e.test.js` scans the built bundle as a real browser
+  renders it, over HTTP from `dist/examples/`, across all five Playwright
+  projects — first visit, modal open, post-consent, and each of the four
+  banner-bearing example pages. `npm run test:a11y` runs it and `ci.yml`
+  gates on it, which completes the defense-in-depth ladder: ESLint, jsdom
+  component scans, browser scans, and a CI run against the built preview.
+
+  Landing that gate surfaced real WCAG failures in the shipped example
+  pages — an unlabelled language `<select>` (FORMS-08/09) and content
+  outside any landmark (STRUCTURE-22) — which are fixed rather than
+  suppressed. Two rules are excluded, each justified at the call site:
+  NAVIGATION-08 (WCAG 2.4.5 Multiple Ways) is a page-set criterion a
+  standalone demo cannot satisfy, and STRUCTURE-22 is dropped for the
+  modal-open state only, because the dialog's `<h2>` title sits inside
+  `role="dialog"` by design and wrapping it in a landmark would be wrong.
+
 ### Added (gaps closed by this change)
 
 - **ESLint plugins** applicable to vanilla JS: `sonarjs` (code smells,
@@ -61,6 +78,25 @@ remainder.
   (semgrep, osv-scanner, gitleaks, lychee).
 - **lychee** link checking as a weekly scheduled workflow (external-link
   rot) — local runs are optional because the binary is not npm-installable.
+- **GitHub Actions reduced to four workflows** (2026-08-02): blocking
+  `ci.yml`, `release.yml`, and the scheduled `security.yml` and
+  `link-check.yml`. `pr-check.yml` was deleted — it re-ran lint and tests
+  that `ci.yml` already covers, every step was `continue-on-error`, and it
+  installed with `npm ci --ignore-scripts`, which the root `CLAUDE.md`
+  forbids. `bundle-size.yml` was folded into `ci.yml` as a job, dropping a
+  duplicate checkout and build. Release was split out of `ci.yml`, where it
+  had depended on an accessibility job marked `continue-on-error`.
+
+  Two latent defects were fixed in the process. Every lint step in `ci.yml`
+  carried `continue-on-error: true`, so the safety net reported failures as
+  passes; those are now blocking, with the visual regression suite the one
+  documented exception (macOS baselines do not reproduce on Linux runners).
+  And `security.yml` gated its OWASP Dependency Check and licence jobs on
+  `github.event_name == 'schedule'` while declaring no schedule trigger, so
+  neither had ever run; it now has a weekly cron.
+  `test/workflows.test.js` asserts all of this so it cannot silently
+  regress.
+
 - **`typescript` (devDependency, 5.9 line)** — present only because
   `eslint-plugin-sonarjs` requires the TS API at lint time. Pinned to ~5.9:
   TypeScript 7 changes the compiler API and breaks `ts-api-utils`.
@@ -82,6 +118,14 @@ remainder.
   schedule in `security.yml`.
 - **TypeDoc**: JSDoc-to-markdown (`npm run docs`) already generates API
   docs from the same comments.
+
+- **Committing `.npmrc`** (the issue asks for `save-exact=true` and
+  `engine-strict=true`): `.npmrc` is gitignored here precisely because the
+  local one holds an npm auth token. Un-ignoring it to add two non-secret
+  settings is how that token would get published, and the settings are not
+  worth that risk — `engines` is already declared in `package.json` and
+  exact-pinning is handled by the lockfile. Issue #62 was amended on
+  2026-07-22 to say the same. Keep authentication in `~/.npmrc`.
 
 ## Consequences
 

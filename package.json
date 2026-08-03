@@ -16,6 +16,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:a11y": "playwright test --config=playwright.config.js",
+    "test:a11y:headed": "playwright test --config=playwright.config.js --headed",
     "test:visual": "playwright test --config=playwright-visual.config.js",
     "test:visual:headed": "playwright test --config=playwright-visual.config.js --headed",
     "test:visual:update": "playwright test --config=playwright-visual.config.js --update-snapshots",

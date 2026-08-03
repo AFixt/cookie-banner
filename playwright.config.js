@@ -62,11 +62,12 @@ export default {
     },
   ],
 
-  webServer: process.env.CI
-    ? undefined
-    : {
-        command: 'npm run serve',
-        port: 8080,
-        reuseExistingServer: !process.env.CI,
-      },
+  // Playwright owns the preview server in every environment, CI included, so
+  // the accessibility scans cannot silently run against a stale or absent
+  // server. `npm run serve` needs `npm run build` to have produced dist/.
+  webServer: {
+    command: 'npm run serve',
+    port: 8080,
+    reuseExistingServer: !process.env.CI,
+  },
 };

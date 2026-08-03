@@ -57,15 +57,16 @@
     </style>
   </head>
   <body>
-    <h1>Cookie Banner - High Contrast Example</h1>
+    <main>
+      <h1>Cookie Banner - High Contrast Example</h1>
 
-    <p>
-      This example demonstrates the cookie banner in high contrast mode, suitable for users with low
-      vision.
-    </p>
+      <p>
+        This example demonstrates the cookie banner in high contrast mode, suitable for users with
+        low vision.
+      </p>
 
-    <h2>Implementation</h2>
-    <pre><code>window.CookieBanner.init({
+      <h2>Implementation</h2>
+      <pre><code>window.CookieBanner.init({
   locale: 'en',
   theme: 'high-contrast',  // Use high-contrast theme
   onConsentChange: (consent) => {
@@ -73,17 +74,18 @@
   }
 });</code></pre>
 
-    <div class="demo-controls">
-      <h3>Demo Controls</h3>
-      <div>
-        <button id="reset-consent">Reset Consent</button>
-        <button id="toggle-theme">Toggle Normal/High-Contrast</button>
+      <div class="demo-controls">
+        <h3>Demo Controls</h3>
+        <div>
+          <button id="reset-consent">Reset Consent</button>
+          <button id="toggle-theme">Toggle Normal/High-Contrast</button>
+        </div>
+        <div>
+          <h4>Current Consent Status:</h4>
+          <pre id="consent-status">No consent data found</pre>
+        </div>
       </div>
-      <div>
-        <h4>Current Consent Status:</h4>
-        <pre id="consent-status">No consent data found</pre>
-      </div>
-    </div>
+    </main>
 
     <!-- Include the built UMD bundle (exposes window.initCookieBanner, window.CookieConsent, etc.) -->
     <script src="./consent.js"></script>
