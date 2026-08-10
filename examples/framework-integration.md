@@ -252,6 +252,6 @@ document.addEventListener('cookieConsentChanged', e => {
 
 ## Additional Resources
 
-- [Main README](../../README.md)
-- [Accessibility Guide](../../ACCESSIBILITY.md)
-- [Contributing Guide](../../CONTRIBUTING.md)
+- [Main README](../README.md)
+- [Accessibility Guide](../ACCESSIBILITY.md)
+- [Contributing Guide](../CONTRIBUTING.md)
