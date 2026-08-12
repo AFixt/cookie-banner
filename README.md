@@ -188,13 +188,13 @@ The package includes various examples to help you implement the cookie banner in
 
 - **Basic Usage**: Simple implementation with vanilla JavaScript
 - **Framework Integration**:
-  - [React](src/examples/react-example.jsx)
-  - [Vue](src/examples/vue-example.vue)
-  - [Angular](src/examples/angular-example.ts)
-- **TypeScript**: [Type-safe implementation](src/examples/typescript-example.ts)
+  - [React](examples/react-example.jsx)
+  - [Vue](examples/vue-example.vue)
+  - [Angular](examples/angular-example.ts)
+- **TypeScript**: [Type-safe implementation](examples/typescript-example.ts)
 - **Accessibility Features**:
-  - [High Contrast Theme](src/examples/high-contrast.html)
-  - [RTL Support](src/examples/rtl-support.html)
+  - [High Contrast Theme](examples/high-contrast.html)
+  - [RTL Support](examples/rtl-support.html)
 
 ### Running Examples Locally
 
@@ -252,7 +252,7 @@ If the script fails to load during local development, check your blocker's
 logger before assuming a build problem — a blocked request usually surfaces as
 `ERR_BLOCKED_BY_CLIENT` or `ERR_FAILED` rather than a 404.
 
-See the [examples directory](src/examples/) for more detailed examples and implementation guides.
+See the [examples directory](examples/) for more detailed examples and implementation guides.
 
 ## Accessibility Features
 

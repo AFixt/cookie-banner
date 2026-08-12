@@ -26,14 +26,14 @@ Detailed guides on specific topics:
 
 - [Framework Integration Guide](framework-integration.md) - Detailed guide for integrating with frameworks
 - [TypeScript Guide](typescript.md) - Using the banner with TypeScript
-- [README](../../README.md) - Main project documentation
-- [Accessibility Features](../../ACCESSIBILITY.md) - In-depth accessibility information
+- [README](../README.md) - Main project documentation
+- [Accessibility Features](../ACCESSIBILITY.md) - In-depth accessibility information
 
 ## Additional Resources
 
-- [Source Code](../js/) - Core JavaScript source code
-- [CSS Styles](../css/) - Stylesheet source
-- [Localization Files](../locales/) - Translation files
+- [Source Code](../src/js/) - Core JavaScript source code
+- [CSS Styles](../src/css/) - Stylesheet source
+- [Localization Files](../src/locales/) - Translation files
 
 ## Running the Examples
 
@@ -48,4 +48,4 @@ The compiled examples will also be available in the `dist/examples/` directory a
 
 ## Contributing
 
-If you'd like to add a new example or improve an existing one, please see the [Contributing Guide](../../CONTRIBUTING.md) for guidelines and the process for submitting pull requests.
+If you'd like to add a new example or improve an existing one, please see the [Contributing Guide](../CONTRIBUTING.md) for guidelines and the process for submitting pull requests.
