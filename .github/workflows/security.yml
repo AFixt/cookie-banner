@@ -1,12 +1,11 @@
 name: Security Scanning
 
-# The OWASP Dependency Check and licence jobs below are gated on
-# `schedule`/`workflow_dispatch`. Until this schedule was added they could
-# never run, because the workflow had no schedule trigger at all.
+# Policy: no scheduled (cron) Actions. The PR-time gates are `npm audit`
+# (here) and the licence allowlist (`npm run lint:licenses` in ci.yml).
+# The heavier OWASP Dependency Check and the duplicate licence report are
+# manual-only (`workflow_dispatch`) — a timer-triggered failure is
+# attributable to nobody and gets ignored.
 on:
-  schedule:
-    # Weekly, Monday 06:00 UTC.
-    - cron: '0 6 * * 1'
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
@@ -56,11 +55,11 @@ jobs:
   # Do not add a custom CodeQL job here as it will conflict with the default setup.
   # To configure CodeQL, go to: Repository Settings > Code security and analysis > CodeQL analysis
 
-  # OWASP Dependency Check (comprehensive - weekly only)
+  # OWASP Dependency Check (comprehensive — manual runs only; heavy NVD download)
   owasp-dependency-check:
     name: OWASP Dependency Check
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
@@ -103,11 +102,12 @@ jobs:
           sarif_file: reports/dependency-check-report.sarif
         if: always()
 
-  # License compliance check
+  # License compliance report (manual only — the PR gate is `npm run
+  # lint:licenses` in ci.yml; this job just produces the full JSON report)
   license-check:
     name: License Compliance
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
