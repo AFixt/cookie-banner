@@ -2,7 +2,10 @@
  * Guards for the GitHub Actions layout.
  *
  * Issue #62 reduces Actions to a safety net: one blocking `ci.yml`, a
- * `release.yml`, and two scheduled workflows. The failure modes this file
+ * `release.yml`, and two on-demand workflows (`security.yml`,
+ * `link-check.yml`). Issue #103 removes every cron schedule: checks run on
+ * pull requests, where a failure is attributable to the change that caused
+ * it, with `workflow_dispatch` for manual runs. The failure modes this file
  * exists to catch have all already happened here:
  *
  * - `security.yml` gated two jobs on `schedule` while the workflow had no
@@ -127,19 +130,42 @@ describe('npm authentication', () => {
   );
 });
 
-describe('scheduled workflows', () => {
-  it.each(['security.yml', 'link-check.yml'])('%s has a cron schedule', name => {
-    const lines = workflow(name).split('\n');
-    const scheduleIndex = lines.findIndex(line => /^\s*schedule:\s*$/.test(line));
-    expect(scheduleIndex).toBeGreaterThan(-1);
-    expect(lines.slice(scheduleIndex).some(line => /^\s*- cron:/.test(line))).toBe(true);
+describe('no scheduled workflows (issue #103)', () => {
+  // Policy: no regularly scheduled GitHub Action, ever. A timer-triggered
+  // check reports failures against no particular change and gets ignored;
+  // the same check on a pull request gates the defect at introduction.
+  // `workflow_dispatch` (manual runs) remains allowed.
+  it('no workflow has a schedule or cron trigger', () => {
+    const files = fs.readdirSync(WORKFLOW_DIR).filter(name => /\.ya?ml$/.test(name));
+    for (const name of files) {
+      const lines = workflow(name).split('\n');
+      expect(lines.some(line => line.trim() === 'schedule:')).toBe(false);
+      expect(lines.some(line => line.trim().startsWith('- cron:'))).toBe(false);
+    }
   });
 
-  it('security.yml schedules the jobs that are gated on the schedule event', () => {
+  it('no job is gated on the schedule event', () => {
+    const files = fs.readdirSync(WORKFLOW_DIR).filter(name => /\.ya?ml$/.test(name));
+    for (const name of files) {
+      // A job gated on `github.event_name == 'schedule'` is dead code once no
+      // schedule trigger exists — the inverse of how OWASP Dependency Check
+      // once never ran. Gate manual-only jobs on `workflow_dispatch` instead.
+      expect(workflow(name)).not.toMatch(/github\.event_name == 'schedule'/);
+    }
+  });
+
+  it('link-check.yml runs the link check on pull requests', () => {
+    const contents = workflow('link-check.yml');
+    expect(contents).toMatch(/pull_request:/);
+    expect(contents).toMatch(/--offline/);
+    expect(contents).toMatch(/fail: true/);
+    // No timer-triggered auto-filed issues: the PR failure is the signal.
+    expect(contents).not.toMatch(/create-issue-from-file/);
+  });
+
+  it('security.yml keeps its manual-only jobs runnable via workflow_dispatch', () => {
     const contents = workflow('security.yml');
-    // Every `if: github.event_name == 'schedule'` job is dead code without a
-    // schedule trigger. This is exactly how OWASP Dependency Check never ran.
-    expect(contents).toMatch(/github\.event_name == 'schedule'/);
-    expect(contents).toMatch(/- cron:/);
+    expect(contents).toMatch(/workflow_dispatch:/);
+    expect(contents).toMatch(/github\.event_name == 'workflow_dispatch'/);
   });
 });
