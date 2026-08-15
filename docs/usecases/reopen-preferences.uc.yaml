@@ -47,10 +47,14 @@ before:
 
 steps:
   # The banner is gone, so the persistent control is now the only route back
-  # to the choices. It must be a real control in the accessibility tree, not
-  # a footer link that only scrolls somewhere.
+  # to the choices. Audit this state before touching it: the post-consent page
+  # is where a visitor spends the rest of the session.
   - verify: hidden region "{{ banner_label }}"
+  - audit: page
+  - lang_check: page
   - locate: button "{{ preferences_control_label }}"
+  # It must be a real control in the accessibility tree, not a footer link
+  # that only scrolls somewhere.
   - contrast: button "{{ preferences_control_label }}"
   - focus: button "{{ preferences_control_label }}"
   - activate: button "{{ preferences_control_label }}" via keyboard

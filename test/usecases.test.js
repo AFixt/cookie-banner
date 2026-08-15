@@ -6,14 +6,19 @@
  * else in this repo runs them, so without this file a template can stop
  * parsing — or quietly start meaning something different — and land green.
  *
- * Two failure modes from the house library (AFixt/audit-usecases) are worth
- * asserting by name:
+ * Three failure modes are worth asserting by name. The first two come from the
+ * house library (AFixt/audit-usecases); the third is why the keyword guard
+ * below is pointed where it is.
  *
- * - An unknown keyword or modifier is a *warning*, not an error, so a typo
- *   parses successfully and then does nothing at runtime.
+ * - An unknown *modifier* is a warning, not an error, so a typo parses
+ *   successfully and then does nothing at runtime. (An unknown *keyword* does
+ *   throw — the two are not symmetric, and conflating them is what made the
+ *   original version of that guard a tautology.)
  * - `steps_override.from_step` is a positional index into the parent. Insert
  *   a step in the parent and every child silently overrides from the wrong
  *   place, with validation still passing because the index is still in range.
+ * - The runner's keyword table is version-dependent. Downgrading the pin below
+ *   1.4.0 removes verbs these templates use.
  */
 
 const fs = require('fs');
@@ -34,6 +39,31 @@ const REQUIRED_IDS = [
   'cookie-banner-storage-blocked',
   'cookie-banner-rtl-localized',
 ];
+
+/**
+ * Verbs the runner only gained in 1.4.0. Versions 1.2.0–1.3.3 ship a
+ * 15-keyword table without them, and a template using one dies there with
+ * `Unknown step keyword` — which looks exactly like a malformed template and
+ * has been misdiagnosed as one before (see the audit-usecases README).
+ * Downgrading the pin is therefore the realistic way these templates break.
+ */
+const VERBS_ADDED_IN_1_4_0 = ['contrast', 'lang_check', 'read_image', 'sr_says'];
+
+/** Lowest runner version that ships all of the above. */
+const MIN_RUNNER = [1, 4, 0];
+
+/**
+ * Lowest version a semver range can resolve to. `^1.5.1`, `~1.5.1` and
+ * `>=1.5.1` all floor at 1.5.1; anything without three numeric parts (`*`,
+ * `latest`, a git URL) yields null and is treated as unpinnable.
+ *
+ * @param {string} range - A semver range from package.json.
+ * @returns {number[] | null} `[major, minor, patch]`, or null if unpinnable.
+ */
+function versionFloor(range) {
+  const parts = String(range).replace(/^\D*/, '').split('.').map(Number);
+  return parts.length === 3 && parts.every(Number.isInteger) ? parts : null;
+}
 
 describe('docs/usecases templates', () => {
   let useCases;
@@ -67,9 +97,33 @@ describe('docs/usecases templates', () => {
     expect(useCase.steps.some(step => step.keyword === 'audit')).toBe(true);
   });
 
-  it('uses only keywords the pinned runner actually ships', () => {
-    const keywords = new Set(useCases.flatMap(useCase => useCase.steps.map(step => step.keyword)));
-    expect([...keywords].filter(keyword => !STEP_KEYWORDS.includes(keyword))).toEqual([]);
+  // The obvious version of this — "no template uses a keyword outside
+  // STEP_KEYWORDS" — is a tautology. `parseStep` throws on an unrecognized
+  // keyword, so every parsed step's keyword is in the table by construction
+  // and the assertion can never fail. The exposure runs the other way: the
+  // table losing a verb the templates depend on.
+  it('runs against a keyword table that still ships the verbs the templates use', () => {
+    const used = new Set(useCases.flatMap(useCase => useCase.steps.map(step => step.keyword)));
+    const atRisk = VERBS_ADDED_IN_1_4_0.filter(verb => used.has(verb));
+
+    // Guard the guard: if no template uses one of these any more, this test
+    // has stopped watching anything and wants re-pointing or deleting.
+    expect(atRisk.length).toBeGreaterThan(0);
+
+    for (const verb of atRisk) {
+      expect(STEP_KEYWORDS).toContain(verb);
+    }
+  });
+
+  it('pins @afixt/usecase-runner at or above the version that added those verbs', () => {
+    const range = require('../package.json').devDependencies['@afixt/usecase-runner'];
+    const floor = versionFloor(range);
+
+    expect(floor).not.toBeNull();
+    // Compare as a tuple so 1.10.0 sorts above 1.4.0 rather than below it.
+    expect(floor.map((n, i) => n - MIN_RUNNER[i]).find(d => d !== 0) ?? 0).toBeGreaterThanOrEqual(
+      0
+    );
   });
 
   it('keeps escape-dismisses-modal pointed at its parent’s save tail', () => {

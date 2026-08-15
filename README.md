@@ -317,10 +317,14 @@ npm install --save-dev @afixt/afixt-engine @afixt/test-utils
 ```
 
 The templates default to this repo's own example pages, so build and serve them
-first:
+first. `npm start` runs the server in the foreground, so leave it running and
+use a second terminal:
 
 ```bash
 npm start
+```
+
+```bash
 npx usecase-runner run docs/usecases/accept-all.uc.yaml --headed
 ```
 
@@ -332,12 +336,12 @@ parent has to be discoverable:
 npx usecase-runner run docs/usecases
 ```
 
-Or generate committed Playwright specs instead:
-
-```bash
-npx usecase-runner generate docs/usecases --outdir ./test/generated
-npx playwright test ./test/generated
-```
+`usecase-runner run` is the supported path in this repository. The runner's
+`generate` subcommand, which emits committed Playwright specs, does **not**
+work here: it writes `const { AccessibilityEngine } = require('…')` into the
+generated files, and this package is `"type": "module"`, so Node rejects them
+with `ReferenceError: require is not defined in ES module scope` before
+Playwright can collect any test. No Playwright config works around that.
 
 ### What the templates expect that this library does not yet do
 

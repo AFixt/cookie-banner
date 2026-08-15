@@ -29,8 +29,13 @@ data:
   page_landmark_heading: 'Cookie Banner - Vanilla JS Example'
 
 steps:
-  # First visit: the banner is asking.
+  # First visit: the banner is asking. Audit before interacting — the banner
+  # is a distinct rendered state, and a template that only audits the quiet
+  # post-consent page reports nothing about the state users actually meet.
   - wait_for: region "{{ banner_label }}"
+  - audit: page
+  - lang_check: page
+  - audit: region "{{ banner_label }}"
   - locate: button "{{ accept_all_label }}"
   - focus: button "{{ accept_all_label }}"
   - activate: button "{{ accept_all_label }}" via keyboard
