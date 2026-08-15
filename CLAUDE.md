@@ -75,24 +75,6 @@ Releases are managed with `standard-version`. The changelog is automatically gen
 - `npm run release:major` - Force major release (X.0.0)
 - `npm run release:dry-run` - Preview release without changes
 
-## GitHub Actions
-
-**No regularly scheduled GitHub Action may ever be added to this repository.**
-No `on.schedule:` block, no `- cron:` entry, in any workflow, on any branch.
-
-A timer-triggered check reports a problem hours or days after it entered the
-codebase, against no particular author, and is routinely ignored. The same
-check on a pull request gates the defect at the point of introduction, where
-the failure is attributable to the change that caused it. Any check worth
-running belongs in the PR pipeline.
-
-`workflow_dispatch` (manual runs) remains allowed — a manual trigger is not a
-schedule. Use it for the heavy sweeps that are too slow to gate every PR.
-
-`test/workflows.test.js` enforces this, so a reintroduced schedule fails
-`npm test` rather than being discovered later. See
-[#103](https://github.com/AFixt/cookie-banner/issues/103).
-
 ## Build/Lint/Test Commands
 
 - Node.js version: LTS (use `nvm use` or Node.js 22+)
@@ -180,9 +162,17 @@ pull request blocks the defect at the point of introduction.
 - `workflow_dispatch` is allowed. A manual, on-demand run is not a scheduled run.
 - Event-driven triggers (`push`, `pull_request`, `release`, `repository_dispatch`,
   `workflow_call`) are allowed and preferred.
-- Genuinely periodic *product* work — batch jobs, data pipelines, report
+- Genuinely periodic _product_ work — batch jobs, data pipelines, report
   generation — does not belong in GitHub Actions at all. Run it on real
   infrastructure with its own scheduler, alerting, and retries.
+
+### How this is enforced
+
+`test/workflows.test.js` asserts it: no `schedule:` block, no `- cron:` entry,
+and no job gated on `github.event_name == 'schedule'` in any workflow. A
+reintroduced schedule therefore fails `npm test` at the point someone adds it,
+rather than being noticed later. See
+[#103](https://github.com/AFixt/cookie-banner/issues/103).
 
 ### If you think you need an exception
 
