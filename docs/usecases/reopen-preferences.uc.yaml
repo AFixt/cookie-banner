@@ -1,0 +1,83 @@
+id: cookie-banner-reopen-preferences
+title: 'Reopen preferences from the persistent control and withdraw a prior consent'
+type: positive
+description: >-
+  A returning visitor who already consented changes their mind. Consent has to
+  be as easy to withdraw as it was to give (GDPR Art. 7(3)), which means a
+  control that stays on the page after the banner is gone and reopens the same
+  preferences dialog with the recorded choices reflected in it.
+
+preconditions:
+  - 'The page under test exposes a persistent control that reopens the preferences dialog after consent has been recorded'
+  - 'The browser context persists storage across the `before:` block and the main steps'
+
+start_location: 'http://localhost:8080/dist/examples/vanilla-js.html'
+
+expected_result: >-
+  The dialog reopens showing the previously saved choices, a category can be
+  switched off and saved, focus returns to the control that opened the dialog,
+  and reopening again shows the withdrawal stuck.
+
+data:
+  banner_label: 'Cookie Consent'
+  accept_all_label: 'Accept All'
+  save_label: 'Save Preferences'
+  dialog_label: 'Cookie Preferences'
+  analytics_label: 'Allow Analytics Cookies'
+  # REPLACE: accessible name of the persistent reopen control. Sites label it
+  # "Cookie preferences", "Cookie settings", "Manage cookies", "Privacy
+  # settings", and so on.
+  #
+  # @afixt/accessible-cookie-banner does not ship one: once a decision is
+  # stored, initCookieBanner() returns before rendering anything, so the host
+  # page has to provide the control and call the banner's API from it. Against
+  # the bundled examples this template fails at the `locate` step below, and
+  # that failure is the finding — see AFixt/cookie-banner#105.
+  preferences_control_label: 'Cookie preferences'
+  # REPLACE: the control focus must land on when the dialog opens.
+  initial_dialog_focus: 'Allow Analytics Cookies'
+
+# Establish the "already consented" precondition deterministically rather than
+# depending on profile state carried in from somewhere else.
+before:
+  - 'wait_for: region "{{ banner_label }}"'
+  - 'focus: button "{{ accept_all_label }}"'
+  - 'activate: button "{{ accept_all_label }}" via keyboard'
+  - 'verify: hidden region "{{ banner_label }}"'
+
+steps:
+  # The banner is gone, so the persistent control is now the only route back
+  # to the choices. It must be a real control in the accessibility tree, not
+  # a footer link that only scrolls somewhere.
+  - verify: hidden region "{{ banner_label }}"
+  - locate: button "{{ preferences_control_label }}"
+  - contrast: button "{{ preferences_control_label }}"
+  - focus: button "{{ preferences_control_label }}"
+  - activate: button "{{ preferences_control_label }}" via keyboard
+
+  - wait_for: dialog "{{ dialog_label }}"
+  - verify: dialog "{{ dialog_label }}" attribute "aria-modal" is "true"
+  - verify: focus checkbox "{{ initial_dialog_focus }}"
+  - audit: page
+  - audit: dialog "{{ dialog_label }}"
+
+  # The dialog must open showing what was actually consented to. A dialog that
+  # reopens at its defaults misrepresents the user's current state.
+  - verify: checked checkbox "{{ analytics_label }}"
+
+  - focus: checkbox "{{ analytics_label }}"
+  - deselect: checkbox "{{ analytics_label }}"
+  - verify: unchecked checkbox "{{ analytics_label }}"
+
+  - locate: button "{{ save_label }}"
+  - focus: button "{{ save_label }}"
+  - activate: button "{{ save_label }}" via keyboard
+  - verify: hidden dialog "{{ dialog_label }}"
+  - verify: focus button "{{ preferences_control_label }}"
+
+  # The withdrawal has to survive a reopen, not just repaint.
+  - focus: button "{{ preferences_control_label }}"
+  - activate: button "{{ preferences_control_label }}" via keyboard
+  - wait_for: dialog "{{ dialog_label }}"
+  - verify: unchecked checkbox "{{ analytics_label }}"
+  - audit: page

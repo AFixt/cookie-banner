@@ -1,0 +1,92 @@
+id: cookie-banner-customize-preferences
+title: 'Open the preferences dialog, change a category, and save'
+type: positive
+description: >-
+  A visitor opens the granular preferences dialog from the banner, turns one
+  optional category on, and saves. This is the flow that carries the dialog
+  semantics — modal role, focus move on open, focus trap, focus return on
+  close — so it is the template that most cookie-banner defects surface in.
+
+preconditions:
+  - 'No consent is stored for the origin (fresh browser profile, or the demo "Reset Consent" control has been used)'
+  - 'The banner is configured to offer a preferences dialog (showModal: true)'
+
+start_location: 'http://localhost:8080/dist/examples/vanilla-js.html'
+
+expected_result: >-
+  The chosen category is saved, both the dialog and the banner are dismissed,
+  and focus is handed back to a meaningful element.
+
+data:
+  banner_label: 'Cookie Consent'
+  customize_label: 'Customize'
+  cancel_label: 'Cancel'
+  save_label: 'Save Preferences'
+  dialog_label: 'Cookie Preferences'
+  functional_label: 'Functional Cookies (Required)'
+  analytics_label: 'Allow Analytics Cookies'
+  marketing_label: 'Allow Marketing Cookies'
+  # REPLACE: the exact id of the dialog the trigger's aria-controls points at.
+  # At runner 1.5.1 `attribute` is exact-match only, so a site that generates
+  # this id per render cannot be asserted this way — delete the step there.
+  modal_id: 'cookie-modal'
+  # REPLACE: the control focus must land on when the dialog opens. A dialog
+  # that opens without moving focus into itself strands keyboard and screen
+  # reader users behind it (WCAG 2.4.3). Note that the first *disabled*
+  # control does not satisfy this: calling focus() on a disabled input is a
+  # no-op, so a dialog whose first focusable match is the always-on
+  # "functional" checkbox never moves focus at all.
+  initial_dialog_focus: 'Allow Analytics Cookies'
+  # REPLACE: see accept-all.uc.yaml — where focus goes after the banner is
+  # torn down.
+  post_dismiss_focus_target: 'Cookie Banner - Vanilla JS Example'
+
+steps:
+  - wait_for: region "{{ banner_label }}"
+  - audit: page
+  - lang_check: page
+
+  # The trigger must advertise that it opens a dialog and say which one.
+  - locate: button "{{ customize_label }}"
+  - verify: button "{{ customize_label }}" attribute "aria-haspopup" is "dialog"
+  - verify: button "{{ customize_label }}" attribute "aria-controls" is "{{ modal_id }}"
+  - focus: button "{{ customize_label }}"
+  - activate: button "{{ customize_label }}" via keyboard
+
+  # Dialog semantics and focus move on open.
+  - wait_for: dialog "{{ dialog_label }}"
+  - verify: dialog "{{ dialog_label }}" attribute "aria-modal" is "true"
+  - verify: heading "{{ dialog_label }}"
+  - verify: focus checkbox "{{ initial_dialog_focus }}"
+  - audit: page
+  - audit: dialog "{{ dialog_label }}"
+  - contrast: dialog "{{ dialog_label }}"
+
+  # Strictly necessary cookies are on and locked; everything optional starts
+  # off. A category pre-ticked here is a consent defect, not a11y-only.
+  - verify: checked checkbox "{{ functional_label }}"
+  - verify: disabled checkbox "{{ functional_label }}"
+  - verify: unchecked checkbox "{{ analytics_label }}"
+  - verify: unchecked checkbox "{{ marketing_label }}"
+
+  - locate: checkbox "{{ analytics_label }}"
+  - focus: checkbox "{{ analytics_label }}"
+  - select: checkbox "{{ analytics_label }}"
+  - verify: checked checkbox "{{ analytics_label }}"
+
+  # Focus trap: tabbing past the last control in the dialog wraps back to the
+  # first one instead of escaping into the page behind the dialog.
+  - focus: button "{{ cancel_label }}"
+  - keyboard: 'Tab'
+  - verify: focus checkbox "{{ initial_dialog_focus }}"
+
+  # Steps 27+ are the save tail. escape-dismisses-modal.uc.yaml replaces
+  # everything from step 27 onward — keep that boundary accurate, and update
+  # the child's `from_step` in the same commit if you insert a step above.
+  - locate: button "{{ save_label }}"
+  - focus: button "{{ save_label }}"
+  - activate: button "{{ save_label }}" via keyboard
+  - verify: hidden dialog "{{ dialog_label }}"
+  - verify: hidden region "{{ banner_label }}"
+  - verify: focus heading "{{ post_dismiss_focus_target }}"
+  - audit: page

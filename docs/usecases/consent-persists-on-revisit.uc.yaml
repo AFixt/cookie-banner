@@ -1,0 +1,49 @@
+id: cookie-banner-consent-persists-on-revisit
+title: 'Consent is remembered — the banner does not reappear on revisit'
+type: positive
+description: >-
+  A visitor makes a choice, then returns to the page. The banner must not ask
+  again. Re-prompting on every page load is the single most common cookie
+  banner defect and it lands hardest on screen reader and magnifier users, who
+  pay the full cost of the interruption every time.
+
+preconditions:
+  - 'No consent is stored for the origin at the start of the run (fresh browser profile, or the demo "Reset Consent" control has been used)'
+  - 'The browser context persists storage between the two page loads in this template'
+
+# `start_location` is interpolated, so the revisit `navigate:` step below reads
+# from the same value and the two cannot drift apart.
+start_location: '{{ page_url }}'
+
+expected_result: >-
+  The second page load renders no banner, the recorded decision still applies,
+  and the page audits clean without the banner present.
+
+data:
+  page_url: 'http://localhost:8080/dist/examples/vanilla-js.html'
+  banner_label: 'Cookie Consent'
+  accept_all_label: 'Accept All'
+  # REPLACE: a heading or text on the page under test, used to prove the
+  # second load actually rendered rather than the assertions passing against
+  # a blank document.
+  page_landmark_heading: 'Cookie Banner - Vanilla JS Example'
+
+steps:
+  # First visit: the banner is asking.
+  - wait_for: region "{{ banner_label }}"
+  - locate: button "{{ accept_all_label }}"
+  - focus: button "{{ accept_all_label }}"
+  - activate: button "{{ accept_all_label }}" via keyboard
+  - verify: hidden region "{{ banner_label }}"
+
+  # Second visit: same URL, stored decision, no banner.
+  - navigate: '{{ page_url }}'
+  - verify: heading "{{ page_landmark_heading }}"
+  - verify: hidden region "{{ banner_label }}"
+  - audit: page
+  - lang_check: page
+
+  # A banner that re-prompts usually does so a beat after first paint, once
+  # its storage read resolves. Give it that beat before concluding it did not.
+  - wait: 1500
+  - verify: hidden region "{{ banner_label }}"

@@ -1,0 +1,44 @@
+id: cookie-banner-escape-dismisses-modal
+title: 'Preferences — Alt 1 (Escape closes the dialog without saving)'
+extends: cookie-banner-customize-preferences
+type: negative
+description: >-
+  A visitor opens the preferences dialog, ticks a category, then presses
+  Escape. Escape must close the dialog, discard the unsaved change, hand focus
+  back to the control that opened it, and leave the banner in place because no
+  decision was recorded.
+
+preconditions:
+  - 'No consent is stored for the origin (fresh browser profile, or the demo "Reset Consent" control has been used)'
+  - 'The banner is configured to offer a preferences dialog (showModal: true)'
+
+expected_result: >-
+  The dialog closes, focus returns to the trigger, the banner is still
+  present, and reopening the dialog shows the category still switched off.
+
+data:
+  # Substring of the banner copy, used to prove the banner survived a
+  # cancelled dialog rather than being torn down with it.
+  banner_description: 'We use cookies to improve your experience'
+
+# Parent steps 1–26 open the dialog, tick "analytics", and check the focus
+# trap. Replace the parent's save tail (27–33) with the Escape assertions.
+steps_override:
+  from_step: 27
+  steps:
+    - 'keyboard: Escape'
+    - 'verify: hidden dialog "{{ dialog_label }}"'
+    # Focus must return to the trigger, not to document.body (WCAG 2.4.3).
+    - 'verify: focus button "{{ customize_label }}"'
+    # No decision was recorded, so the banner must still be asking.
+    - 'verify: visible region "{{ banner_label }}"'
+    - 'verify: live_region "{{ banner_description }}"'
+    - 'audit: page'
+    # Reopening must show the discarded change really was discarded, not
+    # merely hidden. A dialog that keeps unsaved state gives the user a
+    # false impression of what they consented to.
+    - 'focus: button "{{ customize_label }}"'
+    - 'activate: button "{{ customize_label }}" via keyboard'
+    - 'wait_for: dialog "{{ dialog_label }}"'
+    - 'verify: unchecked checkbox "{{ analytics_label }}"'
+    - 'audit: dialog "{{ dialog_label }}"'

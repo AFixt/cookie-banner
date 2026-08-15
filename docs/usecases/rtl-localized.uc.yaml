@@ -1,0 +1,67 @@
+id: cookie-banner-rtl-localized
+title: 'Consent banner — Alt 3 (RTL page and localized strings)'
+type: negative
+description: >-
+  The same accept flow on a right-to-left, non-English page. Two things go
+  wrong here often enough to be worth a template of their own: the banner
+  keeps shipping the default English strings into a page declared as another
+  language, and the RTL layout reverses the visual order of the actions
+  without reversing the DOM order, so the reading order a screen reader
+  follows stops matching the one a sighted user sees.
+
+preconditions:
+  - 'No consent is stored for the origin (fresh browser profile, or the demo reset control has been used)'
+  - 'The page declares its own language and direction (`<html lang="…" dir="rtl">`)'
+  - 'The banner is initialized with a locale matching the page language'
+
+start_location: 'http://localhost:8080/dist/examples/rtl-support.html'
+
+expected_result: >-
+  The banner renders in the page's declared language, `lang_check` finds no
+  disagreement between `<html lang>` and the rendered text, and the actions
+  are keyboard-reachable in the order they are read.
+
+data:
+  banner_label: 'Cookie Consent'
+  # REPLACE: the banner strings for the locale under test. The values below
+  # are the defaults the bundled RTL example actually renders — it declares
+  # `lang="ar" dir="rtl"` but initializes the banner with `locale: 'en'`, so
+  # the `lang_check: page` step below is expected to flag the mismatch. That
+  # failure is the finding, not a broken template. For a German run, swap in
+  # 'Alle akzeptieren' / 'Alle ablehnen' / 'Anpassen' from src/locales/de.json.
+  banner_description: 'We use cookies to improve your experience'
+  accept_all_label: 'Accept All'
+  reject_all_label: 'Reject All'
+  customize_label: 'Customize'
+
+steps:
+  - wait_for: region "{{ banner_label }}"
+  - audit: page
+
+  # The criterion this template exists for: the language the page declares has
+  # to be the language the banner is actually written in (WCAG 3.1.1 / 3.1.2).
+  # No rule engine catches this by reading markup alone.
+  - lang_check: page
+  - lang_check: region "{{ banner_label }}"
+
+  - verify: live_region "{{ banner_description }}"
+  - audit: region "{{ banner_label }}"
+  # Mirrored layouts frequently pick up a different button treatment than the
+  # LTR theme and lose contrast in the process.
+  - contrast: region "{{ banner_label }}"
+
+  # Tab order must follow the DOM, and the DOM must follow the reading order
+  # the RTL layout presents. Focusing each action in the order it is read is
+  # what surfaces a layout that reorders visually with `flex-direction` or
+  # `order` while leaving the DOM alone.
+  - locate: button "{{ accept_all_label }}" within region "{{ banner_label }}"
+  - focus: button "{{ accept_all_label }}"
+  - keyboard: 'Tab'
+  - verify: focus button "{{ reject_all_label }}"
+  - keyboard: 'Tab'
+  - verify: focus button "{{ customize_label }}"
+
+  - focus: button "{{ accept_all_label }}"
+  - activate: button "{{ accept_all_label }}" via keyboard
+  - verify: hidden region "{{ banner_label }}"
+  - audit: page

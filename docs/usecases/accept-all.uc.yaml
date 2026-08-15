@@ -1,0 +1,65 @@
+id: cookie-banner-accept-all
+title: 'Accept all cookie categories from the consent banner'
+type: positive
+description: >-
+  A first-time visitor lands on a page carrying a cookie consent banner and
+  accepts every category, driving the banner with the keyboard only. Exercises
+  the banner's first-paint announcement, the keyboard reachability of all three
+  actions, and where focus lands once the banner is torn down.
+
+preconditions:
+  - 'No consent is stored for the origin (fresh browser profile, or the demo "Reset Consent" control has been used)'
+  - 'The banner renders on first paint, not behind a delay or a scroll trigger'
+
+start_location: 'http://localhost:8080/dist/examples/vanilla-js.html'
+
+expected_result: >-
+  All categories are consented to, the banner is removed from the page, and
+  focus lands on a meaningful element rather than being dropped to
+  document.body.
+
+data:
+  # Accessible name of the banner container. The library ships
+  # role="region" aria-label="Cookie Consent".
+  banner_label: 'Cookie Consent'
+  # A substring of the banner's explanatory copy. The default English strings
+  # are shorter than the ones in src/locales/en.json — the locale file is only
+  # fetched for non-English locales.
+  banner_description: 'We use cookies to improve your experience'
+  accept_all_label: 'Accept All'
+  reject_all_label: 'Reject All'
+  customize_label: 'Customize'
+  # REPLACE: the element the page moves focus to once the banner is dismissed.
+  # The activated button is removed from the DOM, so unless the host page
+  # redirects focus deliberately it falls to document.body and this step
+  # fails — which is the WCAG 2.4.3 defect this template exists to surface.
+  post_dismiss_focus_target: 'Cookie Banner - Vanilla JS Example'
+
+steps:
+  # First paint: the banner must be in the accessibility tree as a named
+  # region, and its copy must be announced rather than only drawn.
+  - wait_for: region "{{ banner_label }}"
+  - locate: region "{{ banner_label }}"
+  - verify: live_region "{{ banner_description }}"
+  - audit: page
+  - lang_check: page
+  - audit: region "{{ banner_label }}"
+
+  # Consent banners are routinely styled as low-contrast overlay chrome.
+  - contrast: region "{{ banner_label }}"
+
+  # All three actions must be reachable and discoverable, not just the one
+  # this template goes on to press. A banner that hides "Reject All" behind a
+  # second screen while "Accept All" sits in the first is a consent-symmetry
+  # problem as well as an accessibility one.
+  - locate: button "{{ reject_all_label }}"
+  - locate: button "{{ customize_label }}"
+  - locate: button "{{ accept_all_label }}"
+  - focus: button "{{ accept_all_label }}"
+  - activate: button "{{ accept_all_label }}" via keyboard
+
+  # Success tail. The banner is removed from the DOM rather than hidden, so
+  # `verify: hidden` covers both implementations.
+  - verify: hidden region "{{ banner_label }}"
+  - verify: focus heading "{{ post_dismiss_focus_target }}"
+  - audit: page

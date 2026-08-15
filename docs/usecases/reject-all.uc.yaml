@@ -1,0 +1,49 @@
+id: cookie-banner-reject-all
+title: 'Reject all optional cookie categories from the consent banner'
+type: positive
+description: >-
+  A first-time visitor declines every optional category straight from the
+  banner, without opening the preferences dialog. The reject action must be
+  reachable in the same place, in the same way, and with the same number of
+  keystrokes as the accept action.
+
+preconditions:
+  - 'No consent is stored for the origin (fresh browser profile, or the demo "Reset Consent" control has been used)'
+  - 'The banner renders on first paint, not behind a delay or a scroll trigger'
+
+start_location: 'http://localhost:8080/dist/examples/vanilla-js.html'
+
+expected_result: >-
+  Optional categories are declined, strictly necessary cookies remain on, the
+  banner is removed from the page, and focus lands on a meaningful element.
+
+data:
+  banner_label: 'Cookie Consent'
+  banner_description: 'We use cookies to improve your experience'
+  accept_all_label: 'Accept All'
+  reject_all_label: 'Reject All'
+  # REPLACE: see the note in accept-all.uc.yaml — the activated button is
+  # destroyed, so this assertion fails unless the page redirects focus.
+  post_dismiss_focus_target: 'Cookie Banner - Vanilla JS Example'
+
+steps:
+  - wait_for: region "{{ banner_label }}"
+  - locate: region "{{ banner_label }}"
+  - verify: live_region "{{ banner_description }}"
+  - audit: page
+  - lang_check: page
+  - audit: region "{{ banner_label }}"
+
+  # Reject must sit alongside accept in the same container, not one level
+  # down behind "Customize". Locating both from the banner region is what
+  # asserts that.
+  - locate: button "{{ accept_all_label }}" within region "{{ banner_label }}"
+  - locate: button "{{ reject_all_label }}" within region "{{ banner_label }}"
+  - contrast: button "{{ reject_all_label }}"
+
+  - focus: button "{{ reject_all_label }}"
+  - activate: button "{{ reject_all_label }}" via keyboard
+
+  - verify: hidden region "{{ banner_label }}"
+  - verify: focus heading "{{ post_dismiss_focus_target }}"
+  - audit: page
