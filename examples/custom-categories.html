@@ -40,18 +40,20 @@
     </style>
   </head>
   <body>
-    <h1>Cookie Banner - Custom Categories Example</h1>
+    <main>
+      <h1>Cookie Banner - Custom Categories Example</h1>
 
-    <p>This example demonstrates how to set up custom categories in the cookie consent banner.</p>
+      <p>This example demonstrates how to set up custom categories in the cookie consent banner.</p>
 
-    <div class="note">
-      <strong>Note:</strong> This example shows how you would set up custom categories, but it does
-      not modify the actual UI rendering. For a production implementation, you would need to modify
-      the banner.js source code to display these custom categories in the preferences modal.
-    </div>
+      <div class="note">
+        <strong>Note:</strong> This example shows how you would set up custom categories, but it
+        does not modify the actual UI rendering. For a production implementation, you would need to
+        modify the banner.js source code to display these custom categories in the preferences
+        modal.
+      </div>
 
-    <h2>Implementation</h2>
-    <pre><code>window.CookieBanner.init({
+      <h2>Implementation</h2>
+      <pre><code>window.CookieBanner.init({
   locale: 'en',
   theme: 'light',
   categories: {
@@ -75,29 +77,30 @@
   }
 });</code></pre>
 
-    <div class="demo-controls">
-      <h3>Demo Controls</h3>
-      <div>
-        <button id="reset-consent">Reset Consent</button>
-      </div>
-      <div>
-        <h4>Current Consent Status:</h4>
-        <pre id="consent-status">No consent data found</pre>
-      </div>
+      <div class="demo-controls">
+        <h3>Demo Controls</h3>
+        <div>
+          <button id="reset-consent">Reset Consent</button>
+        </div>
+        <div>
+          <h4>Current Consent Status:</h4>
+          <pre id="consent-status">No consent data found</pre>
+        </div>
 
-      <h4>Test Consent Settings Manually:</h4>
-      <div>
-        <button id="set-custom-consent">Set Custom Consent</button>
-        <p>This will set the following custom consent categories:</p>
-        <ul>
-          <li>functional: true (always required)</li>
-          <li>analytics: true</li>
-          <li>marketing: false</li>
-          <li>preferences: true (custom category)</li>
-          <li>personalization: false (custom category)</li>
-        </ul>
+        <h4>Test Consent Settings Manually:</h4>
+        <div>
+          <button id="set-custom-consent">Set Custom Consent</button>
+          <p>This will set the following custom consent categories:</p>
+          <ul>
+            <li>functional: true (always required)</li>
+            <li>analytics: true</li>
+            <li>marketing: false</li>
+            <li>preferences: true (custom category)</li>
+            <li>personalization: false (custom category)</li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </main>
 
     <!-- Include the built UMD bundle (exposes window.initCookieBanner, window.CookieConsent, etc.) -->
     <script src="./consent.js"></script>

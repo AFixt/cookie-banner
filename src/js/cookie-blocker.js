@@ -43,7 +43,6 @@ const _blockerAPI = (function () {
   /**
    * Initialize the cookie blocker - sets up script and cookie blocking mechanisms
    * @function
-   * @memberof CookieBlocker
    * @returns {void}
    * @example
    * // Initialize cookie blocker

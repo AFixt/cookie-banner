@@ -35,7 +35,7 @@ import { initSubdomainSync } from './subdomain-sync.js';
  * @property {string} [locale='en'] - Language locale for the banner
  * @property {string} [theme='light'] - Theme for the banner ('light' or 'dark')
  * @property {boolean} [showModal=true] - Whether to show the preferences modal
- * @property {Function} [onConsentChange] - Callback function called when consent changes
+ * @property {function(object): void} [onConsentChange] - Callback function called when consent changes
  * @property {string} [storageMethod='localStorage'] - Storage method ('localStorage' or 'cookie')
  * @property {number} [expireDays=365] - Number of days before consent expires
  * @property {object} [categories] - Default consent categories
@@ -54,10 +54,10 @@ if (typeof window !== 'undefined') {
   /**
    * Global cookie banner API
    * @namespace window.CookieBanner
-   * @property {Function} init - Initialize the cookie banner
-   * @property {Function} getConsent - Get current consent status
-   * @property {Function} setConsent - Set consent status
-   * @property {Function} hasConsent - Check if a specific category has consent
+   * @property {function(CookieBannerConfig=): void} init - Initialize the cookie banner
+   * @property {function(): (object | null)} getConsent - Get current consent status
+   * @property {function(object): (object | null)} setConsent - Set consent status
+   * @property {function(string): boolean} hasConsent - Check if a specific category has consent
    */
   window.CookieBanner = {
     /**
@@ -93,6 +93,7 @@ if (typeof window !== 'undefined') {
      * @function
      * @memberof window.CookieBanner
      * @param {ConsentObject} consent - Consent object with boolean values
+     * @returns {object | null} The stored consent data, or null when unavailable
      * @example
      * window.CookieBanner.setConsent({
      *   functional: true,

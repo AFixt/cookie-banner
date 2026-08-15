@@ -33,8 +33,8 @@ describe('Index.js Integration', () => {
   });
 
   // The full integration suite was removed due to failures and still needs
-  // reinstating — see the TODO in the repo issue tracker. These smoke tests
-  // at least pin the module's global surface in the meantime.
+  // reinstating — tracked in the repo issue tracker. These smoke tests at
+  // least pin the module's global surface in the meantime.
 
   test('loading the entry point exposes the public globals', () => {
     require('../src/js/index.js');

@@ -129,7 +129,7 @@ if (CookieBanner.hasConsent('analytics')) {
 
 If you encounter any issues or have questions, please:
 
-1. Check the main [README.md](../../README.md) for general information
-2. Review the [ACCESSIBILITY.md](../../ACCESSIBILITY.md) document for accessibility features
-3. See [CONTRIBUTING.md](../../CONTRIBUTING.md) if you'd like to contribute
+1. Check the main [README.md](../README.md) for general information
+2. Review the [ACCESSIBILITY.md](../ACCESSIBILITY.md) document for accessibility features
+3. See [CONTRIBUTING.md](../CONTRIBUTING.md) if you'd like to contribute
 4. Open an issue on GitHub if you need further assistance

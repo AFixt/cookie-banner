@@ -162,9 +162,17 @@ pull request blocks the defect at the point of introduction.
 - `workflow_dispatch` is allowed. A manual, on-demand run is not a scheduled run.
 - Event-driven triggers (`push`, `pull_request`, `release`, `repository_dispatch`,
   `workflow_call`) are allowed and preferred.
-- Genuinely periodic *product* work — batch jobs, data pipelines, report
+- Genuinely periodic _product_ work — batch jobs, data pipelines, report
   generation — does not belong in GitHub Actions at all. Run it on real
   infrastructure with its own scheduler, alerting, and retries.
+
+### How this is enforced
+
+`test/workflows.test.js` asserts it: no `schedule:` block, no `- cron:` entry,
+and no job gated on `github.event_name == 'schedule'` in any workflow. A
+reintroduced schedule therefore fails `npm test` at the point someone adds it,
+rather than being noticed later. See
+[#103](https://github.com/AFixt/cookie-banner/issues/103).
 
 ### If you think you need an exception
 

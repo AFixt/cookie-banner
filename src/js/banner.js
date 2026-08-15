@@ -43,8 +43,11 @@ const _bannerAPI = (function () {
     'categories',
   ];
 
-  /** Locale format pattern (M4) */
-  const LOCALE_REGEX = /^[a-z]{2}(-[A-Z]{2})?$/;
+  /**
+   * Locale format pattern (M4). Written without nested quantifiers so the
+   * match is linear-time (security/detect-unsafe-regex).
+   */
+  const LOCALE_REGEX = /^[a-z][a-z](?:-[A-Z][A-Z])?$/;
 
   // State
   let config = {};
@@ -57,6 +60,8 @@ const _bannerAPI = (function () {
   /**
    * Initialize the cookie banner
    * @param {object} userConfig - Configuration options
+   * @returns {Promise<void>} Resolves once the banner is rendered, or
+   * immediately when stored consent already exists
    */
   function initCookieBanner(userConfig = {}) {
     try {
@@ -116,7 +121,8 @@ const _bannerAPI = (function () {
   /**
    * Load locale strings based on configured locale
    * @param {string} locale - Locale code (e.g., 'en')
-   * @returns {Promise}
+   * @returns {Promise<void>} Resolves once locale strings are loaded, falling
+   * back to English on any failure
    */
   function loadLocaleStrings(locale) {
     return new Promise(resolve => {
@@ -175,8 +181,8 @@ const _bannerAPI = (function () {
 
   /**
    * Add keyboard event handler to button
-   * @param button
-   * @param callback
+   * @param {HTMLElement} button - Button to attach the handler to
+   * @param {function(): void} callback - Invoked when Enter or Space is pressed
    */
   function addKeyboardHandler(button, callback) {
     button.addEventListener('keydown', e => {

@@ -66,7 +66,7 @@ function resolveOriginalCookieDescriptor() {
  * Override document.cookie so writes are vetted by the supplied predicate.
  * Blocked writes are logged and dropped; failures in the blocking logic fail
  * closed (the cookie is not set — L4).
- * @param {Function} shouldBlockCookie - (cookieName) => boolean
+ * @param {function(string): boolean} shouldBlockCookie - (cookieName) => boolean
  */
 export function overrideCookieProperty(shouldBlockCookie) {
   // Check if cookie property has already been overridden by us
@@ -126,7 +126,7 @@ export function overrideCookieProperty(shouldBlockCookie) {
 
 /**
  * Expire existing cookies that the blocking predicate rejects.
- * @param {Function} shouldBlockCookie - (cookieName) => boolean
+ * @param {function(string): boolean} shouldBlockCookie - (cookieName) => boolean
  */
 export function blockExistingCookies(shouldBlockCookie) {
   const cookies = document.cookie.split(';');

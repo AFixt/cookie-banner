@@ -94,22 +94,10 @@ describe('Cookie Blocker', () => {
       expect(typeof window.initCookieBlocker).toBe('function');
     });
 
-    test('should not initialize in non-browser environment', () => {
-      const originalWindow = global.window;
-      delete global.window;
-
-      jest.resetModules();
-      require('../src/js/cookie-blocker.js');
-
-      // Should not throw error
-      expect(() => {
-        if (typeof window !== 'undefined' && window.initCookieBlocker) {
-          window.initCookieBlocker();
-        }
-      }).not.toThrow();
-
-      global.window = originalWindow;
-    });
+    // The non-browser-environment case moved to test/cookie-blocker-ssr.test.js.
+    // It cannot be expressed here: it needs `window` to be genuinely absent,
+    // and current jsdom defines `global.window` as non-configurable, so the
+    // `delete global.window` this test used to open with now throws.
 
     test('should override DOM methods on initialization', () => {
       if (window.CookieBlocker && window.CookieBlocker._reset) {
@@ -452,6 +440,7 @@ describe('Cookie Blocker', () => {
     });
 
     test('should handle many scripts efficiently', () => {
+      const appended = [];
       const startTime = Date.now();
 
       // Create many scripts
@@ -461,13 +450,24 @@ describe('Cookie Blocker', () => {
 
         const parentElement = document.createElement('div');
         parentElement.appendChild(script);
+        appended.push({ script, parentElement });
       }
 
-      const endTime = Date.now();
-      const duration = endTime - startTime;
+      const duration = Date.now() - startTime;
 
-      // Should complete quickly (less than 100ms for 100 scripts)
-      expect(duration).toBeLessThan(100);
+      // Assert the outcome, not just the clock. The previous version of this
+      // test measured elapsed time and nothing else, so it would have passed
+      // while the blocker silently swallowed all 100 legitimate scripts.
+      appended.forEach(({ script, parentElement }) => {
+        expect(script.parentNode).toBe(parentElement);
+      });
+      expect(window.CookieBlocker.getBlocked()).toHaveLength(0);
+
+      // A ceiling loose enough not to flake, tight enough to catch an
+      // accidental O(n^2) in the interception path. The original 100ms budget
+      // failed intermittently under ordinary full-suite load — observed at
+      // 200ms, 271ms and 389ms on an unmodified checkout.
+      expect(duration).toBeLessThan(5000);
     });
   });
 

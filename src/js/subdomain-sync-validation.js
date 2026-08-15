@@ -9,11 +9,13 @@
 /** Minimum allowed sync interval in ms */
 export const MIN_SYNC_INTERVAL = 1000;
 
-/** Strict domain name pattern */
-const DOMAIN_REGEX = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-
-/** Single-label subdomain pattern */
-const SUBDOMAIN_REGEX = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i;
+/**
+ * Single DNS label: alphanumeric at both ends, hyphens allowed between.
+ * Written without nested quantifiers so the match is linear-time
+ * (security/detect-unsafe-regex); full domains are validated label by label
+ * in `isValidDomain` rather than with one nested-repetition pattern.
+ */
+const DOMAIN_LABEL_REGEX = /^(?:[a-z0-9]|[a-z0-9][a-z0-9-]*[a-z0-9])$/i;
 
 /**
  * Allowed config keys to prevent prototype pollution. `currentHostname` is a
@@ -35,7 +37,11 @@ const ALLOWED_SYNC_CONFIG_KEYS = [
  * @returns {boolean} Whether the domain is valid
  */
 export function isValidDomain(domain) {
-  return typeof domain === 'string' && DOMAIN_REGEX.test(domain) && domain.length <= 253;
+  return (
+    typeof domain === 'string' &&
+    domain.length <= 253 &&
+    domain.split('.').every(label => DOMAIN_LABEL_REGEX.test(label))
+  );
 }
 
 /**
@@ -44,7 +50,7 @@ export function isValidDomain(domain) {
  * @returns {string[]} Valid subdomains
  */
 export function filterValidSubdomains(subdomains) {
-  return (subdomains || []).filter(s => typeof s === 'string' && SUBDOMAIN_REGEX.test(s));
+  return (subdomains || []).filter(s => typeof s === 'string' && DOMAIN_LABEL_REGEX.test(s));
 }
 
 /**
