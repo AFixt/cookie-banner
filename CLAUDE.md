@@ -75,6 +75,24 @@ Releases are managed with `standard-version`. The changelog is automatically gen
 - `npm run release:major` - Force major release (X.0.0)
 - `npm run release:dry-run` - Preview release without changes
 
+## GitHub Actions
+
+**No regularly scheduled GitHub Action may ever be added to this repository.**
+No `on.schedule:` block, no `- cron:` entry, in any workflow, on any branch.
+
+A timer-triggered check reports a problem hours or days after it entered the
+codebase, against no particular author, and is routinely ignored. The same
+check on a pull request gates the defect at the point of introduction, where
+the failure is attributable to the change that caused it. Any check worth
+running belongs in the PR pipeline.
+
+`workflow_dispatch` (manual runs) remains allowed — a manual trigger is not a
+schedule. Use it for the heavy sweeps that are too slow to gate every PR.
+
+`test/workflows.test.js` enforces this, so a reintroduced schedule fails
+`npm test` rather than being discovered later. See
+[#103](https://github.com/AFixt/cookie-banner/issues/103).
+
 ## Build/Lint/Test Commands
 
 - Node.js version: LTS (use `nvm use` or Node.js 22+)
