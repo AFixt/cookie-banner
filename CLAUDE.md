@@ -75,24 +75,6 @@ Releases are managed with `standard-version`. The changelog is automatically gen
 - `npm run release:major` - Force major release (X.0.0)
 - `npm run release:dry-run` - Preview release without changes
 
-## GitHub Actions
-
-**No regularly scheduled GitHub Action may ever be added to this repository.**
-No `on.schedule:` block, no `- cron:` entry, in any workflow, on any branch.
-
-A timer-triggered check reports a problem hours or days after it entered the
-codebase, against no particular author, and is routinely ignored. The same
-check on a pull request gates the defect at the point of introduction, where
-the failure is attributable to the change that caused it. Any check worth
-running belongs in the PR pipeline.
-
-`workflow_dispatch` (manual runs) remains allowed — a manual trigger is not a
-schedule. Use it for the heavy sweeps that are too slow to gate every PR.
-
-`test/workflows.test.js` enforces this, so a reintroduced schedule fails
-`npm test` rather than being discovered later. See
-[#103](https://github.com/AFixt/cookie-banner/issues/103).
-
 ## Build/Lint/Test Commands
 
 - Node.js version: LTS (use `nvm use` or Node.js 22+)
@@ -147,3 +129,51 @@ If this project installs any `@afixt/*` scoped packages, npm authentication is h
 - Installing `@afixt/*` scoped packages should **not** return `404`. A `404` here is an authentication/token problem, not a missing package.
 - If you do hit a `404`, remove any **repo-level** `NPM_TOKEN` secret — a repo-level token is likely stale and conflicts with the org-level secret.
 - Do not override `NPM_TOKEN` per repository; always rely on the org-level secret.
+
+## CI policy: no scheduled GitHub Actions
+
+**No GitHub Actions workflow in this repository may use a `schedule:` (cron)
+trigger, and no scheduled workflow that has been removed may be added back.**
+This is a standing constraint, not a default to be traded away for convenience.
+
+A timer-triggered check reports a problem hours or days after it entered the
+codebase, attributes it to no one, and gets ignored. The same check run against a
+pull request blocks the defect at the point of introduction.
+
+### Rules
+
+- No `on: schedule:` and no `- cron:` in any file under `.github/workflows/`.
+- No `.github/dependabot.yml` — Dependabot is a scheduled updater and is covered
+  by this policy. GitHub **security alerts** are event-driven notifications, not
+  scheduled jobs, and remain enabled.
+- Every check a scheduled job would have performed runs as a step in the
+  pull-request pipeline instead:
+  - Dependency vulnerability and freshness checks (`npm audit`, `npm outdated`,
+    OWASP Dependency-Check) run on `pull_request`.
+  - Static analysis (CodeQL and equivalents) runs on `pull_request`.
+  - Link checking, docs linting, and content checks run on `pull_request`,
+    path-filtered to the files that can break them.
+  - SBOM generation runs in the release/publish pipeline — an SBOM is a build
+    output, not a periodic report.
+  - DAST scans (ZAP and equivalents) run against the PR preview environment or
+    as a post-deploy gate, not against a static URL on a timer.
+  - End-to-end suites run as a smoke subset on `pull_request` and as the full
+    matrix on merge to the default branch — never nightly.
+- `workflow_dispatch` is allowed. A manual, on-demand run is not a scheduled run.
+- Event-driven triggers (`push`, `pull_request`, `release`, `repository_dispatch`,
+  `workflow_call`) are allowed and preferred.
+- Genuinely periodic _product_ work — batch jobs, data pipelines, report
+  generation — does not belong in GitHub Actions at all. Run it on real
+  infrastructure with its own scheduler, alerting, and retries.
+
+### How this is enforced
+
+`test/workflows.test.js` asserts it: no `schedule:` block, no `- cron:` entry,
+and no job gated on `github.event_name == 'schedule'` in any workflow. A
+reintroduced schedule therefore fails `npm test` at the point someone adds it,
+rather than being noticed later. See
+[#103](https://github.com/AFixt/cookie-banner/issues/103).
+
+### If you think you need an exception
+
+You do not add the cron. Raise it with the repository owner first.
