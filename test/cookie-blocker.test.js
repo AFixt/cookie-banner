@@ -94,22 +94,10 @@ describe('Cookie Blocker', () => {
       expect(typeof window.initCookieBlocker).toBe('function');
     });
 
-    test('should not initialize in non-browser environment', () => {
-      const originalWindow = global.window;
-      delete global.window;
-
-      jest.resetModules();
-      require('../src/js/cookie-blocker.js');
-
-      // Should not throw error
-      expect(() => {
-        if (typeof window !== 'undefined' && window.initCookieBlocker) {
-          window.initCookieBlocker();
-        }
-      }).not.toThrow();
-
-      global.window = originalWindow;
-    });
+    // The non-browser-environment case moved to test/cookie-blocker-ssr.test.js.
+    // It cannot be expressed here: it needs `window` to be genuinely absent,
+    // and current jsdom defines `global.window` as non-configurable, so the
+    // `delete global.window` this test used to open with now throws.
 
     test('should override DOM methods on initialization', () => {
       if (window.CookieBlocker && window.CookieBlocker._reset) {

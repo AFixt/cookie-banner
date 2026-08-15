@@ -27,9 +27,13 @@ const localStorageMock = {
 // Set up localStorage mock
 global.localStorage = localStorageMock;
 
-// Mock document.cookie with configurable property
-Object.defineProperty(document, 'cookie', {
-  writable: true,
-  configurable: true,
-  value: '',
-});
+// Mock document.cookie with configurable property. Guarded because the
+// server-side-rendering suites run under the `node` environment, where there
+// is no document at all — see test/cookie-blocker-ssr.test.js.
+if (typeof document !== 'undefined') {
+  Object.defineProperty(document, 'cookie', {
+    writable: true,
+    configurable: true,
+    value: '',
+  });
+}
