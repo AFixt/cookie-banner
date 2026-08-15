@@ -1,0 +1,65 @@
+id: cookie-banner-storage-blocked
+title: 'Consent banner — Alt 2 (localStorage and cookies blocked)'
+type: negative
+description: >-
+  A visitor with cookies and site data blocked for the origin works the banner.
+  The banner cannot remember the decision, which is acceptable; what is not
+  acceptable is the banner becoming inoperable, throwing past its own error
+  handling, or leaving a keyboard user stranded on a control that no longer
+  does anything.
+
+preconditions:
+  - >-
+    The browser context is configured to block storage for the origin before
+    the run. The DSL has no verb for this — set it in the runner config, in
+    the Playwright context, or in the browser profile the run uses. Chromium:
+    block "third-party and site data" for the origin, or launch with
+    --disable-local-storage.
+  - 'No consent is stored for the origin'
+
+start_location: '{{ page_url }}'
+
+expected_result: >-
+  The banner renders, every control stays operable, activating a choice
+  dismisses the banner without an uncaught error, and the page remains usable.
+  The banner reappearing on the next load is the correct consequence of
+  unavailable storage — silent breakage is not.
+
+data:
+  page_url: 'http://localhost:8080/dist/examples/vanilla-js.html'
+  banner_label: 'Cookie Consent'
+  banner_description: 'We use cookies to improve your experience'
+  accept_all_label: 'Accept All'
+  reject_all_label: 'Reject All'
+  page_landmark_heading: 'Cookie Banner - Vanilla JS Example'
+
+steps:
+  - note: 'Confirm before reading any result below that storage really is blocked for this origin — an unconfigured run passes this template for the wrong reason.'
+
+  - wait_for: region "{{ banner_label }}"
+  - verify: live_region "{{ banner_description }}"
+  - audit: page
+  - lang_check: page
+
+  # With storage unavailable the banner must still be a working control, not
+  # a decorative bar the keyboard cannot get past.
+  - locate: button "{{ reject_all_label }}"
+  - focus: button "{{ reject_all_label }}"
+  - locate: button "{{ accept_all_label }}"
+  - focus: button "{{ accept_all_label }}"
+  - activate: button "{{ accept_all_label }}" via keyboard
+
+  # The write fails, but the interaction must not: the banner comes down and
+  # the page underneath is left in a usable state.
+  - verify: hidden region "{{ banner_label }}"
+  - verify: heading "{{ page_landmark_heading }}"
+  - audit: page
+
+  - note: 'Read the browser console for this step. A caught, logged storage error is expected; an uncaught exception or a stack trace from the banner is a defect.'
+
+  # Re-prompting is the honest behaviour when nothing could be stored. Assert
+  # it so a silent "consent" that was never recorded cannot pass unnoticed.
+  - navigate: '{{ page_url }}'
+  - wait_for: region "{{ banner_label }}"
+  - verify: live_region "{{ banner_description }}"
+  - audit: page

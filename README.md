@@ -269,6 +269,101 @@ rendered banner and preferences modal during `npm test`, and
 `@afixt/a11y-assert-reporter` writes an HTML/JSON/Markdown report to
 `reports/a11y/` on every run.
 
+## Use Case Documents
+
+[`docs/usecases/`](docs/usecases/) holds AFixt-style use case documents for the
+banner's flows, written in the `.uc.yaml` DSL from
+[`@afixt/usecase-runner`](https://github.com/AFixt/usecase-runner) and following
+the house format used in
+[AFixt/audit-usecases](https://github.com/AFixt/audit-usecases). The runner
+turns each one into a Playwright test that fails whenever an element is missing
+from the accessibility tree, cannot take keyboard focus, or does not meet WCAG
+when audited.
+
+They are templates, not fixtures. Every site-specific value lives in the file's
+`data:` block, so auditing someone else's cookie banner is a single pass through
+that block plus the `start_location` at the top. `grep -n REPLACE docs/usecases`
+lists everything worth reviewing before a run.
+
+| File                                                                                       | Type     | Flow                                                                    |
+| ------------------------------------------------------------------------------------------ | -------- | ----------------------------------------------------------------------- |
+| [`accept-all.uc.yaml`](docs/usecases/accept-all.uc.yaml)                                   | positive | First visit, accept every category, keyboard only                       |
+| [`reject-all.uc.yaml`](docs/usecases/reject-all.uc.yaml)                                   | positive | Decline optional categories straight from the banner                    |
+| [`customize-preferences.uc.yaml`](docs/usecases/customize-preferences.uc.yaml)             | positive | Open the dialog, toggle a category, save — focus move, trap, and return |
+| [`consent-persists-on-revisit.uc.yaml`](docs/usecases/consent-persists-on-revisit.uc.yaml) | positive | Revisit after consent; the banner must not ask again                    |
+| [`reopen-preferences.uc.yaml`](docs/usecases/reopen-preferences.uc.yaml)                   | positive | Reopen from a persistent control and withdraw a prior consent           |
+| [`escape-dismisses-modal.uc.yaml`](docs/usecases/escape-dismisses-modal.uc.yaml)           | negative | Escape closes the dialog, discards the change, returns focus            |
+| [`storage-blocked.uc.yaml`](docs/usecases/storage-blocked.uc.yaml)                         | negative | Banner behaviour with cookies and site data blocked                     |
+| [`rtl-localized.uc.yaml`](docs/usecases/rtl-localized.uc.yaml)                             | negative | RTL layout and localized strings; language mismatch detection           |
+
+### Running the use cases
+
+`@afixt/usecase-runner` is already a dev dependency, so parsing needs nothing
+extra:
+
+```bash
+npm run validate:usecases
+```
+
+That is also asserted by `test/usecases.test.js` during `npm test`, which
+additionally fails on parse _warnings_ — an unknown keyword or modifier
+otherwise parses successfully and then does nothing at runtime.
+
+Actually driving a browser needs Playwright (already a dev dependency here) and,
+for the `audit:` steps, the engine:
+
+```bash
+npm install --save-dev @afixt/afixt-engine @afixt/test-utils
+```
+
+The templates default to this repo's own example pages, so build and serve them
+first. `npm start` runs the server in the foreground, so leave it running and
+use a second terminal:
+
+```bash
+npm start
+```
+
+```bash
+npx usecase-runner run docs/usecases/accept-all.uc.yaml --headed
+```
+
+Point the runner at the directory rather than a single file when running
+`escape-dismisses-modal.uc.yaml` — it resolves its parent by `id:`, and the
+parent has to be discoverable:
+
+```bash
+npx usecase-runner run docs/usecases
+```
+
+`usecase-runner run` is the supported path in this repository. The runner's
+`generate` subcommand, which emits committed Playwright specs, does **not**
+work here: it writes `const { AccessibilityEngine } = require('…')` into the
+generated files, and this package is `"type": "module"`, so Node rejects them
+with `ReferenceError: require is not defined in ES module scope` before
+Playwright can collect any test. No Playwright config works around that.
+
+### What the templates expect that this library does not yet do
+
+Three of them are written against conformant behaviour that the bundled
+examples do not currently exhibit. The failures are the finding, not a broken
+template — see [#105](https://github.com/AFixt/cookie-banner/issues/105):
+
+- **Focus after the banner is dismissed.** The activated button is removed from
+  the DOM, so focus falls to `document.body` (WCAG 2.4.3). `accept-all`,
+  `reject-all` and `customize-preferences` assert a real focus target.
+- **Focus when the dialog opens.** The first focusable match inside the dialog
+  is the disabled "functional" checkbox, and `focus()` on a disabled control is
+  a no-op, so the dialog opens without moving focus into itself.
+- **A persistent control to reopen preferences.** Once consent is stored,
+  `initCookieBanner()` returns before rendering anything, so there is nothing to
+  reopen the dialog with. `reopen-preferences.uc.yaml` assumes the host page
+  supplies that control.
+
+`storage-blocked.uc.yaml` additionally needs storage blocked for the origin
+before the run; the DSL has no verb for that, so configure it in the browser
+context or profile.
+
 ## Privacy & Compliance Notes
 
 - GDPR: Includes "Reject All" button and granular consent options
@@ -317,25 +412,26 @@ live in [docs/templates/](docs/templates/).
 
 ### Scripts
 
-| Script                  | What it does                                                                           |
-| ----------------------- | -------------------------------------------------------------------------------------- |
-| `npm run dev`           | Build the CSS and watch the bundle for changes                                         |
-| `npm run build`         | Clean, build the CSS, and produce the production bundles in `dist/`                    |
-| `npm start`             | Build, then serve the project at <http://localhost:8080>                               |
-| `npm test`              | Jest unit, integration and accessibility suites                                        |
-| `npm run test:coverage` | The same suites with a coverage report                                                 |
-| `npm run test:a11y`     | Playwright accessibility scans of the built pages (needs `npm run build` and a server) |
-| `npm run test:visual`   | Playwright visual regression suite                                                     |
-| `npm run lint`          | ESLint over the whole repo                                                             |
-| `npm run lint:css`      | Stylelint over `src/**/*.css`                                                          |
-| `npm run lint:md`       | markdownlint over the Markdown files                                                   |
-| `npm run lint:cpd`      | jscpd duplication report                                                               |
-| `npm run lint:licenses` | Fail on a production dependency outside the licence allowlist                          |
-| `npm run format`        | Prettier write; `format:check` to verify only                                          |
-| `npm run check`         | Lint, format check, CSS and Markdown lint                                              |
-| `npm run check:all`     | `check` plus duplication, licences and tests — what the pre-push hook runs             |
-| `npm run size`          | Enforce the bundle budgets declared in `package.json`                                  |
-| `npm run docs:build`    | Regenerate the API documentation from JSDoc comments                                   |
+| Script                      | What it does                                                                           |
+| --------------------------- | -------------------------------------------------------------------------------------- |
+| `npm run dev`               | Build the CSS and watch the bundle for changes                                         |
+| `npm run build`             | Clean, build the CSS, and produce the production bundles in `dist/`                    |
+| `npm start`                 | Build, then serve the project at <http://localhost:8080>                               |
+| `npm test`                  | Jest unit, integration and accessibility suites                                        |
+| `npm run test:coverage`     | The same suites with a coverage report                                                 |
+| `npm run test:a11y`         | Playwright accessibility scans of the built pages (needs `npm run build` and a server) |
+| `npm run test:visual`       | Playwright visual regression suite                                                     |
+| `npm run validate:usecases` | Parse every `.uc.yaml` in `docs/usecases` without launching a browser                  |
+| `npm run lint`              | ESLint over the whole repo                                                             |
+| `npm run lint:css`          | Stylelint over `src/**/*.css`                                                          |
+| `npm run lint:md`           | markdownlint over the Markdown files                                                   |
+| `npm run lint:cpd`          | jscpd duplication report                                                               |
+| `npm run lint:licenses`     | Fail on a production dependency outside the licence allowlist                          |
+| `npm run format`            | Prettier write; `format:check` to verify only                                          |
+| `npm run check`             | Lint, format check, CSS and Markdown lint                                              |
+| `npm run check:all`         | `check` plus duplication, licences and tests — what the pre-push hook runs             |
+| `npm run size`              | Enforce the bundle budgets declared in `package.json`                                  |
+| `npm run docs:build`        | Regenerate the API documentation from JSDoc comments                                   |
 
 Accessibility scans and duplication reports are written to `reports/`.
 
