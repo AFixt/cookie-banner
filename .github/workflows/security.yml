@@ -37,6 +37,13 @@ jobs:
           # from the organisation-level NPM_TOKEN secret — see CLAUDE.md.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      # Non-blocking, and that is a deliberate exception rather than an
+      # oversight: 10 high-severity advisories are already present on the
+      # default branch, all of them dev-dependency-only, so making this
+      # blocking today would fail every run for reasons unrelated to the
+      # change under test. It is allowlisted by name in
+      # test/workflows.test.js so it cannot be forgotten, and tracked in #109
+      # along with the dependency triage that would let the flag come off.
       - name: Run npm audit
         run: npm audit --audit-level=high
         continue-on-error: true
