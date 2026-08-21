@@ -124,7 +124,6 @@ describe('ci.yml', () => {
     expect(contents).toMatch(pattern);
   });
 
-
   it('never installs dependencies with --ignore-scripts', () => {
     expect(contents).not.toMatch(/--ignore-scripts/);
   });
