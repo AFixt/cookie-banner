@@ -40,6 +40,64 @@ describe('GitHub Actions layout', () => {
   });
 });
 
+/**
+ * Every step permitted to report a failure as a success, and why.
+ *
+ * Keyed by workflow file, valued by the `name:` of the step. A silenced gate
+ * catches nothing, so each one has to be argued for here rather than added
+ * quietly in YAML.
+ */
+const PERMITTED_SILENCED_STEPS = {
+  // Baselines are captured on macOS and re-render differently on Linux.
+  'ci.yml': ['Run visual regression tests'],
+  // 10 high-severity advisories already present on the default branch, all
+  // dev-dependency-only. Blocking today would fail every run for reasons
+  // unrelated to the change under test. Tracked in #109 with the dependency
+  // triage that would let the flag come off.
+  'security.yml': ['Run npm audit'],
+};
+
+describe('no workflow silences its own gates', () => {
+  /*
+   * Scoped to `ci.yml` until #109. The identical defect was sitting in
+   * `security.yml` at the time — `npm audit` marked `continue-on-error: true`,
+   * reporting green while the command it runs exited non-zero — and this guard
+   * could not see it, because it read one file. #62 removed the pattern from
+   * `ci.yml`; nothing stopped it reappearing anywhere else.
+   *
+   * Reading the directory rather than a list also means a fifth workflow is
+   * covered the day it is added.
+   */
+  const workflowFiles = fs
+    .readdirSync(WORKFLOW_DIR)
+    .filter(name => /\.ya?ml$/.test(name))
+    .sort();
+
+  it('finds workflows to check at all — a vacuous guard is not a guard', () => {
+    expect(workflowFiles.length).toBeGreaterThan(0);
+  });
+
+  it.each(workflowFiles)('%s silences only the steps argued for here', name => {
+    const contents = workflow(name);
+    const permitted = PERMITTED_SILENCED_STEPS[name] || [];
+
+    const silenced = contents
+      .split('\n')
+      .filter(line => /^\s*continue-on-error:\s*true\s*$/.test(line));
+    expect(silenced).toHaveLength(permitted.length);
+
+    // Named, not just counted: swapping which step carries the flag would
+    // otherwise keep the count right and the meaning wrong.
+    for (const step of permitted) {
+      const from = contents.indexOf(`name: ${step}`);
+      expect(from).toBeGreaterThan(-1);
+      const nextStep = contents.indexOf('\n      - name:', from + 1);
+      const block = contents.slice(from, nextStep === -1 ? undefined : nextStep);
+      expect(block).toMatch(/continue-on-error: true/);
+    }
+  });
+});
+
 describe('ci.yml', () => {
   let contents;
 
@@ -64,16 +122,6 @@ describe('ci.yml', () => {
     ['npm run size', /run: npm run size/],
   ])('runs the %s gate', (_label, pattern) => {
     expect(contents).toMatch(pattern);
-  });
-
-  it('does not silence the quality gates', () => {
-    // The visual regression suite is the sole permitted exception: its
-    // baselines are captured on macOS and re-render differently on Linux.
-    const silenced = contents.split('\n').filter(line => /^\s*continue-on-error:/.test(line));
-    expect(silenced).toHaveLength(1);
-
-    const visualStep = contents.slice(contents.indexOf('Run visual regression tests'));
-    expect(visualStep).toMatch(/continue-on-error: true/);
   });
 
   it('never installs dependencies with --ignore-scripts', () => {
