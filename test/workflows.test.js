@@ -38,6 +38,63 @@ describe('GitHub Actions layout', () => {
     const files = fs.readdirSync(WORKFLOW_DIR).filter(name => /\.ya?ml$/.test(name));
     expect(files.sort()).toEqual(['ci.yml', 'link-check.yml', 'release.yml', 'security.yml']);
   });
+
+  /**
+   * Every `continue-on-error` permitted anywhere in `.github/workflows`, each
+   * with the reason it is allowed. A silenced gate reports failure as success,
+   * so each one is enumerated here rather than judged case by case.
+   *
+   * To add an entry you have to state why. To remove one, delete the line and
+   * the `continue-on-error` it describes.
+   */
+  const PERMITTED_SILENCED_STEPS = [
+    {
+      file: 'ci.yml',
+      step: 'Run visual regression tests',
+      // Baselines are captured on macOS and re-render differently on Linux.
+      reason: 'platform-dependent baselines',
+    },
+    {
+      file: 'security.yml',
+      step: 'Run npm audit',
+      // TRACKED EXCEPTION -- issue #109. `npm audit --audit-level=high` exits
+      // non-zero on 13 pre-existing high advisories, all reached through dev
+      // dependencies. `npm audit fix` resolves none of them: the bulk arrive
+      // via @afixt/a11y-assert 2.x -> @afixt/afixt-engine 1.x -> puppeteer ->
+      // extract-zip, which needs a11y-assert >= 3 (it depends on engine ^5).
+      // Remove this entry, and the continue-on-error it covers, once that bump
+      // lands -- do not let it become permanent by inattention.
+      reason: 'pre-existing advisories, tracked in #109',
+    },
+  ];
+
+  it('silences no workflow step that is not an enumerated exception', () => {
+    const found = [];
+
+    for (const file of fs.readdirSync(WORKFLOW_DIR).filter(name => /\.ya?ml$/.test(name))) {
+      const lines = workflow(file).split('\n');
+
+      lines.forEach((line, index) => {
+        // Only a real key counts; the word also appears in explanatory comments.
+        if (!/^\s*continue-on-error:\s*true\s*$/.test(line)) return;
+
+        // Attribute it to the nearest preceding `- name:` so the exception list
+        // names steps rather than line numbers, which move.
+        let step = '(unnamed step)';
+        for (let i = index; i >= 0; i -= 1) {
+          const match = /^\s*-?\s*name:\s*(.+?)\s*$/.exec(lines[i]);
+          if (match) {
+            step = match[1].replace(/^['"]|['"]$/g, '');
+            break;
+          }
+        }
+        found.push(`${file}: ${step}`);
+      });
+    }
+
+    const permitted = PERMITTED_SILENCED_STEPS.map(entry => `${entry.file}: ${entry.step}`);
+    expect(found.sort()).toEqual(permitted.sort());
+  });
 });
 
 describe('ci.yml', () => {
