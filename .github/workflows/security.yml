@@ -37,6 +37,23 @@ jobs:
           # from the organisation-level NPM_TOKEN secret — see CLAUDE.md.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      # What ships to consumers, and it blocks.
+      #
+      # Every advisory on the tree today is reached through devDependencies, so a
+      # production-scoped audit is green right now AND fails for real the day one
+      # lands in a shipped path. That is the half of #109's item 1 that can be
+      # answered without waiting on the dependency triage in item 3.
+      - name: Run npm audit (production dependencies)
+        run: npm audit --omit=dev --audit-level=high
+
+      # The full tree, non-blocking, for visibility.
+      #
+      # A deliberate exception rather than an oversight: 13 high-severity advisories
+      # are already present on the default branch, all dev-only, and `npm audit fix
+      # --package-lock-only` leaves the lockfile byte-identical — there is no
+      # in-range remedy to apply, so blocking here would fail every run for reasons
+      # no author can act on. Allowlisted by name in test/workflows.test.js so it
+      # cannot be forgotten, and tracked in #109 with the bump that would clear it.
       - name: Run npm audit
         run: npm audit --audit-level=high
         continue-on-error: true
