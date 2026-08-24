@@ -88,8 +88,13 @@ describe('no workflow silences its own gates', () => {
 
     // Named, not just counted: swapping which step carries the flag would
     // otherwise keep the count right and the meaning wrong.
+    //
+    // The name is matched to end-of-line. Without that, an allowlisted `Run npm audit`
+    // also matches a `Run npm audit (production dependencies)` step declared above it,
+    // and the block that gets checked is the wrong one — which is how this guard first
+    // went red against a change that was correct.
     for (const step of permitted) {
-      const from = contents.indexOf(`name: ${step}`);
+      const from = contents.indexOf(`name: ${step}\n`);
       expect(from).toBeGreaterThan(-1);
       const nextStep = contents.indexOf('\n      - name:', from + 1);
       const block = contents.slice(from, nextStep === -1 ? undefined : nextStep);
