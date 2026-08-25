@@ -50,11 +50,6 @@ describe('GitHub Actions layout', () => {
 const PERMITTED_SILENCED_STEPS = {
   // Baselines are captured on macOS and re-render differently on Linux.
   'ci.yml': ['Run visual regression tests'],
-  // 10 high-severity advisories already present on the default branch, all
-  // dev-dependency-only. Blocking today would fail every run for reasons
-  // unrelated to the change under test. Tracked in #109 with the dependency
-  // triage that would let the flag come off.
-  'security.yml': ['Run npm audit'],
 };
 
 describe('no workflow silences its own gates', () => {

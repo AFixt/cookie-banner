@@ -93,7 +93,7 @@
   ],
   "sideEffects": false,
   "devDependencies": {
-    "@afixt/a11y-assert": "^2.1.3",
+    "@afixt/a11y-assert": "^3.0.0",
     "@afixt/a11y-assert-reporter": "^2.0.1",
     "@afixt/usecase-runner": "^1.5.1",
     "@babel/preset-env": "^7.29.7",
