@@ -48,12 +48,19 @@ jobs:
 
       # The full tree, non-blocking, for visibility.
       #
-      # A deliberate exception rather than an oversight: 13 high-severity advisories
-      # are already present on the default branch, all dev-only, and `npm audit fix
-      # --package-lock-only` leaves the lockfile byte-identical — there is no
-      # in-range remedy to apply, so blocking here would fail every run for reasons
-      # no author can act on. Allowlisted by name in test/workflows.test.js so it
-      # cannot be forgotten, and tracked in #109 with the bump that would clear it.
+      # A deliberate exception rather than an oversight: 8 high-severity advisories
+      # remain on the default branch, all dev-only and all the same root cause --
+      # `extract-zip`, whose every published version (<=2.0.1) is vulnerable with no
+      # patched release, reached only through puppeteer. It cannot be overridden
+      # away: `@puppeteer/browsers` drops `extract-zip` at 3.x, which pairs with
+      # puppeteer >=25, and puppeteer 25 is ESM-only -- Jest's CJS `require()` in
+      # test/setup.js cannot load it. Clearing these needs @afixt/afixt-engine to
+      # move to puppeteer 25 first (AFixt/afixt-engine#226).
+      #
+      # The other 5 highs and the postcss moderate were cleared by the per-major
+      # `overrides` in package.json, so blocking here still fails every run, but on
+      # a much smaller and fully-attributed set. Allowlisted by name in
+      # test/workflows.test.js so it cannot be forgotten; tracked in #109.
       - name: Run npm audit
         run: npm audit --audit-level=high
         continue-on-error: true
