@@ -50,20 +50,19 @@ describe('GitHub Actions layout', () => {
 const PERMITTED_SILENCED_STEPS = {
   // Baselines are captured on macOS and re-render differently on Linux.
   'ci.yml': ['Run visual regression tests'],
-  // 10 high-severity advisories already present on the default branch, all
-  // dev-dependency-only. Blocking today would fail every run for reasons
-  // unrelated to the change under test. Tracked in #109 with the dependency
-  // triage that would let the flag come off.
-  'security.yml': ['Run npm audit'],
 };
 
 describe('no workflow silences its own gates', () => {
   /*
-   * Scoped to `ci.yml` until #109. The identical defect was sitting in
-   * `security.yml` at the time — `npm audit` marked `continue-on-error: true`,
-   * reporting green while the command it runs exited non-zero — and this guard
-   * could not see it, because it read one file. #62 removed the pattern from
-   * `ci.yml`; nothing stopped it reappearing anywhere else.
+   * This guard was once scoped to `ci.yml`, and the identical defect was sitting
+   * in `security.yml` the whole time — `npm audit` marked `continue-on-error:
+   * true`, reporting green while the command it runs exited non-zero — where it
+   * could not be seen, because the guard read one file. #62 removed the pattern
+   * from `ci.yml`; nothing stopped it reappearing anywhere else.
+   *
+   * `security.yml` carried the last allowed exception until #109 closed: the
+   * dependency tree is clean, so that step is blocking and nothing in it is
+   * permitted to be silenced. Re-adding the flag there fails this test.
    *
    * Reading the directory rather than a list also means a fifth workflow is
    * covered the day it is added.

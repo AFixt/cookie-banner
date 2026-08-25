@@ -27,6 +27,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.css$': '<rootDir>/test/mocks/styleMock.js',
+    '^puppeteer$': '<rootDir>/test/mocks/puppeteerMock.js',
   },
   // @afixt/a11y-assert (and its dependency uuid) ship native ESM; let
   // babel-jest transform them so the CJS test environment can load them.
