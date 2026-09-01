@@ -164,10 +164,15 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     timeout-minutes: 10
+    # Narrower than the workflow default: this job reads its own checkout and
+    # queries public tag refs. It uploads no SARIF, so it has no use for the
+    # `security-events: write` the other jobs here need.
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Check action pin freshness
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/check-action-pins.mjs
+        run: node scripts/check-action-pins.js
