@@ -126,8 +126,35 @@ describe('parseActionPins', () => {
   });
 
   it('skips local and docker references, which have no upstream tag', () => {
-    expect(parseLine('      - uses: ./.github/actions/setup')).toEqual([]);
-    expect(parseLine('      - uses: docker://alpine:3.20')).toEqual([]);
+    // These carry an `@`, so they reach the ./ and docker:// guard rather
+    // than being rejected earlier for having no ref at all.
+    expect(parseLine('      - uses: ./.github/actions/setup@v1')).toEqual([]);
+    expect(
+      parseLine(
+        '      - uses: docker://alpine@sha256:0a4eaa0eecf5f8c050e5bba433f58c052be7587ee8af3e8b3910ef9ab5fbe9f5'
+      )
+    ).toEqual([]);
+  });
+
+  it('does not let an unterminated quote ride into the owner', () => {
+    // Invalid YAML, but it must not silently become owner `"actions` and then
+    // be reported as an upstream tag that would not resolve.
+    expect(parseOne(`      - uses: "actions/checkout@${SHA_A} # v6`)).toMatchObject({
+      owner: 'actions',
+      repo: 'checkout',
+      sha: SHA_A,
+      tag: 'v6',
+    });
+  });
+
+  it('treats a # inside a quoted value as part of the value, not a comment', () => {
+    const pin = parseOne(`      - uses: 'actions/checkout@${SHA_A}#frag'`);
+    expect(pin.ref).toBe(`${SHA_A}#frag`);
+    expect(pin.tag).toBeUndefined();
+  });
+
+  it('records no tag for an empty trailing comment', () => {
+    expect(parseOne(`      - uses: actions/checkout@${SHA_A} #`).tag).toBeUndefined();
   });
 
   it('skips lines that are not a uses: reference', () => {
@@ -156,7 +183,7 @@ describe('parseActionPins', () => {
       fs
         .readFileSync(path.join(WORKFLOW_DIR, name), 'utf8')
         .split('\n')
-        .filter(line => /^\s*(- )?uses:/.test(line))
+        .filter(line => /^\s*(-\s+)?uses:/.test(line))
     );
 
     const pins = files.flatMap(name =>
@@ -251,6 +278,12 @@ describe('summarize', () => {
 
   it('passes an empty run rather than throwing', () => {
     expect(summarize([])).toMatchObject({ total: 0, resolved: 0, ok: true });
+  });
+
+  it('refuses to tally a status kind nobody has decided the meaning of', () => {
+    // The pass condition is an allowlist, so a new kind must be named before
+    // it can pass. Throwing here becomes a non-zero exit in the CLI.
+    expect(() => summarize([{ kind: 'probably-fine' }])).toThrow(TypeError);
   });
 });
 

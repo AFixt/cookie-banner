@@ -25,8 +25,12 @@
  * mcp-server/scripts/actionPins.ts). This copy is plain ESM in a `.js` file,
  * because package.json sets `"type": "module"` and the repository's tooling
  * (lint-staged's `*.js` glob, Jest's default transform) is keyed to `.js`.
- * The parsing and classification logic is shared with the other ports, so a
- * fix in any of the three applies to the others.
+ *
+ * This copy has since diverged from both: the `unresolved` status, the
+ * `summarize()` exit decision, and quoted-scalar handling are new here. The
+ * older ports still fold an unresolvable tag into `unknown` and pass the run,
+ * which is the bug this one exists without. A fix here does not propagate to
+ * them by itself.
  */
 
 /**
@@ -83,17 +87,22 @@ const QUOTES = new Set(['"', "'"]);
  * @returns {{value: string, remainder: string}} The scalar and whatever follows it.
  */
 function splitScalar(rest) {
-  const quote = rest[0];
-  if (QUOTES.has(quote)) {
+  const quote = QUOTES.has(rest[0]) ? rest[0] : '';
+  if (quote) {
     const close = rest.indexOf(quote, 1);
     if (close !== -1) {
       return { value: rest.slice(1, close), remainder: rest.slice(close + 1) };
     }
   }
 
-  const hash = rest.indexOf('#');
-  const value = (hash === -1 ? rest : rest.slice(0, hash)).trim();
-  return { value, remainder: hash === -1 ? '' : rest.slice(hash) };
+  // An unterminated quote is invalid YAML that Actions would reject outright.
+  // Drop the stray opener anyway rather than letting it ride into the owner:
+  // skipping the line would hide the reference, and keeping the quote makes
+  // the report blame upstream ("tag could not be resolved") for a local typo.
+  const body = quote ? rest.slice(1) : rest;
+  const hash = body.indexOf('#');
+  const value = (hash === -1 ? body : body.slice(0, hash)).trim();
+  return { value, remainder: hash === -1 ? '' : body.slice(hash) };
 }
 
 /**
@@ -252,7 +261,7 @@ export function classifyPin(pin, resolvedSha) {
  * backwards reports a false stale on every annotated tag, so the decision is
  * kept here as pure logic rather than buried in the fetch code.
  *
- * @param {{object?: {sha?: string, type?: string}}} refBody Parsed response body.
+ * @param {{object?: {sha?: string, type?: string}} | undefined} refBody Parsed response body.
  * @returns {{sha: string, annotated: boolean} | undefined} What the tag points at, if anything.
  */
 export function tagRefTarget(refBody) {
@@ -279,6 +288,11 @@ export function summarize(statuses) {
   const counts = { current: 0, stale: 0, unresolved: 0, unknown: 0 };
 
   for (const status of statuses) {
+    if (!(status.kind in counts)) {
+      // Fail loudly rather than tallying a state nobody decided the meaning
+      // of. main() turns this into a non-zero exit.
+      throw new TypeError(`unrecognised pin status: ${status.kind}`);
+    }
     counts[status.kind] += 1;
   }
 
@@ -286,7 +300,10 @@ export function summarize(statuses) {
     total: statuses.length,
     ...counts,
     resolved: counts.current + counts.stale,
-    ok: counts.stale === 0 && counts.unresolved === 0,
+    // An allowlist, not a denylist. A status kind added later has to be named
+    // here before it can pass — defaulting an undecided state to success is
+    // exactly how the exit-0-having-checked-nothing bug arose.
+    ok: counts.current + counts.unknown === statuses.length,
   };
 }
 

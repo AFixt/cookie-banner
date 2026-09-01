@@ -63,30 +63,39 @@ function headers() {
  * @returns {Promise<string | undefined>} The commit SHA, if resolvable.
  */
 async function resolveTag(slug, tag) {
-  const res = await fetch(`${API}/repos/${slug}/git/ref/tags/${encodeURIComponent(tag)}`, {
-    headers: headers(),
-  });
-  if (!res.ok) {
+  try {
+    const res = await fetch(`${API}/repos/${slug}/git/ref/tags/${encodeURIComponent(tag)}`, {
+      headers: headers(),
+    });
+    if (!res.ok) {
+      return undefined;
+    }
+
+    const target = tagRefTarget(await res.json());
+    if (!target) {
+      return undefined;
+    }
+    if (!target.annotated) {
+      return target.sha;
+    }
+
+    const deref = await fetch(`${API}/repos/${slug}/git/tags/${target.sha}`, {
+      headers: headers(),
+    });
+    if (!deref.ok) {
+      return undefined;
+    }
+
+    // The second hop is checked the same way as the first: a tag object that
+    // points at another tag object is not the commit a workflow checks out,
+    // and comparing it against a pinned commit SHA reports a false stale.
+    const inner = tagRefTarget(await deref.json());
+    return inner && !inner.annotated ? inner.sha : undefined;
+  } catch {
+    // A transport failure or a malformed body is "we could not check", not
+    // "this pin is fine" and not a reason to abandon the other 28 references.
     return undefined;
   }
-
-  const target = tagRefTarget(await res.json());
-  if (!target) {
-    return undefined;
-  }
-  if (!target.annotated) {
-    return target.sha;
-  }
-
-  const deref = await fetch(`${API}/repos/${slug}/git/tags/${target.sha}`, {
-    headers: headers(),
-  });
-  if (!deref.ok) {
-    return undefined;
-  }
-
-  const annotated = await deref.json();
-  return annotated.object?.sha;
 }
 
 /**
@@ -114,8 +123,9 @@ async function collectPins(dir) {
 
 /**
  * Classify every pin, printing one line each, and bucket the ones that need
- * attention. Split out of main() to keep that function within this
- * repository's complexity limits.
+ * attention. Split out of main() so that function stays readable; the numeric
+ * complexity budgets in eslint.config.mjs are scoped to `src/**` and do not
+ * reach this file, but `sonarjs/cognitive-complexity` does.
  *
  * @param {import('./action-pins.js').ActionPin[]} pins Parsed references.
  * @param {Map<string, string | undefined>} resolved Tag lookups, keyed `slug@tag`.
@@ -180,7 +190,8 @@ async function main() {
 
   if (pins.length === 0) {
     console.error(`No action references found in ${dir}`);
-    process.exit(1);
+    process.exitCode = 1;
+    return;
   }
 
   // One lookup per distinct repo+tag: the references collapse to a handful,
@@ -225,12 +236,15 @@ async function main() {
       'SHA buys you, and the reason this repository pins rather than floating.'
   );
 
+  // process.exitCode rather than process.exit(): the report above is the
+  // whole point of a failing run, and process.exit() drops whatever of it is
+  // still queued on a pipe.
   if (!totals.ok) {
-    process.exit(1);
+    process.exitCode = 1;
   }
 }
 
 main().catch(err => {
   console.error(err);
-  process.exit(1);
+  process.exitCode = 1;
 });
