@@ -59,6 +59,17 @@ jobs:
       - name: Check for code duplication (jscpd)
         run: npm run lint:cpd:ci
 
+      # The unprofiled parse of docs/usecases. `validate:usecases` has existed
+      # in package.json without a caller, so a template could stop parsing and
+      # land green. The companion pointer-independence check is a parse-level
+      # assertion in test/usecases.test.js rather than a job of its own: the
+      # runner's `--profile no-pointer` only enforces at execution time, and
+      # these templates cannot execute here — they carry REPLACE placeholders
+      # instead of a real site's selectors, and their `audit:` steps need
+      # @afixt/afixt-engine, which is deliberately not a dependency.
+      - name: Validate use case templates
+        run: npm run validate:usecases
+
       - name: Upload duplication report
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         if: always()

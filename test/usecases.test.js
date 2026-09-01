@@ -53,6 +53,25 @@ const VERBS_ADDED_IN_1_4_0 = ['contrast', 'lang_check', 'read_image', 'sr_says']
 const MIN_RUNNER = [1, 4, 0];
 
 /**
+ * The verbs `@afixt/usecase-runner`'s `no-pointer` interaction profile forbids
+ * (`run --profile no-pointer`, added in 1.7.0). A tooltip that only appears on
+ * hover, or a carousel that advances on pointer-over, cannot be operated by
+ * anyone navigating without a pointing device — but a test that hovers passes
+ * happily, because Playwright can hover when a real user cannot.
+ *
+ * The profile enforces this when a use case *executes*: `run` fails the step
+ * with `failure_reason: 'profile_forbidden'`, and `generate --profile
+ * no-pointer` compiles it into a `throw`. Neither is reachable from this
+ * repository's CI — these are templates, so their `data:` blocks carry REPLACE
+ * placeholders rather than a real site's selectors, and every one of them has
+ * an `audit:` step, which needs `@afixt/afixt-engine` (not a dependency here).
+ * The property itself is static, though: whether a flow needs a pointer is a
+ * fact about its steps, not about the page. So it is asserted here, where it
+ * runs on every `npm test`.
+ */
+const POINTER_ONLY_KEYWORDS = ['hover', 'hover_out'];
+
+/**
  * Lowest version a semver range can resolve to. `^1.5.1`, `~1.5.1` and
  * `>=1.5.1` all floor at 1.5.1; anything without three numeric parts (`*`,
  * `latest`, a git URL) yields null and is treated as unpinnable.
@@ -113,6 +132,23 @@ describe('docs/usecases templates', () => {
     for (const verb of atRisk) {
       expect(STEP_KEYWORDS).toContain(verb);
     }
+  });
+
+  it('keeps every flow completable without a pointer', () => {
+    // Guard the guard, the same way the keyword test above does: if the runner
+    // ever renames or drops these verbs, the filter below matches nothing and
+    // this test passes while watching nothing.
+    for (const keyword of POINTER_ONLY_KEYWORDS) {
+      expect(STEP_KEYWORDS).toContain(keyword);
+    }
+
+    const pointerOnly = useCases.flatMap(useCase =>
+      useCase.steps
+        .filter(step => POINTER_ONLY_KEYWORDS.includes(step.keyword))
+        .map(step => `${useCase.id}: ${step.keyword}`)
+    );
+
+    expect(pointerOnly).toEqual([]);
   });
 
   it('pins @afixt/usecase-runner at or above the version that added those verbs', () => {
