@@ -307,7 +307,13 @@ npm run validate:usecases
 
 That is also asserted by `test/usecases.test.js` during `npm test`, which
 additionally fails on parse _warnings_ — an unknown keyword or modifier
-otherwise parses successfully and then does nothing at runtime.
+otherwise parses successfully and then does nothing at runtime — and on any
+template that uses `hover` or `hover_out`. Those are the two verbs the runner's
+`no-pointer` interaction profile forbids, because a flow that needs a pointer
+cannot be completed by anyone navigating without one. The profile itself
+(`usecase-runner run --profile no-pointer`) only enforces at execution time, so
+the check is made against the parsed steps instead, where it runs on every
+build.
 
 Actually driving a browser needs Playwright (already a dev dependency here) and,
 for the `audit:` steps, the engine:
