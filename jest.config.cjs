@@ -35,11 +35,15 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['src/js/**/*.js', '!**/node_modules/**', '!**/dist/**', '!**/coverage/**'],
   coverageThreshold: {
+    // Floors at the coverage measured when #128 was fixed, so the gate fails on
+    // any regression. The old values (14/14/20/25) sat 60+ points below what the
+    // suite actually covers and could not catch anything. Raise these as
+    // coverage grows; never lower them to make a change pass.
     global: {
-      branches: 25,
-      functions: 20,
-      lines: 14,
-      statements: 14,
+      branches: 74,
+      functions: 87,
+      lines: 86,
+      statements: 85,
     },
   },
 };
