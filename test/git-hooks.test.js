@@ -68,6 +68,24 @@ describe('Husky hooks', () => {
     expect(pkg.scripts['check:all']).toMatch(/npm test/);
   });
 
+  // knip only earns its keep if the push gate runs it. Added by hand and left
+  // out of check:all, it becomes another configured-but-unexecuted check of the
+  // kind #127 was filed about. See https://github.com/AFixt/cookie-banner/issues/126.
+  it('runs knip inside the push gate', () => {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+    expect(pkg.scripts.knip).toBeDefined();
+    expect(pkg.scripts['check:all']).toMatch(/npm run knip/);
+  });
+
+  it('keeps a knip configuration for the gate to read', () => {
+    const configPath = path.join(__dirname, '..', 'knip.json');
+    expect(fs.existsSync(configPath)).toBe(true);
+
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    expect(Array.isArray(config.entry)).toBe(true);
+    expect(config.entry.length).toBeGreaterThan(0);
+  });
+
   it('validates commit messages against commitlint', () => {
     expect(hookCommands('commit-msg').join('\n')).toMatch(/commitlint/);
   });
