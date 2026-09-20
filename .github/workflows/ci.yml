@@ -81,6 +81,12 @@ jobs:
       - name: Check dependency licences
         run: npm run lint:licenses
 
+      # Unused files, exports and dependencies. Runs here rather than only in
+      # the pre-push hook so a `--no-verify` push or a web UI merge cannot slip
+      # dead code past the gate — the reason this workflow exists at all.
+      - name: Find unused code and dependencies (knip)
+        run: npm run knip
+
       # Build before testing so the built-output guards in the test suite
       # (e.g. test/example-script-paths.test.js) run against a real dist/
       # instead of silently skipping.

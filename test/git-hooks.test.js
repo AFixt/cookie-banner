@@ -83,7 +83,17 @@ describe('Husky hooks', () => {
 
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     expect(Array.isArray(config.entry)).toBe(true);
-    expect(config.entry.length).toBeGreaterThan(0);
+    expect(config.entry).toContain('index.js');
+  });
+
+  // `check:all` never builds, so whether knip sees dist/ depends on whether the
+  // developer happens to have built recently — and `package.json` points
+  // `types` at dist/types/index.d.ts, which makes it an entry point knip reads.
+  // Without this ignore the same commit passes the push gate on a clean
+  // checkout and fails it on a built tree. See #132 for the finding it hid.
+  it("keeps built output out of knip's view", () => {
+    const config = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'knip.json'), 'utf8'));
+    expect(config.ignore).toEqual(expect.arrayContaining(['dist/**']));
   });
 
   it('validates commit messages against commitlint', () => {
