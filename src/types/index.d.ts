@@ -2,7 +2,7 @@
  * Type declarations for Accessible Cookie Banner
  */
 
-declare module 'accessible-cookie-banner' {
+declare module '@afixt/accessible-cookie-banner' {
   /**
    * Configuration options for initializing the cookie banner
    */
@@ -199,16 +199,16 @@ declare global {
     /**
      * Global CookieBanner object
      */
-    CookieBanner: import('accessible-cookie-banner').CookieBannerAPI;
+    CookieBanner: import('@afixt/accessible-cookie-banner').CookieBannerAPI;
 
     /**
      * Global ConsentManager constructor
      */
-    ConsentManager: typeof import('accessible-cookie-banner').ConsentManager;
+    ConsentManager: typeof import('@afixt/accessible-cookie-banner').ConsentManager;
 
     /**
      * Legacy initialization function
      */
-    initCookieBanner: (options: import('accessible-cookie-banner').ConsentOptions) => void;
+    initCookieBanner: (options: import('@afixt/accessible-cookie-banner').ConsentOptions) => void;
   }
 }
