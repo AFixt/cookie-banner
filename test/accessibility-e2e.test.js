@@ -32,8 +32,26 @@ const BASE_URL = 'http://localhost:8080/dist/examples';
  * locate a page "within a set of Web pages". Each example is a standalone
  * demo, not a member of a site, so a search facility or sitemap would be
  * meaningless here. It is a page-set criterion, not a banner defect.
+ *
+ * TIMEOUTS-01 (WCAG 2.2.1 Timing Adjustable / 2.2.6 Timeouts): the rule
+ * declares `type: 'auto_assisted'` in @afixt/afixt-tests — it flags candidates
+ * for a human to judge and cannot establish a failure on its own. It reports
+ * as a blocking error anyway because a11y-assert's `severityForRule` maps
+ * severity from a hardcoded allowlist (`REVIEW_ONLY_RULES`, one entry:
+ * KEYBOARD-01) rather than from the rule's own `type`. So this is a severity
+ * mapping defect upstream, not a banner defect — see #131 and
+ * AFixt/acr-archive#158, which asks for exactly that fix.
+ *
+ * What it has to flag on: `subdomain-sync.js` sets a `setInterval` to poll for
+ * consent changes across subdomains. That is background synchronisation, not a
+ * time limit on the user's ability to complete a task, and 2.2.1 governs the
+ * latter. Telling those two apart is a judgement call, which is precisely why
+ * the rule is auto_assisted and not automatic.
+ *
+ * `test/rule-severity-contract.test.js` pins the `auto_assisted` claim, so
+ * this entry fails rather than lingering if upstream reclassifies the rule.
  */
-const OUT_OF_SCOPE_RULES = ['KEYBOARD-01', 'NAVIGATION-08'];
+const OUT_OF_SCOPE_RULES = ['KEYBOARD-01', 'NAVIGATION-08', 'TIMEOUTS-01'];
 
 /**
  * STRUCTURE-22 (all major content inside a landmark) flags the modal's
