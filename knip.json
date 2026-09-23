@@ -1,0 +1,10 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["index.js", "scripts/**/*.js"],
+  "project": ["src/**/*.js", "scripts/**/*.js", "test/**/*.js", "*.js", "*.cjs", "*.mjs"],
+  "ignore": ["dist/**"],
+  "ignoreDependencies": ["babel-jest"],
+  "rules": {
+    "exports": "warn"
+  }
+}

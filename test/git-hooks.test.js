@@ -68,6 +68,34 @@ describe('Husky hooks', () => {
     expect(pkg.scripts['check:all']).toMatch(/npm test/);
   });
 
+  // knip only earns its keep if the push gate runs it. Added by hand and left
+  // out of check:all, it becomes another configured-but-unexecuted check of the
+  // kind #127 was filed about. See https://github.com/AFixt/cookie-banner/issues/126.
+  it('runs knip inside the push gate', () => {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+    expect(pkg.scripts.knip).toBeDefined();
+    expect(pkg.scripts['check:all']).toMatch(/npm run knip/);
+  });
+
+  it('keeps a knip configuration for the gate to read', () => {
+    const configPath = path.join(__dirname, '..', 'knip.json');
+    expect(fs.existsSync(configPath)).toBe(true);
+
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    expect(Array.isArray(config.entry)).toBe(true);
+    expect(config.entry).toContain('index.js');
+  });
+
+  // `check:all` never builds, so whether knip sees dist/ depends on whether the
+  // developer happens to have built recently — and `package.json` points
+  // `types` at dist/types/index.d.ts, which makes it an entry point knip reads.
+  // Without this ignore the same commit passes the push gate on a clean
+  // checkout and fails it on a built tree. See #132 for the finding it hid.
+  it("keeps built output out of knip's view", () => {
+    const config = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'knip.json'), 'utf8'));
+    expect(config.ignore).toEqual(expect.arrayContaining(['dist/**']));
+  });
+
   it('validates commit messages against commitlint', () => {
     expect(hookCommands('commit-msg').join('\n')).toMatch(/commitlint/);
   });

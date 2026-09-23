@@ -215,6 +215,15 @@ describe('no scheduled workflows (issue #103)', () => {
     expect(contents).not.toMatch(/create-issue-from-file/);
   });
 
+  // The hook is the primary gate and this workflow is the net under it, so a
+  // check that runs only in `check:all` is invisible to `--no-verify` pushes
+  // and web UI merges — the two cases the header comment says this file exists
+  // for. knip was added to the hook in #130 and is asserted here so it cannot
+  // quietly become hook-only again.
+  it('ci.yml runs knip as a blocking step', () => {
+    expect(workflow('ci.yml')).toMatch(/run: npm run knip/);
+  });
+
   it('security.yml keeps its manual-only jobs runnable via workflow_dispatch', () => {
     const contents = workflow('security.yml');
     expect(contents).toMatch(/workflow_dispatch:/);

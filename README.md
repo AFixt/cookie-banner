@@ -433,9 +433,10 @@ live in [docs/templates/](docs/templates/).
 | `npm run lint:md`           | markdownlint over the Markdown files                                                   |
 | `npm run lint:cpd`          | jscpd duplication report                                                               |
 | `npm run lint:licenses`     | Fail on a production dependency outside the licence allowlist                          |
+| `npm run knip`              | Find unused files, exports and dependencies                                            |
 | `npm run format`            | Prettier write; `format:check` to verify only                                          |
 | `npm run check`             | Lint, format check, CSS and Markdown lint                                              |
-| `npm run check:all`         | `check` plus duplication, licences and tests — what the pre-push hook runs             |
+| `npm run check:all`         | `check` plus duplication, licences, knip and tests — what the pre-push hook runs       |
 | `npm run size`              | Enforce the bundle budgets declared in `package.json`                                  |
 | `npm run docs:build`        | Regenerate the API documentation from JSDoc comments                                   |
 
