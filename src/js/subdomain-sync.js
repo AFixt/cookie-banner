@@ -388,8 +388,6 @@ if (typeof window !== 'undefined') {
   };
 }
 
-// ES-module exports — referenced from `src/js/index.js` to defeat tree-shaking.
+// ES-module export — referenced from `src/js/index.js` to defeat tree-shaking.
+// The rest of the API stays reachable as `window.CookieConsentSync`.
 export const initSubdomainSync = _subdomainSyncAPI.initSubdomainSync;
-export const stopSubdomainSync = _subdomainSyncAPI.stopSubdomainSync;
-export const getSyncStatus = _subdomainSyncAPI.getSyncStatus;
-export const generateSyncEndpointHTML = _subdomainSyncAPI.generateSyncEndpointHTML;

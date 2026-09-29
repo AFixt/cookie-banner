@@ -423,10 +423,10 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// ES-module exports. The fact that these are imported from `src/js/index.js`
-// is what guarantees Rollup keeps `_bannerAPI` (and therefore the entire IIFE)
-// in the published bundle.
+// ES-module export. The fact that this binding is imported from
+// `src/js/index.js` is what guarantees Rollup keeps `_bannerAPI` (and therefore
+// the entire IIFE) in the published bundle. One referenced binding is enough:
+// getConsent/setConsent/hasConsent reach consumers through `window.CookieConsent`
+// and `window.CookieBanner`, and were never re-exported from the entry point,
+// so exporting them here added nothing to the published API. See #136.
 export const initCookieBanner = _bannerAPI.initCookieBanner;
-export const getConsent = _bannerAPI.getConsent;
-export const setConsent = _bannerAPI.setConsent;
-export const hasConsent = _bannerAPI.hasConsent;

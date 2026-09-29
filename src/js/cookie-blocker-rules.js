@@ -7,7 +7,7 @@
  */
 
 // Common tracking script patterns to block
-export const TRACKING_PATTERNS = [
+const TRACKING_PATTERNS = [
   /google-analytics\.com/,
   /googletagmanager\.com/,
   /doubleclick\.net/,
@@ -28,7 +28,7 @@ export const TRACKING_PATTERNS = [
 ];
 
 // Cookie patterns to block by category
-export const COOKIE_PATTERNS = {
+const COOKIE_PATTERNS = {
   analytics: [
     /^_ga/,
     /^_gid/,

@@ -3,8 +3,5 @@
   "entry": ["index.js", "scripts/**/*.js"],
   "project": ["src/**/*.js", "scripts/**/*.js", "test/**/*.js", "*.js", "*.cjs", "*.mjs"],
   "ignore": ["dist/**"],
-  "ignoreDependencies": ["babel-jest"],
-  "rules": {
-    "exports": "warn"
-  }
+  "ignoreDependencies": ["babel-jest"]
 }
