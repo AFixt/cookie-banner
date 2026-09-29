@@ -90,21 +90,24 @@
     <!-- Include the built UMD bundle (exposes window.initCookieBanner, window.CookieConsent, etc.) -->
     <script src="./consent.js"></script>
     <script>
-      // Wait for scripts to load then initialize
-      setTimeout(() => {
-        if (typeof window.initCookieBanner === 'function') {
-          window.initCookieBanner({
-            locale: 'en',
-            theme: 'light',
-            onConsentChange: consent => {
-              console.log('Consent changed:', consent);
-              updateConsentStatus();
-            },
-          });
-        } else {
-          console.error('initCookieBanner function not found');
-        }
-      }, 100);
+      // consent.js is a classic, synchronous <script> above, so
+      // window.initCookieBanner is already defined here; no timer is needed.
+      // A load-time timer in the same inline script as the Reset button's
+      // location.reload() is also what made LANG-24 (change of context
+      // without user request) flag this page. The reload only ever runs on
+      // a click. See #135.
+      if (typeof window.initCookieBanner === 'function') {
+        window.initCookieBanner({
+          locale: 'en',
+          theme: 'light',
+          onConsentChange: consent => {
+            console.log('Consent changed:', consent);
+            updateConsentStatus();
+          },
+        });
+      } else {
+        console.error('initCookieBanner function not found');
+      }
 
       // Update the consent status display
       function updateConsentStatus() {
