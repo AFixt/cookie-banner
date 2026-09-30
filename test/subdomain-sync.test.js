@@ -443,12 +443,19 @@ describe('Subdomain Consent Synchronization', () => {
     });
 
     test('ignores a non-OK response', async () => {
-      global.fetch = jest.fn().mockResolvedValue({ ok: false });
+      // The body is well-formed, so only the `response.ok` check can keep it
+      // from being applied. Without a body, dropping that check would throw
+      // on `response.json` and leave setConsent uncalled anyway.
+      const json = jest.fn().mockResolvedValue({
+        consent: { functional: true, analytics: true, marketing: true },
+      });
+      global.fetch = jest.fn().mockResolvedValue({ ok: false, json });
 
       window.CookieConsentSync.init(apiConfig);
       await flush();
 
       expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(json).not.toHaveBeenCalled();
       expect(window.CookieConsent.setConsent).not.toHaveBeenCalled();
     });
 
