@@ -296,6 +296,13 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// ES-module exports — referenced from `src/js/index.js` to defeat tree-shaking.
+// ES-module exports — initCookieBlocker is referenced from `src/js/index.js`
+// to defeat tree-shaking.
 export const initCookieBlocker = _blockerAPI.initCookieBlocker;
+/**
+ * The only way to read the blocked-script list where there is no `window`
+ * (and so no `window.CookieBlocker.getBlocked`); test/cookie-blocker-ssr.test.js
+ * exercises it through a namespace `require()`, which Knip does not trace.
+ * @public
+ */
 export const getBlockedScripts = _blockerAPI.getBlockedScripts;

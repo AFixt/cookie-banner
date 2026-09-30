@@ -96,6 +96,17 @@ describe('Husky hooks', () => {
     expect(config.ignore).toEqual(expect.arrayContaining(['dist/**']));
   });
 
+  // A knip rule demoted to `warn` or `off` reports on every run and fails
+  // nothing — documentation, not enforcement, which is the pattern #127 was
+  // filed about. `exports` sat at `warn` with nine findings until #136 resolved
+  // them; this keeps the next demotion from going in unnoticed. Fix the
+  // finding, or add a narrow per-file ignore with a reason, instead.
+  it('does not demote any knip rule below error', () => {
+    const config = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'knip.json'), 'utf8'));
+    const demoted = Object.entries(config.rules || {}).filter(([, level]) => level !== 'error');
+    expect(demoted).toEqual([]);
+  });
+
   it('validates commit messages against commitlint', () => {
     expect(hookCommands('commit-msg').join('\n')).toMatch(/commitlint/);
   });

@@ -380,4 +380,134 @@ describe('Subdomain Consent Synchronization', () => {
       expect(status.isActive).toBe(false);
     });
   });
+
+  // The endpoint path (usePostMessage: false + syncEndpoint) had no test at
+  // all: fetchConsentFromAPI and pushConsentToAPI were never executed.
+  describe('API Synchronization', () => {
+    const ENDPOINT = 'https://example.com/api/consent';
+    const apiConfig = {
+      enabled: true,
+      primaryDomain: 'example.com',
+      allowedSubdomains: ['app'],
+      currentHostname: 'app.example.com',
+      usePostMessage: false,
+      syncEndpoint: ENDPOINT,
+    };
+    let originalFetch;
+
+    /**
+     * Let the module's un-awaited async fetch chain settle.
+     * @returns {Promise<void>}
+     */
+    const flush = () => new Promise(resolve => setTimeout(resolve, 0));
+
+    beforeEach(() => {
+      originalFetch = global.fetch;
+      require('../src/js/subdomain-sync.js');
+      window.CookieConsent = {
+        getConsent: jest.fn().mockReturnValue(null),
+        setConsent: jest.fn(),
+      };
+    });
+
+    afterEach(() => {
+      global.fetch = originalFetch;
+    });
+
+    test('fetches consent from the endpoint on init and applies it', async () => {
+      const remote = {
+        functional: true,
+        analytics: true,
+        marketing: false,
+        timestamp: '2024-01-02T00:00:00Z',
+      };
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({ consent: remote }),
+      });
+
+      window.CookieConsentSync.init(apiConfig);
+      await flush();
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        ENDPOINT,
+        expect.objectContaining({ method: 'GET', credentials: 'same-origin' })
+      );
+      expect(window.CookieConsent.setConsent).toHaveBeenCalledWith(remote);
+
+      // Applying remote consent detaches the change listener and re-attaches it
+      // 100ms later. Let that happen before afterEach's stop() runs, or the
+      // re-attach lands after stop() and this module instance keeps pushing
+      // to the endpoint during later tests.
+      await new Promise(resolve => setTimeout(resolve, 150));
+    });
+
+    test('ignores a non-OK response', async () => {
+      // The body is well-formed, so only the `response.ok` check can keep it
+      // from being applied. Without a body, dropping that check would throw
+      // on `response.json` and leave setConsent uncalled anyway.
+      const json = jest.fn().mockResolvedValue({
+        consent: { functional: true, analytics: true, marketing: true },
+      });
+      global.fetch = jest.fn().mockResolvedValue({ ok: false, json });
+
+      window.CookieConsentSync.init(apiConfig);
+      await flush();
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(json).not.toHaveBeenCalled();
+      expect(window.CookieConsent.setConsent).not.toHaveBeenCalled();
+    });
+
+    test('logs, rather than throws, when the fetch fails', async () => {
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      global.fetch = jest.fn().mockRejectedValue(new Error('offline'));
+
+      window.CookieConsentSync.init(apiConfig);
+      await flush();
+
+      expect(errorSpy).toHaveBeenCalledWith(
+        '[Cookie Banner] Failed to fetch consent from API:',
+        expect.any(Error)
+      );
+      errorSpy.mockRestore();
+    });
+
+    test('pushes a local consent change to the endpoint', async () => {
+      global.fetch = jest.fn().mockResolvedValue({ ok: false });
+      window.CookieConsentSync.init(apiConfig);
+      await flush();
+      global.fetch.mockClear();
+
+      const consent = { functional: true, analytics: false, marketing: true };
+      document.dispatchEvent(new CustomEvent('cookieConsentChanged', { detail: consent }));
+      await flush();
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      const [url, options] = global.fetch.mock.calls[0];
+      expect(url).toBe(ENDPOINT);
+      expect(options.method).toBe('POST');
+      expect(JSON.parse(options.body)).toEqual({
+        consent,
+        domain: window.location.hostname,
+      });
+    });
+
+    test('logs, rather than throws, when the push fails', async () => {
+      global.fetch = jest.fn().mockResolvedValue({ ok: false });
+      window.CookieConsentSync.init(apiConfig);
+      await flush();
+
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      global.fetch = jest.fn().mockRejectedValue(new Error('offline'));
+      document.dispatchEvent(new CustomEvent('cookieConsentChanged', { detail: {} }));
+      await flush();
+
+      expect(errorSpy).toHaveBeenCalledWith(
+        '[Cookie Banner] Failed to push consent to API:',
+        expect.any(Error)
+      );
+      errorSpy.mockRestore();
+    });
+  });
 });
