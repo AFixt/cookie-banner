@@ -152,6 +152,11 @@
     "typescript": "~5.9.0",
     "webpack-bundle-analyzer": "^5.3.1"
   },
+  "overrides": {
+    "markdownlint-cli": {
+      "js-yaml": "5.4.2"
+    }
+  },
   "babel": {
     "presets": [
       "@babel/preset-env"
