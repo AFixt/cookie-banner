@@ -1,18 +1,21 @@
 name: Security Scanning
 
-# Policy: no scheduled (cron) Actions. The PR-time gates are `npm audit`
-# (here) and the licence allowlist (`npm run lint:licenses` in ci.yml).
-# The heavier OWASP Dependency Check and the duplicate licence report are
-# manual-only (`workflow_dispatch`) — a timer-triggered failure is
-# attributable to nobody and gets ignored.
+# Policy: no scheduled (cron) Actions — a timer-triggered failure is
+# attributable to nobody and gets ignored. The gates here run on every pull
+# request and on push to the long-lived branches: `npm audit` and OWASP
+# Dependency-Check (AFixt/fleet-security#4). The licence allowlist gate is
+# `npm run lint:licenses` in ci.yml. The full licence report and the action
+# pin check stay manual-only (`workflow_dispatch`).
 on:
+  push:
+    branches: [main, develop]
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
 
+# Each job that needs more (the SARIF upload) asks for it itself.
 permissions:
   contents: read
-  security-events: write
 
 jobs:
   # Quick scan on every push/PR
@@ -49,11 +52,17 @@ jobs:
       # The full tree, blocking. This step carried `continue-on-error: true` from
       # the day it was written until #109 closed: it reported green while the
       # command it runs exited non-zero, which is the whole defect that issue is
-      # about. The tree is clean now -- `npm audit` finds 0 vulnerabilities at
-      # every severity -- so there is nothing left to justify silencing it, and a
-      # new advisory should stop a PR rather than be noted and ignored.
+      # about. A new advisory should stop a PR rather than be noted and ignored.
+      #
+      # It runs `npm audit` at high severity through scripts/check-audit.js,
+      # which accepts only advisories with no patched release, each named,
+      # tracked in an issue and expiring (braces GHSA-vfj7-8cjw-p6xm, #140,
+      # until 2026-12-02). Without that, one unfixable advisory leaves
+      # `npm audit --audit-level=high` red on every run, and red-on-every-run
+      # stops anyone reading it. It also fails on an expired or stale entry, and
+      # when the audit returns no report.
       - name: Run npm audit
-        run: npm audit --audit-level=high
+        run: npm run security:check
 
       - name: Run npm audit (JSON output)
         run: npm audit --json > npm-audit-results.json || true
@@ -69,14 +78,36 @@ jobs:
   # Do not add a custom CodeQL job here as it will conflict with the default setup.
   # To configure CodeQL, go to: Repository Settings > Code security and analysis > CodeQL analysis
 
-  # OWASP Dependency Check (comprehensive — manual runs only; heavy NVD download)
+  # OWASP Dependency-Check, as a GATE (AFixt/fleet-security#4). This is the
+  # fleet reference job (fleet-security `templates/dependency-check.yml`),
+  # with this repository's SARIF upload kept.
+  #
+  # It used to run only on workflow_dispatch, through
+  # dependency-check/Dependency-Check_Action@75ba02d. That wrapper runs
+  # `owasp/dependency-check-action:latest`, so the scanner and its CVE data
+  # were never pinned; it silently drops everything passed as `args` (it only
+  # reads `others`), so the `--enableExperimental --nodeAuditAnalyzer ...` the
+  # job passed never reached the scanner; and with no --failOnCVSS it could
+  # not fail a build. Now it runs on every pull request and push, and fails.
   owasp-dependency-check:
     name: OWASP Dependency Check
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+      security-events: write # the SARIF upload to code scanning
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
+      # The scan needs node_modules (detect-features#89). Without it, the Node
+      # analyzers see only what the npm audit API reports for the lockfile, and
+      # NVD and RetireJS have nothing to match.
+      #
+      # --ignore-scripts here only, and deliberately: CLAUDE.md forbids it for
+      # anything that tests or validates the package, because scripts must run
+      # there (ci.yml, which test/workflows.test.js holds to that). This job
+      # tests nothing. It reads files, and no install script (Playwright,
+      # husky, the platform binaries) should run in a security job. The fleet
+      # gate requires it (fleet-security `depcheck-status`, point `install`).
       - name: Setup Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
@@ -85,36 +116,104 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
         env:
           # @afixt/a11y-assert pulls in the restricted @afixt/test-utils, so an
           # unauthenticated `npm ci` 404s on its tarball. Authentication comes
           # from the organisation-level NPM_TOKEN secret — see CLAUDE.md.
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: OWASP Dependency Check
-        uses: dependency-check/Dependency-Check_Action@75ba02d6183445fe0761d26e836bde58b1560600 # 1.1.0
-        with:
-          project: ${{ github.repository }}
-          path: '.'
-          format: 'HTML,JSON,SARIF'
-          args: >
-            --enableExperimental
-            --nodeAuditAnalyzer
-            --nodePackageSkipDevDependencies false
+      # The scanner image is pinned by DIGEST (detect-features#99), so the
+      # scanner and its CVE data can't change under the job, and a broken or
+      # compromised `latest` can't run here unreviewed.
+      #
+      # Freshness: --noupdate scans against the CVE data baked into the image,
+      # so no NVD download or API key is needed, and findings are only as fresh
+      # as the pinned build. Nothing bumps the digest automatically (no
+      # Dependabot, no scheduled jobs), so the step prints the image's build
+      # date and warns once it is over DC_MAX_AGE_DAYS old. To bump: take the
+      # current digest (`docker buildx imagetools inspect
+      # owasp/dependency-check-action:latest`), then verify locally that the
+      # repo still exits 0 and that a known-vulnerable lockfile exits 15.
+      #
+      # The gate (detect-features#87): exit 15 on any finding with CVSS >= 7.
+      # --enableRetired also runs the analyzers Dependency-Check has retired
+      # from its default set. Reviewed findings go in
+      # .dependency-check-suppressions.xml, each with a reason, a tracking
+      # issue and an `until` date.
+      #
+      # Exit codes (detect-features#101). When an analyzer throws, the CLI
+      # exits 14 WITHOUT evaluating --failOnCVSS, so 14 does not mean "no
+      # findings": it means the gate did not run. These errors are usually
+      # transient, so any exit other than 0 or 15 is retried once. 15 is never
+      # retried. A second non-0/non-15 exit fails the job. It must never pass,
+      # because it can hide a finding.
+      #
+      # Yarn and pnpm audit are disabled: this is an npm project with neither
+      # lockfile, so they can find nothing and only add ways for an analyzer
+      # to throw.
+      - name: OWASP Dependency-Check
+        env:
+          DC_IMAGE: owasp/dependency-check-action@sha256:1782f0b306f3e73e98e7c1f00f3fd8ae4a6214deaceebffa38ecb821874bbfcd # built 2026-09-25, dependency-check 13.0.0
+          DC_MAX_AGE_DAYS: '30'
+          PROJECT: ${{ github.event.repository.name }}
+        run: |
+          docker pull --quiet "$DC_IMAGE"
+          built=$(docker image inspect --format '{{.Created}}' "$DC_IMAGE")
+          age_days=$(( ( $(date -u +%s) - $(date -u -d "$built" +%s) ) / 86400 ))
+          echo "Scanner image built ${built} (age: ${age_days} day(s))"
+          {
+            echo "### OWASP Dependency-Check"
+            echo "CVE data from image built ${built}: **${age_days} day(s) old**."
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$age_days" -gt "$DC_MAX_AGE_DAYS" ]; then
+            echo "::warning title=Dependency-Check data is ${age_days} day(s) old::The pinned scanner image is older than ${DC_MAX_AGE_DAYS} days, so CVEs published since then are not checked. Bump DC_IMAGE (see the comment above it)."
+          fi
+          scan() {
+            docker run --rm -v "$PWD":/src -w /src "$DC_IMAGE" \
+              --project "$PROJECT" \
+              --scan /src \
+              --format HTML \
+              --format SARIF \
+              --out /src/reports \
+              --noupdate \
+              --suppression /src/.dependency-check-suppressions.xml \
+              --failOnCVSS 7 \
+              --enableRetired \
+              --disableYarnAudit \
+              --disablePnpmAudit
+          }
+          rc=0
+          scan || rc=$?
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 15 ]; then
+            echo "::warning title=Dependency-Check did not complete (exit ${rc})::The scan did not complete, so the CVSS check did not run. Retrying once."
+            sleep 30
+            rc=0
+            scan || rc=$?
+          fi
+          case "$rc" in
+            0) ;;
+            15) echo "::error title=Dependency-Check found CVSS >= 7::See the dependency-check-report artifact." ;;
+            *) echo "::error title=Dependency-Check did not complete (exit ${rc}), twice::The CVSS check did not run, so a real finding may be hidden. This is not a pass. See the [ERROR] lines above, then re-run the job." ;;
+          esac
+          exit "$rc"
 
+      # always(): the report matters most when the gate has just failed.
       - name: Upload OWASP results
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
         with:
-          name: owasp-dependency-check-report
+          name: dependency-check-report
           path: reports/
           retention-days: 90
 
+      # Guarded on the file: a scan that never ran writes no SARIF, and the
+      # upload failing on top of that would only bury the real error.
       - name: Upload SARIF to GitHub Security
         uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4
+        if: always() && hashFiles('reports/dependency-check-report.sarif') != ''
         with:
           sarif_file: reports/dependency-check-report.sarif
-        if: always()
 
   # License compliance report (manual only — the PR gate is `npm run
   # lint:licenses` in ci.yml; this job just produces the full JSON report)

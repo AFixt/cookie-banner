@@ -5,8 +5,10 @@
  * `release.yml`, and two on-demand workflows (`security.yml`,
  * `link-check.yml`). Issue #103 removes every cron schedule: checks run on
  * pull requests, where a failure is attributable to the change that caused
- * it, with `workflow_dispatch` for manual runs. The failure modes this file
- * exists to catch have all already happened here:
+ * it, with `workflow_dispatch` for manual runs. Since AFixt/fleet-security#4,
+ * `security.yml` gates pull requests too: `npm audit` and OWASP
+ * Dependency-Check. The failure modes this file exists to catch have all
+ * already happened here:
  *
  * - `security.yml` gated two jobs on `schedule` while the workflow had no
  *   schedule trigger, so OWASP Dependency Check never ran once.
@@ -228,5 +230,66 @@ describe('no scheduled workflows (issue #103)', () => {
     const contents = workflow('security.yml');
     expect(contents).toMatch(/workflow_dispatch:/);
     expect(contents).toMatch(/github\.event_name == 'workflow_dispatch'/);
+  });
+});
+
+/**
+ * The OWASP Dependency-Check job is a gate (AFixt/fleet-security#4). Each
+ * property below is one way it has already failed to be one somewhere in the
+ * fleet: a wrapper that ran an unpinned `latest` and dropped every flag passed
+ * as `args`, no CVSS threshold, a job that only ran on manual dispatch, and an
+ * exit 14 ("an analyzer threw, the threshold was never evaluated") treated as
+ * a pass.
+ */
+describe('security.yml Dependency-Check gate', () => {
+  let contents;
+  let job;
+
+  beforeAll(() => {
+    contents = workflow('security.yml');
+    const start = contents.indexOf('\n  owasp-dependency-check:');
+    const next = contents.slice(start + 1).search(/\n {2}[a-z][\w-]*:\n/);
+    job = contents.slice(start, next === -1 ? undefined : start + 1 + next);
+  });
+
+  it('runs on every pull request, not only on manual dispatch', () => {
+    expect(contents).toMatch(/pull_request:/);
+    expect(job.length).toBeGreaterThan(0);
+    expect(job).not.toMatch(/^ +if: github\.event_name == 'workflow_dispatch'/m);
+  });
+
+  it('runs the scanner image pinned by digest, not through the 75ba02d wrapper', () => {
+    expect(job).toMatch(/DC_IMAGE: owasp\/dependency-check-action@sha256:[0-9a-f]{64}/);
+    expect(job).not.toMatch(/Dependency-Check_Action@/);
+  });
+
+  it.each([
+    ['fails at CVSS 7', /--failOnCVSS 7\b/],
+    ['runs the retired analyzers too', /--enableRetired/],
+    [
+      'reads the reviewed suppressions',
+      /--suppression \/src\/\.dependency-check-suppressions\.xml/,
+    ],
+  ])('%s', (_label, pattern) => {
+    expect(job).toMatch(pattern);
+  });
+
+  it('passes only on exit 0 and never on a second non-0/non-15 exit', () => {
+    expect(job).toMatch(/0\) ;;/);
+    expect(job).toMatch(/exit "\$rc"/);
+  });
+
+  // CLAUDE.md forbids --ignore-scripts wherever the package is tested or
+  // validated, and ci.yml is held to that above. This job tests nothing: it
+  // installs only so the scanner can read node_modules, and no install script
+  // should run in a security job. It is the one permitted use in the repo.
+  it('is the only place in the workflows that installs with --ignore-scripts', () => {
+    const files = fs.readdirSync(WORKFLOW_DIR).filter(name => /\.ya?ml$/.test(name));
+    const total = files.reduce(
+      (sum, name) => sum + (workflow(name).match(/--ignore-scripts/g) || []).length,
+      0
+    );
+    expect(job.match(/run: npm ci --ignore-scripts/g) || []).toHaveLength(1);
+    expect(total).toBe((job.match(/--ignore-scripts/g) || []).length);
   });
 });

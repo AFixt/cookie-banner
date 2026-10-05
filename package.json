@@ -58,7 +58,7 @@
     "knip": "knip",
     "validate:usecases": "usecase-runner validate docs/usecases",
     "security:audit": "npm audit",
-    "security:check": "npm audit --audit-level=high",
+    "security:check": "node scripts/check-audit.js",
     "lint:licenses": "license-checker-rseidelsohn --production --excludePrivatePackages --onlyAllow 'MIT;ISC;BSD-2-Clause;BSD-3-Clause;Apache-2.0;CC0-1.0;Unlicense;0BSD;BlueOak-1.0.0;CC-BY-4.0;Python-2.0'",
     "check:all": "npm run check && npm run lint:cpd:ci && npm run lint:licenses && npm run knip && npm test",
     "bootstrap": "bash scripts/bootstrap.sh"
@@ -151,6 +151,11 @@
     "stylelint-config-standard": "^40.0.0",
     "typescript": "~5.9.0",
     "webpack-bundle-analyzer": "^5.3.1"
+  },
+  "overrides": {
+    "markdownlint-cli": {
+      "js-yaml": "5.4.2"
+    }
   },
   "babel": {
     "presets": [
