@@ -17,8 +17,11 @@
  * - `steps_override.from_step` is a positional index into the parent. Insert
  *   a step in the parent and every child silently overrides from the wrong
  *   place, with validation still passing because the index is still in range.
- * - The runner's keyword table is version-dependent. Downgrading the pin below
- *   1.4.0 removes verbs these templates use.
+ * - The runner's keyword table is version-dependent. A runner without the
+ *   verbs these templates use breaks them. The version *number* is no longer a
+ *   usable proxy for that: on 2026-10-04 the only published release was a
+ *   republished 1.0.1 that ships the full table, so the pin is exact and the
+ *   guard checks the installed runner's own table instead of a version floor.
  */
 
 const fs = require('fs');
@@ -41,16 +44,17 @@ const REQUIRED_IDS = [
 ];
 
 /**
- * Verbs the runner only gained in 1.4.0. Versions 1.2.0–1.3.3 ship a
- * 15-keyword table without them, and a template using one dies there with
- * `Unknown step keyword` — which looks exactly like a malformed template and
- * has been misdiagnosed as one before (see the audit-usecases README).
- * Downgrading the pin is therefore the realistic way these templates break.
+ * Verbs the original runner line only gained in 1.4.0. Versions 1.2.0–1.3.3
+ * ship a 15-keyword table without them, and a template using one dies there
+ * with `Unknown step keyword` — which looks exactly like a malformed template
+ * and has been misdiagnosed as one before (see the audit-usecases README).
+ * Moving the pin to a runner without them is therefore the realistic way these
+ * templates break.
  */
 const VERBS_ADDED_IN_1_4_0 = ['contrast', 'lang_check', 'read_image', 'sr_says'];
 
-/** Lowest runner version that ships all of the above. */
-const MIN_RUNNER = [1, 4, 0];
+/** Exactly one release: `1.0.1`, never `^1.0.1`, `~1.0.1`, `*` or a URL. */
+const EXACT_VERSION = /^\d+\.\d+\.\d+$/;
 
 /**
  * The verbs `@afixt/usecase-runner`'s `no-pointer` interaction profile forbids
@@ -70,19 +74,6 @@ const MIN_RUNNER = [1, 4, 0];
  * runs on every `npm test`.
  */
 const POINTER_ONLY_KEYWORDS = ['hover', 'hover_out'];
-
-/**
- * Lowest version a semver range can resolve to. `^1.5.1`, `~1.5.1` and
- * `>=1.5.1` all floor at 1.5.1; anything without three numeric parts (`*`,
- * `latest`, a git URL) yields null and is treated as unpinnable.
- *
- * @param {string} range - A semver range from package.json.
- * @returns {number[] | null} `[major, minor, patch]`, or null if unpinnable.
- */
-function versionFloor(range) {
-  const parts = String(range).replace(/^\D*/, '').split('.').map(Number);
-  return parts.length === 3 && parts.every(Number.isInteger) ? parts : null;
-}
 
 describe('docs/usecases templates', () => {
   let useCases;
@@ -151,15 +142,19 @@ describe('docs/usecases templates', () => {
     expect(pointerOnly).toEqual([]);
   });
 
-  it('pins @afixt/usecase-runner at or above the version that added those verbs', () => {
-    const range = require('../package.json').devDependencies['@afixt/usecase-runner'];
-    const floor = versionFloor(range);
+  // The keyword-table test above is the real guard: it checks the verbs
+  // against the runner that is actually installed. This one keeps that check
+  // honest. A range would let the installed runner drift from what was
+  // reviewed, and the runner's version numbers stopped ordering its features
+  // when 1.0.1 was republished with the full keyword table, so a floor such as
+  // ">= 1.4.0" would reject the only published release while accepting nothing
+  // safer. Pin exactly, and make sure node_modules holds that exact version.
+  it('pins @afixt/usecase-runner to one exact, installed version', () => {
+    const pinned = require('../package.json').devDependencies['@afixt/usecase-runner'];
+    const installed = require('@afixt/usecase-runner/package.json').version;
 
-    expect(floor).not.toBeNull();
-    // Compare as a tuple so 1.10.0 sorts above 1.4.0 rather than below it.
-    expect(floor.map((n, i) => n - MIN_RUNNER[i]).find(d => d !== 0) ?? 0).toBeGreaterThanOrEqual(
-      0
-    );
+    expect(pinned).toMatch(EXACT_VERSION);
+    expect(installed).toBe(pinned);
   });
 
   it('keeps escape-dismisses-modal pointed at its parent’s save tail', () => {
