@@ -199,8 +199,8 @@ describe('accepted advisories agree across the npm audit and Dependency-Check ga
 
   it('pins each package-scoped suppression to a version still in the lockfile', () => {
     for (const entry of suppressions.filter(s => s.names.length > 0)) {
-      // e.g. ^pkg:npm/braces@3\.0\.3$ -> braces, 3.0.3
-      const [, name, version] = /^\^pkg:npm\/([^@]+)@([^$]+)\$$/.exec(entry.purl);
+      // e.g. ^pkg:npm/braces@3\.0\.3$ -> braces, 3.0.3. A scope is allowed.
+      const [, name, version] = /^\^pkg:npm\/((?:@[^/]+\/)?[^@/]+)@([^$]+)\$$/.exec(entry.purl);
       const wanted = version.replace(/\\\./g, '.');
       const installed = Object.entries(lockPackages)
         .filter(([key]) => key === `node_modules/${name}` || key.endsWith(`/node_modules/${name}`))

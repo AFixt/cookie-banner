@@ -5,8 +5,10 @@
  * `release.yml`, and two on-demand workflows (`security.yml`,
  * `link-check.yml`). Issue #103 removes every cron schedule: checks run on
  * pull requests, where a failure is attributable to the change that caused
- * it, with `workflow_dispatch` for manual runs. The failure modes this file
- * exists to catch have all already happened here:
+ * it, with `workflow_dispatch` for manual runs. Since AFixt/fleet-security#4,
+ * `security.yml` gates pull requests too: `npm audit` and OWASP
+ * Dependency-Check. The failure modes this file exists to catch have all
+ * already happened here:
  *
  * - `security.yml` gated two jobs on `schedule` while the workflow had no
  *   schedule trigger, so OWASP Dependency Check never ran once.
