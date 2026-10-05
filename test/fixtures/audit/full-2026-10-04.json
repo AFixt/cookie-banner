@@ -1,0 +1,348 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@humanfs/node": {
+      "name": "@humanfs/node",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1158499,
+          "name": "@humanfs/node",
+          "dependency": "@humanfs/node",
+          "title": "humanfs: Recursive copy follows symlinked files and copies data from outside the source tree",
+          "url": "https://github.com/advisories/GHSA-p498-v437-472g",
+          "severity": "moderate",
+          "cwe": ["CWE-22"],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<0.16.8"
+        }
+      ],
+      "effects": [],
+      "range": "<0.16.8",
+      "nodes": ["node_modules/@humanfs/node"],
+      "fixAvailable": true
+    },
+    "braces": {
+      "name": "braces",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1240992,
+          "name": "braces",
+          "dependency": "braces",
+          "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+          "severity": "high",
+          "cwe": ["CWE-674"],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=3.0.3"
+        }
+      ],
+      "effects": ["chokidar", "micromatch"],
+      "range": "*",
+      "nodes": ["node_modules/braces"],
+      "fixAvailable": {
+        "name": "postcss-cli",
+        "version": "12.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "chokidar": {
+      "name": "chokidar",
+      "severity": "high",
+      "isDirect": false,
+      "via": ["braces"],
+      "effects": ["postcss-cli"],
+      "range": "2.0.0 - 3.6.0",
+      "nodes": ["node_modules/chokidar"],
+      "fixAvailable": {
+        "name": "postcss-cli",
+        "version": "12.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "colord": {
+      "name": "colord",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1193675,
+          "name": "colord",
+          "dependency": "colord",
+          "title": "Colord: Slow rejection of oversized malformed color strings",
+          "url": "https://github.com/advisories/GHSA-2wm5-q62r-hmrv",
+          "severity": "moderate",
+          "cwe": ["CWE-1333"],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<2.9.4"
+        }
+      ],
+      "effects": [],
+      "range": "<2.9.4",
+      "nodes": ["node_modules/colord"],
+      "fixAvailable": true
+    },
+    "dmd": {
+      "name": "dmd",
+      "severity": "high",
+      "isDirect": false,
+      "via": ["file-set"],
+      "effects": ["jsdoc-to-markdown"],
+      "range": ">=6.3.0-1",
+      "nodes": ["node_modules/dmd"],
+      "fixAvailable": {
+        "name": "jsdoc-to-markdown",
+        "version": "8.0.3",
+        "isSemVerMajor": true
+      }
+    },
+    "fast-glob": {
+      "name": "fast-glob",
+      "severity": "high",
+      "isDirect": false,
+      "via": ["micromatch"],
+      "effects": ["file-set", "globby", "stylelint"],
+      "range": "*",
+      "nodes": ["node_modules/fast-glob"],
+      "fixAvailable": {
+        "name": "stylelint",
+        "version": "7.7.0",
+        "isSemVerMajor": true
+      }
+    },
+    "file-set": {
+      "name": "file-set",
+      "severity": "high",
+      "isDirect": false,
+      "via": ["fast-glob"],
+      "effects": ["dmd", "jsdoc-api"],
+      "range": "5.2.0 - 5.3.0",
+      "nodes": ["node_modules/file-set"],
+      "fixAvailable": {
+        "name": "jsdoc-to-markdown",
+        "version": "8.0.3",
+        "isSemVerMajor": true
+      }
+    },
+    "globby": {
+      "name": "globby",
+      "severity": "high",
+      "isDirect": false,
+      "via": ["fast-glob"],
+      "effects": ["rollup-plugin-copy", "stylelint"],
+      "range": ">=8.0.0",
+      "nodes": ["node_modules/globby", "node_modules/stylelint/node_modules/globby"],
+      "fixAvailable": {
+        "name": "stylelint",
+        "version": "7.7.0",
+        "isSemVerMajor": true
+      }
+    },
+    "jsdoc-api": {
+      "name": "jsdoc-api",
+      "severity": "high",
+      "isDirect": false,
+      "via": ["file-set"],
+      "effects": ["jsdoc-to-markdown"],
+      "range": ">=9.3.0",
+      "nodes": ["node_modules/jsdoc-api"],
+      "fixAvailable": {
+        "name": "jsdoc-to-markdown",
+        "version": "8.0.3",
+        "isSemVerMajor": true
+      }
+    },
+    "jsdoc-to-markdown": {
+      "name": "jsdoc-to-markdown",
+      "severity": "high",
+      "isDirect": true,
+      "via": ["dmd", "jsdoc-api"],
+      "effects": [],
+      "range": "0.6.0 - 0.6.4 || 2.0.0-alpha.0 - 2.0.0-alpha.23 || >=9.0.0-0",
+      "nodes": ["node_modules/jsdoc-to-markdown"],
+      "fixAvailable": {
+        "name": "jsdoc-to-markdown",
+        "version": "8.0.3",
+        "isSemVerMajor": true
+      }
+    },
+    "markdown-it": {
+      "name": "markdown-it",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1239989,
+          "name": "markdown-it",
+          "dependency": "markdown-it",
+          "title": "markdown-it linkify: true has two quadratic paths, so a few hundred KB of markdown blocks the event loop for tens of seconds",
+          "url": "https://github.com/advisories/GHSA-253c-mchw-3w2r",
+          "severity": "moderate",
+          "cwe": ["CWE-400", "CWE-407"],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<14.3.1"
+        }
+      ],
+      "effects": [],
+      "range": "<14.3.1",
+      "nodes": ["node_modules/markdown-it"],
+      "fixAvailable": true
+    },
+    "micromatch": {
+      "name": "micromatch",
+      "severity": "high",
+      "isDirect": false,
+      "via": ["braces"],
+      "effects": ["fast-glob", "stylelint"],
+      "range": ">=0.2.0",
+      "nodes": ["node_modules/micromatch"],
+      "fixAvailable": {
+        "name": "stylelint",
+        "version": "7.7.0",
+        "isSemVerMajor": true
+      }
+    },
+    "postcss-cli": {
+      "name": "postcss-cli",
+      "severity": "high",
+      "isDirect": true,
+      "via": ["chokidar"],
+      "effects": [],
+      "range": "5.0.0 - 11.0.1",
+      "nodes": ["node_modules/postcss-cli"],
+      "fixAvailable": {
+        "name": "postcss-cli",
+        "version": "12.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "qs": {
+      "name": "qs",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1158506,
+          "name": "qs",
+          "dependency": "qs",
+          "title": "qs array-limit bypass via bracket-key comma parsing",
+          "url": "https://github.com/advisories/GHSA-x5fp-wj9c-mxmx",
+          "severity": "moderate",
+          "cwe": ["CWE-770"],
+          "cvss": {
+            "score": 3.7,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=6.14.2 <=6.15.3"
+        },
+        {
+          "source": 1158507,
+          "name": "qs",
+          "dependency": "qs",
+          "title": "qs: Denial of Service via Attacker Controlled isBuffer",
+          "url": "https://github.com/advisories/GHSA-4mjr-xmp4-gh2g",
+          "severity": "moderate",
+          "cwe": ["CWE-248", "CWE-703"],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=2.2.5 <6.16.0"
+        }
+      ],
+      "effects": [],
+      "range": "2.2.5 - 6.15.3",
+      "nodes": ["node_modules/qs"],
+      "fixAvailable": true
+    },
+    "rollup-plugin-copy": {
+      "name": "rollup-plugin-copy",
+      "severity": "high",
+      "isDirect": true,
+      "via": ["globby"],
+      "effects": [],
+      "range": ">=3.0.0",
+      "nodes": ["node_modules/rollup-plugin-copy"],
+      "fixAvailable": {
+        "name": "rollup-plugin-copy",
+        "version": "2.0.1",
+        "isSemVerMajor": true
+      }
+    },
+    "stylelint": {
+      "name": "stylelint",
+      "severity": "high",
+      "isDirect": true,
+      "via": ["fast-glob", "globby", "micromatch"],
+      "effects": ["stylelint-config-recommended", "stylelint-config-standard"],
+      "range": ">=7.7.1",
+      "nodes": ["node_modules/stylelint"],
+      "fixAvailable": {
+        "name": "stylelint",
+        "version": "7.7.0",
+        "isSemVerMajor": true
+      }
+    },
+    "stylelint-config-recommended": {
+      "name": "stylelint-config-recommended",
+      "severity": "high",
+      "isDirect": false,
+      "via": ["stylelint"],
+      "effects": ["stylelint-config-standard"],
+      "range": "*",
+      "nodes": ["node_modules/stylelint-config-recommended"],
+      "fixAvailable": {
+        "name": "stylelint-config-standard",
+        "version": "15.0.1",
+        "isSemVerMajor": true
+      }
+    },
+    "stylelint-config-standard": {
+      "name": "stylelint-config-standard",
+      "severity": "high",
+      "isDirect": true,
+      "via": ["stylelint", "stylelint-config-recommended"],
+      "effects": [],
+      "range": ">=16.0.0",
+      "nodes": ["node_modules/stylelint-config-standard"],
+      "fixAvailable": {
+        "name": "stylelint-config-standard",
+        "version": "15.0.1",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 4,
+      "high": 14,
+      "critical": 0,
+      "total": 18
+    },
+    "dependencies": {
+      "prod": 1,
+      "dev": 1279,
+      "optional": 131,
+      "peer": 3,
+      "peerOptional": 0,
+      "total": 1279
+    }
+  }
+}
