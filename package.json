@@ -86,6 +86,13 @@
   "engines": {
     "node": ">=22.0.0"
   },
+  "allowScripts": {
+    "puppeteer@25.5.0": true,
+    "@parcel/watcher": false,
+    "fsevents": false,
+    "tesseract.js": false,
+    "unrs-resolver": false
+  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
