@@ -56,10 +56,10 @@ jobs:
       #
       # It runs `npm audit` at high severity through scripts/check-audit.js,
       # which accepts only advisories with no patched release, each named,
-      # tracked in an issue and expiring (braces GHSA-vfj7-8cjw-p6xm, #140,
-      # until 2026-12-02). Without that, one unfixable advisory leaves
-      # `npm audit --audit-level=high` red on every run, and red-on-every-run
-      # stops anyone reading it. It also fails on an expired or stale entry, and
+      # tracked in an issue and expiring (none at present; braces
+      # GHSA-vfj7-8cjw-p6xm, #140, was withdrawn). Without that, one unfixable
+      # advisory leaves `npm audit --audit-level=high` red on every run, and
+      # red-on-every-run stops anyone reading it. It also fails on an expired or stale entry, and
       # when the audit returns no report.
       - name: Run npm audit
         run: npm run security:check
