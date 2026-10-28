@@ -20,12 +20,27 @@ const load = name => JSON.parse(JSON.stringify(require(path.join(FIXTURES, name)
 const BRACES = 'GHSA-vfj7-8cjw-p6xm';
 const TODAY = new Date('2026-10-04T12:00:00Z');
 
+/**
+ * The acceptance the gate held for braces while the fixtures were captured.
+ * GitHub withdrew the advisory on 2026-10-23, so it is no longer in ACCEPTED
+ * (#140), but the 2026-10-04 captures still report it and remain the best
+ * real input for exercising the gate's rules.
+ */
+const FIXTURE_ACCEPTED = {
+  [BRACES]: {
+    package: 'braces',
+    issue: 140,
+    expires: '2026-12-02',
+    reason: 'fixture: the acceptance in force when the audit captures were taken',
+  },
+};
+
 describe('audit-allowlist: npm audit with accepted, expiring advisories', () => {
   it('passes the real tree, whose only high advisory is the accepted braces one', () => {
     const result = evaluate(
       load('full-2026-10-04.json'),
       load('prod-2026-10-04.json'),
-      ACCEPTED,
+      FIXTURE_ACCEPTED,
       TODAY
     );
     expect(result.errors).toEqual([]);
@@ -43,7 +58,7 @@ describe('audit-allowlist: npm audit with accepted, expiring advisories', () => 
     const result = evaluate(
       load('full-2026-10-04.json'),
       load('prod-2026-10-04.json'),
-      ACCEPTED,
+      FIXTURE_ACCEPTED,
       new Date('2026-12-03T00:00:00Z')
     );
     expect(result.errors).toHaveLength(1);
@@ -55,7 +70,7 @@ describe('audit-allowlist: npm audit with accepted, expiring advisories', () => 
     const result = evaluate(
       load('full-2026-10-04.json'),
       load('prod-2026-10-04.json'),
-      ACCEPTED,
+      FIXTURE_ACCEPTED,
       new Date('2026-12-02T23:59:59Z')
     );
     expect(result.errors).toEqual([]);
@@ -66,7 +81,7 @@ describe('audit-allowlist: npm audit with accepted, expiring advisories', () => 
     const result = evaluate(
       load('prod-2026-10-04.json'),
       load('prod-2026-10-04.json'),
-      ACCEPTED,
+      FIXTURE_ACCEPTED,
       TODAY
     );
     expect(result.errors).toHaveLength(1);
@@ -79,7 +94,7 @@ describe('audit-allowlist: npm audit with accepted, expiring advisories', () => 
     const result = evaluate(
       load('full-2026-10-04.json'),
       load('full-2026-10-04.json'),
-      ACCEPTED,
+      FIXTURE_ACCEPTED,
       TODAY
     );
     expect(result.errors).toHaveLength(1);
@@ -97,7 +112,7 @@ describe('audit-allowlist: npm audit with accepted, expiring advisories', () => 
   });
 
   it.each(['2026-12-2', '2026-13-45'])('treats an unreadable expiry (%s) as expired', expires => {
-    const accepted = { [BRACES]: { ...ACCEPTED[BRACES], expires } };
+    const accepted = { [BRACES]: { ...FIXTURE_ACCEPTED[BRACES], expires } };
     const result = evaluate(
       load('full-2026-10-04.json'),
       load('prod-2026-10-04.json'),
@@ -122,6 +137,14 @@ describe('audit-allowlist: npm audit with accepted, expiring advisories', () => 
     const critical = evaluate(regraded('critical'), prod, {}, TODAY);
     expect(critical.errors).toHaveLength(1);
     expect(critical.errors[0]).toMatch(/^GHSA-vfj7-8cjw-p6xm \(critical, braces\)/);
+  });
+});
+
+describe('audit-allowlist: the live ACCEPTED list', () => {
+  // GHSA-vfj7-8cjw-p6xm was withdrawn by GitHub on 2026-10-23: npm audit no
+  // longer reports it, so an entry for it is stale and fails the gate (#140).
+  it('does not accept the withdrawn braces advisory', () => {
+    expect(Object.keys(ACCEPTED)).not.toContain(BRACES);
   });
 });
 
@@ -186,16 +209,22 @@ describe('accepted advisories agree across the npm audit and Dependency-Check ga
     }
   });
 
-  it.each(Object.entries(ACCEPTED))(
-    '%s is suppressed in Dependency-Check with the same expiry and issue',
-    (id, entry) => {
+  // A loop rather than it.each: the list is legitimately empty when nothing
+  // is accepted, and it.each refuses an empty table.
+  it('suppresses every ACCEPTED advisory in Dependency-Check with the same expiry and issue', () => {
+    for (const [id, entry] of Object.entries(ACCEPTED)) {
       const match = suppressions.filter(s => s.names.includes(id));
       expect(match).toHaveLength(1);
       expect(match[0].until).toBe(entry.expires);
       expect(match[0].notes).toContain(`AFixt/cookie-banner#${entry.issue}`);
       expect(entry.expires <= LATEST_UNTIL).toBe(true);
     }
-  );
+  });
+
+  it('suppresses no advisory in Dependency-Check that the npm audit gate does not accept', () => {
+    const named = suppressions.flatMap(s => s.names);
+    expect(named.filter(id => !(id in ACCEPTED))).toEqual([]);
+  });
 
   it('pins each package-scoped suppression to a version still in the lockfile', () => {
     for (const entry of suppressions.filter(s => s.names.length > 0)) {

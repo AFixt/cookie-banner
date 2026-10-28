@@ -17,16 +17,6 @@
     -->
 
     <!--
-        No fixed release exists. Accepted until 2026-12-02 in step with
-        ACCEPTED in scripts/audit-allowlist.js (the npm audit gate).
-    -->
-    <suppress until="2026-12-02Z">
-        <notes>braces 3.0.3 GHSA-vfj7-8cjw-p6xm: no patched release (affected &lt;=3.0.3; 3.0.3 is the latest). Dev-only, through stylelint, rollup-plugin-copy, postcss-cli and jsdoc-to-markdown; the package has no runtime dependencies. Not reachable: braces expands only repo-controlled globs. Tracking issue AFixt/cookie-banner#140. Reviewed by Karl Groves (standing acceptance, 2026-10-04).</notes>
-        <packageUrl regex="true">^pkg:npm/braces@3\.0\.3$</packageUrl>
-        <vulnerabilityName>GHSA-vfj7-8cjw-p6xm</vulnerabilityName>
-    </suppress>
-
-    <!--
         False positive: a LOW-confidence CPE match on the wrong package.
     -->
     <suppress until="2026-12-02Z">

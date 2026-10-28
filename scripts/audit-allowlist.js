@@ -7,7 +7,7 @@
  * Ported from AFixt/apg-mocha `scripts/check-audit.js` (AFixt/fleet-security#4),
  * itself from AFixt/afixt-tests, split the way `scripts/action-pins.js` is.
  * `npm audit --audit-level=high` is all or nothing, so one advisory with no
- * patched release (braces GHSA-vfj7-8cjw-p6xm, #140) turns every run red, and
+ * patched release (as braces GHSA-vfj7-8cjw-p6xm did, #140) turns every run red, and
  * the only way through would be to stop running the check. The gate runs the
  * audit twice and fails on:
  *
@@ -43,15 +43,9 @@
  * @type {Record<string, Acceptance>}
  */
 export const ACCEPTED = {
-  'GHSA-vfj7-8cjw-p6xm': {
-    package: 'braces',
-    issue: 140,
-    expires: '2026-12-02',
-    reason:
-      'no patched release (<=3.0.3, latest 3.0.3); dev-only, reached through stylelint, ' +
-      'rollup-plugin-copy, postcss-cli and jsdoc-to-markdown, which expand only ' +
-      'repo-controlled globs',
-  },
+  // Empty. braces GHSA-vfj7-8cjw-p6xm (#140) was accepted here until GitHub
+  // withdrew the advisory on 2026-10-23; npm audit stopped reporting it, so
+  // the entry went stale and was removed.
 };
 
 const GATED = new Set(['high', 'critical']);
