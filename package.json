@@ -87,7 +87,7 @@
     "node": ">=22.0.0"
   },
   "allowScripts": {
-    "puppeteer@25.5.0": true,
+    "puppeteer@25.16.0": true,
     "@parcel/watcher": false,
     "fsevents": false,
     "tesseract.js": false,
@@ -160,6 +160,7 @@
     "webpack-bundle-analyzer": "^5.3.1"
   },
   "overrides": {
+    "puppeteer": "^25.13.0",
     "markdownlint-cli": {
       "js-yaml": "5.4.2"
     },
