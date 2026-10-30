@@ -37,7 +37,7 @@ const read = file => fs.readFileSync(path.join(ROOT, file), 'utf8');
 const FIRST_SAFE_ZOD = [4, 6, 6];
 
 /**
- * The numeric release triple of a version, ignoring any prerelease suffix.
+ * The numeric release triple of a version, without any prerelease suffix.
  *
  * @param {string} version - A semver version, e.g. `4.6.7`.
  * @returns {number[]} Its major, minor and patch numbers.
@@ -50,7 +50,8 @@ const releaseTriple = version =>
 
 /**
  * Whether a version is below a floor. Written as a loop rather than nested
- * comparisons so it reads the same for each position.
+ * comparisons so it reads the same for each position. A prerelease of the floor
+ * sorts below it, as in semver, so the advisory's `< 4.6.6` range includes it.
  *
  * @param {string} version - The version to judge.
  * @param {number[]} floor - The lowest acceptable release triple.
@@ -64,7 +65,7 @@ const isBelow = (version, floor) => {
       return part < floor[index];
     }
   }
-  return false;
+  return version.includes('-');
 };
 
 /**
@@ -118,8 +119,8 @@ describe('zod stays outside GHSA-mrhx-c7xc-m3w5', () => {
       expect(isBelow(version, FIRST_SAFE_ZOD)).toBe(expected);
     });
 
-    it('treats a prerelease of the fixed version as the fixed version', () => {
-      expect(isBelow('4.6.6-beta.1', FIRST_SAFE_ZOD)).toBe(false);
+    it('puts a prerelease of the fixed version below the floor', () => {
+      expect(isBelow('4.6.6-beta.1', FIRST_SAFE_ZOD)).toBe(true);
     });
   });
 });
