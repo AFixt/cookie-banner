@@ -8,14 +8,13 @@
  * itself from AFixt/afixt-tests, split the way `scripts/action-pins.js` is.
  *
  * Scope: production dependencies only, under the 2026-11-17 fleet ruling that
- * dependency-audit gates scan what ships. It used to
- * audit the full tree as well, with named, expiring exceptions, and an
- * advisory with no patched release reached only through devDependencies
- * (picomatch GHSA-fc5q-39xc-vjpf, via the build and test tooling; since
- * withdrawn, 2026-11-18) turned every run red with nothing anyone here could
- * do about it. The development
- * tree is still scanned, by OWASP Dependency-Check in security.yml, and
- * `npm audit` without `--omit=dev` still prints it.
+ * dependency-audit gates scan what ships. It used to audit the full tree as
+ * well, with named, expiring exceptions, and an advisory with no patched
+ * release reached only through devDependencies (picomatch GHSA-fc5q-39xc-vjpf,
+ * via the build and test tooling; since withdrawn, 2026-11-18) turned every
+ * run red with nothing anyone here could do about it. The development tree is
+ * still scanned, by OWASP Dependency-Check in security.yml, and `npm audit`
+ * without `--omit=dev` still prints it.
  *
  * The gate fails on:
  *
