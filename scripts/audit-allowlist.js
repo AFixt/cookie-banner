@@ -1,23 +1,25 @@
 /**
- * The pure half of `npm run security:check`: `npm audit` at high severity,
- * with named, tracked, expiring exceptions. The CLI that runs npm is
- * `scripts/check-audit.js`; this module only judges the reports, so it can be
+ * The pure half of `npm run security:check`: `npm audit` of the PRODUCTION
+ * tree (`--omit=dev`) at high severity. The CLI that runs npm is
+ * `scripts/check-audit.js`; this module only judges the report, so it can be
  * tested without a network.
  *
  * Ported from AFixt/apg-mocha `scripts/check-audit.js` (AFixt/fleet-security#4),
  * itself from AFixt/afixt-tests, split the way `scripts/action-pins.js` is.
- * `npm audit --audit-level=high` is all or nothing, so one advisory with no
- * patched release (as braces GHSA-vfj7-8cjw-p6xm did, #140) turns every run red, and
- * the only way through would be to stop running the check. The gate runs the
- * audit twice and fails on:
  *
- * - any high or critical advisory in the PRODUCTION tree (`--omit=dev`).
- *   Nothing is accepted there: shipped code gets no exceptions;
- * - any high or critical advisory in the full tree that is not in ACCEPTED,
- *   or whose acceptance has expired. Past its `expires` date an entry stops
- *   excusing anything, so an exception cannot quietly become permanent;
- * - an ACCEPTED advisory the full tree no longer reports, so the list cannot
- *   go stale and quietly accept the same ID again later;
+ * Scope: production dependencies only, under the 2026-11-17 fleet ruling that
+ * dependency-audit gates scan what ships. It used to
+ * audit the full tree as well, with named, expiring exceptions, and an
+ * advisory with no patched release reached only through devDependencies
+ * (picomatch GHSA-fc5q-39xc-vjpf, via the build and test tooling) turned
+ * every run red with nothing anyone here could do about it. The development
+ * tree is still scanned, by OWASP Dependency-Check in security.yml, and
+ * `npm audit` without `--omit=dev` still prints it.
+ *
+ * The gate fails on:
+ *
+ * - any high or critical advisory in the production tree. Nothing is
+ *   accepted there: shipped code gets no exceptions;
  * - an audit that did not return a report. When the advisory endpoint cannot
  *   be reached, npm prints a message and no `vulnerabilities`, and that is a
  *   failure, not a pass.
@@ -28,24 +30,28 @@
 /**
  * @typedef {object} Acceptance
  * @property {string} package The vulnerable package.
- * @property {number} issue The tracking issue that argues why it is unreachable here.
+ * @property {number} issue The tracking issue or PR that argues why it is unreachable here.
  * @property {string} expires The last day it holds, `YYYY-MM-DD`, UTC, inclusive.
  * @property {string} reason Why it is accepted.
  */
 
 /**
- * Advisories accepted in the development tree only. Each needs no fixed
- * release, an issue that argues why it is unreachable here, and an expiry.
- * Keep the date in step with the matching `until` in
- * .dependency-check-suppressions.xml. Remove an entry in the commit that
- * clears it.
+ * Advisories accepted in the development tree, which only OWASP
+ * Dependency-Check gates now. This is the register its suppressions in
+ * .dependency-check-suppressions.xml must agree with (same advisory, same
+ * `until`, same tracking reference): `test/audit-allowlist.test.js` holds the
+ * two together. Each needs no fixed release, a tracking issue or PR that argues
+ * why it is unreachable here, and an expiry. Remove an entry in the commit
+ * that clears it.
+ *
+ * The npm audit gate does not read this list: it audits production
+ * dependencies only, and accepts nothing there.
  *
  * @type {Record<string, Acceptance>}
  */
 export const ACCEPTED = {
-  // Empty. braces GHSA-vfj7-8cjw-p6xm (#140) was accepted here until GitHub
-  // withdrew the advisory on 2026-10-23; npm audit stopped reporting it, so
-  // the entry went stale and was removed.
+  // braces GHSA-vfj7-8cjw-p6xm (#140) was accepted here until GitHub
+  // withdrew the advisory on 2026-10-23.
 };
 
 const GATED = new Set(['high', 'critical']);
@@ -98,73 +104,28 @@ function unusable(label, report) {
 }
 
 /**
- * Whether an acceptance has run out. `expires` is the last day it holds, in
- * UTC, so an entry dated 2026-12-02 still accepts all of that day. An entry
- * with a missing or malformed date counts as expired: an unreadable expiry
- * must not become no expiry.
+ * Judge the production audit.
  *
- * @param {string} expires - An ISO date, `YYYY-MM-DD`.
- * @param {Date} now - The current time.
- * @returns {boolean} True once the date has passed.
- */
-function isExpired(expires, now) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(expires || '')) {
-    return true;
-  }
-  // NaN for an impossible date such as 2026-13-45, which also counts as expired.
-  const end = Date.parse(expires + 'T00:00:00Z') + 24 * 60 * 60 * 1000;
-  return Number.isNaN(end) || now.getTime() >= end;
-}
-
-/**
- * Judge the two audits against the accepted list.
- *
- * @param {object} full - `npm audit --json`.
  * @param {object} prod - `npm audit --omit=dev --json`.
- * @param {Record<string, Acceptance>} accepted - Accepted advisories.
- * @param {Date} now - The current time, for the expiry check.
- * @returns {{errors: string[], notes: string[]}} What failed, and what was accepted.
+ * @returns {{errors: string[], notes: string[]}} What failed, and what was audited.
  */
-export function evaluate(full, prod, accepted, now) {
+export function evaluate(prod) {
+  const broken = unusable('production', prod);
+  if (broken) {
+    return { errors: [broken], notes: [] };
+  }
   const errors = [];
-  const notes = [];
-  const broken = [unusable('full', full), unusable('production', prod)].filter(Boolean);
-  if (broken.length) {
-    return { errors: broken, notes };
-  }
-
-  const describe = (id, a) => id + ' (' + a.severity + ', ' + a.name + '): ' + a.title;
-
   for (const [id, a] of gatedAdvisories(prod)) {
-    errors.push('production dependency: ' + describe(id, a));
+    errors.push(
+      'production dependency: ' + id + ' (' + a.severity + ', ' + a.name + '): ' + a.title
+    );
   }
-  const inFull = gatedAdvisories(full);
-  for (const [id, a] of inFull) {
-    const entry = Object.prototype.hasOwnProperty.call(accepted, id) ? accepted[id] : null;
-    if (!entry) {
-      errors.push(describe(id, a));
-    } else if (isExpired(entry.expires, now)) {
-      errors.push(
-        describe(id, a) +
-          ' — acceptance expired on ' +
-          entry.expires +
-          ' (#' +
-          entry.issue +
-          '). Fix it, or re-assess in the issue and extend the date.'
-      );
-    } else {
-      notes.push('accepted until ' + entry.expires + ', #' + entry.issue + ': ' + describe(id, a));
-    }
-  }
-  for (const id of Object.keys(accepted)) {
-    if (!inFull.has(id)) {
-      errors.push(
-        id +
-          ' is accepted but no longer reported at high or critical: ' +
-          'remove it from ACCEPTED in scripts/audit-allowlist.js'
-      );
-    }
-  }
+  // npm counts the root package as one production dependency.
+  const deps = prod.metadata && prod.metadata.dependencies;
+  const notes =
+    deps && typeof deps.prod === 'number'
+      ? ['audited ' + Math.max(deps.prod - 1, 0) + ' production dependencies (--omit=dev)']
+      : [];
   return { errors, notes };
 }
 

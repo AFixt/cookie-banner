@@ -1,126 +1,46 @@
 /**
  * Unit tests for scripts/audit-allowlist.js — the pure half of
- * `npm run security:check`.
+ * `npm run security:check`, which audits production dependencies only.
  *
  * Ported with the module from AFixt/apg-mocha `test/check-audit.test.js`
  * (itself from AFixt/afixt-tests). The fixtures are real `npm audit --json`
  * output captured on 2026-10-04, not hand-written: the full tree (14 highs,
- * every one from braces GHSA-vfj7-8cjw-p6xm, which has no patched release,
- * #140), the production tree (empty: this package has no runtime
- * dependencies), and what npm prints when the advisory endpoint cannot be
- * reached.
+ * every one from braces GHSA-vfj7-8cjw-p6xm), the production tree (empty:
+ * this package has no runtime dependencies), and what npm prints when the
+ * advisory endpoint cannot be reached. The full-tree capture stands in for a
+ * production tree that has gained a high advisory.
  */
 
+const fs = require('fs');
 const path = require('path');
 
 const { evaluate, parseAudit, ACCEPTED } = require('../scripts/audit-allowlist.js');
 
+const ROOT = path.join(__dirname, '..');
 const FIXTURES = path.join(__dirname, 'fixtures', 'audit');
 const load = name => JSON.parse(JSON.stringify(require(path.join(FIXTURES, name))));
 const BRACES = 'GHSA-vfj7-8cjw-p6xm';
-const TODAY = new Date('2026-10-04T12:00:00Z');
 
-/**
- * The acceptance the gate held for braces while the fixtures were captured.
- * GitHub withdrew the advisory on 2026-10-23, so it is no longer in ACCEPTED
- * (#140), but the 2026-10-04 captures still report it and remain the best
- * real input for exercising the gate's rules.
- */
-const FIXTURE_ACCEPTED = {
-  [BRACES]: {
-    package: 'braces',
-    issue: 140,
-    expires: '2026-12-02',
-    reason: 'fixture: the acceptance in force when the audit captures were taken',
-  },
-};
-
-describe('audit-allowlist: npm audit with accepted, expiring advisories', () => {
-  it('passes the real tree, whose only high advisory is the accepted braces one', () => {
-    const result = evaluate(
-      load('full-2026-10-04.json'),
-      load('prod-2026-10-04.json'),
-      FIXTURE_ACCEPTED,
-      TODAY
-    );
+describe('audit-allowlist: npm audit of the production tree', () => {
+  it('passes the real production tree, and says how much it audited', () => {
+    const result = evaluate(load('prod-2026-10-04.json'));
     expect(result.errors).toEqual([]);
-    expect(result.notes).toHaveLength(1);
-    expect(result.notes[0]).toMatch(/accepted until 2026-12-02, #140: GHSA-vfj7-8cjw-p6xm/);
+    // npm counts the root package itself as the one production dependency.
+    expect(result.notes).toEqual(['audited 0 production dependencies (--omit=dev)']);
   });
 
-  it('fails an unexcused high advisory, naming it', () => {
-    const result = evaluate(load('full-2026-10-04.json'), load('prod-2026-10-04.json'), {}, TODAY);
+  it('fails a high advisory in the production tree, naming it', () => {
+    const result = evaluate(load('full-2026-10-04.json'));
     expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toMatch(new RegExp(`^${BRACES} \\(high, braces\\)`));
+    expect(result.errors[0]).toMatch(
+      new RegExp(`^production dependency: ${BRACES} \\(high, braces\\)`)
+    );
   });
 
-  it('fails an acceptance past its expiry date', () => {
-    const result = evaluate(
-      load('full-2026-10-04.json'),
-      load('prod-2026-10-04.json'),
-      FIXTURE_ACCEPTED,
-      new Date('2026-12-03T00:00:00Z')
-    );
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toMatch(/acceptance expired on 2026-12-02 \(#140\)/);
-    expect(result.errors[0]).toMatch(new RegExp(BRACES));
-  });
-
-  it('still accepts on the expiry date itself, which is inclusive', () => {
-    const result = evaluate(
-      load('full-2026-10-04.json'),
-      load('prod-2026-10-04.json'),
-      FIXTURE_ACCEPTED,
-      new Date('2026-12-02T23:59:59Z')
-    );
-    expect(result.errors).toEqual([]);
-  });
-
-  it('reports a stale entry, one the audit no longer finds', () => {
-    // The clean production capture stands in for a full tree braces has left.
-    const result = evaluate(
-      load('prod-2026-10-04.json'),
-      load('prod-2026-10-04.json'),
-      FIXTURE_ACCEPTED,
-      TODAY
-    );
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toMatch(/GHSA-vfj7-8cjw-p6xm is accepted but no longer reported/);
-  });
-
-  // An exception is for the development tree. The full capture stands in for
-  // a production tree that has gained braces.
-  it('accepts nothing in the production tree, even an advisory it accepts in dev', () => {
-    const result = evaluate(
-      load('full-2026-10-04.json'),
-      load('full-2026-10-04.json'),
-      FIXTURE_ACCEPTED,
-      TODAY
-    );
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toMatch(/^production dependency: GHSA-vfj7-8cjw-p6xm/);
-  });
   it('fails, rather than passes, when the advisory endpoint cannot be reached', () => {
-    const result = evaluate(
-      load('unreachable.json'),
-      load('prod-2026-10-04.json'),
-      ACCEPTED,
-      TODAY
-    );
+    const result = evaluate(load('unreachable.json'));
     expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toMatch(/^full audit returned no report: .*ECONNREFUSED/);
-  });
-
-  it.each(['2026-12-2', '2026-13-45'])('treats an unreadable expiry (%s) as expired', expires => {
-    const accepted = { [BRACES]: { ...FIXTURE_ACCEPTED[BRACES], expires } };
-    const result = evaluate(
-      load('full-2026-10-04.json'),
-      load('prod-2026-10-04.json'),
-      accepted,
-      TODAY
-    );
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toMatch(/acceptance expired/);
+    expect(result.errors[0]).toMatch(/^production audit returned no report: .*ECONNREFUSED/);
   });
 
   // The gate keeps `--audit-level=high`. The braces advisory, re-graded,
@@ -132,11 +52,24 @@ describe('audit-allowlist: npm audit with accepted, expiring advisories', () => 
   };
 
   it('does not gate a moderate advisory, and does gate a critical one', () => {
-    const prod = load('prod-2026-10-04.json');
-    expect(evaluate(regraded('moderate'), prod, {}, TODAY).errors).toEqual([]);
-    const critical = evaluate(regraded('critical'), prod, {}, TODAY);
+    expect(evaluate(regraded('moderate')).errors).toEqual([]);
+    const critical = evaluate(regraded('critical'));
     expect(critical.errors).toHaveLength(1);
-    expect(critical.errors[0]).toMatch(/^GHSA-vfj7-8cjw-p6xm \(critical, braces\)/);
+    expect(critical.errors[0]).toMatch(
+      /^production dependency: GHSA-vfj7-8cjw-p6xm \(critical, braces\)/
+    );
+  });
+});
+
+describe('check-audit.js: what the gate actually runs', () => {
+  const source = fs.readFileSync(path.join(ROOT, 'scripts', 'check-audit.js'), 'utf8');
+  const audits = [...source.matchAll(/runAudit\((\[[^\]]*\])\)/g)].map(m => m[1]);
+
+  // Scoped to what ships (fleet ruling, 2026-11-17). An unscoped audit here
+  // would gate the development tree again, where an advisory with no fix
+  // (picomatch GHSA-fc5q-39xc-vjpf) leaves the gate red with nothing to do.
+  it('audits the production tree, and only the production tree', () => {
+    expect(audits).toEqual(["['--omit=dev']"]);
   });
 });
 
@@ -163,23 +96,20 @@ describe('audit-allowlist: parseAudit', () => {
       error: { code: 'ENOBUFS' },
     });
     expect(report).toEqual({ message: 'npm exited null (ENOBUFS): npm error code ENOBUFS' });
-    expect(evaluate(report, report, ACCEPTED, TODAY).errors[0]).toMatch(
-      /^full audit returned no report: npm exited null \(ENOBUFS\)/
+    expect(evaluate(report).errors[0]).toMatch(
+      /^production audit returned no report: npm exited null \(ENOBUFS\)/
     );
   });
 });
 
 /**
- * Both gates that judge the whole dependency tree accept the same advisories:
- * `npm run security:check` (ACCEPTED above) and OWASP Dependency-Check
- * (`.dependency-check-suppressions.xml`). An acceptance is one decision, so the
- * two must not drift: same advisory, same expiry, same tracking issue, and
- * nothing past the fleet's acceptance window (AFixt/fleet-security#4).
+ * OWASP Dependency-Check still scans the whole tree, development dependencies
+ * included, so its suppressions (`.dependency-check-suppressions.xml`) must
+ * agree with the ACCEPTED register: same advisory, same expiry, same tracking
+ * reference, and nothing past the fleet's acceptance window
+ * (AFixt/fleet-security#4).
  */
 describe('accepted advisories agree across the npm audit and Dependency-Check gates', () => {
-  const fs = require('fs');
-  const ROOT = path.join(__dirname, '..');
-
   /** The latest `until` the fleet's no-fix acceptances may carry. */
   const LATEST_UNTIL = '2026-12-02';
 

@@ -14,9 +14,10 @@
  * That makes the override load-bearing while looking redundant, which is the
  * dangerous combination. #123 already removed a batch of overrides that an
  * upgrade had made unnecessary; the same reasoning applied here silently
- * reintroduces a high advisory. `npm run security:check` would catch it, but
- * `check:all` — what `pre-push` runs — does not include `security:check`, so
- * nothing local would fail at the point of the change.
+ * reintroduces a high advisory. zod is a development dependency here, so
+ * `npm run security:check`, which audits production dependencies only, would
+ * not catch it; OWASP Dependency-Check in CI would, but nothing local would
+ * fail at the point of the change.
  *
  * So this pins the property rather than the mechanism: no resolved zod may be
  * below 4.6.6, however the tree gets there. If a later `@afixt/a11y-assert`

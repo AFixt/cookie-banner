@@ -49,18 +49,19 @@ jobs:
       - name: Run npm audit (production dependencies)
         run: npm audit --omit=dev --audit-level=high
 
-      # The full tree, blocking. This step carried `continue-on-error: true` from
-      # the day it was written until #109 closed: it reported green while the
-      # command it runs exited non-zero, which is the whole defect that issue is
-      # about. A new advisory should stop a PR rather than be noted and ignored.
+      # The same production scope, through scripts/check-audit.js, which also
+      # fails when the audit returns no report (an unreachable advisory
+      # endpoint otherwise reads as clean). It used to audit the full tree with
+      # named, expiring exceptions; under the 2026-11-17 fleet ruling the npm
+      # audit gate covers production dependencies only (`--omit=dev`), because
+      # an advisory with no patched release reached only through dev tooling
+      # (picomatch GHSA-fc5q-39xc-vjpf) left it red on every run with nothing
+      # to fix. The development tree is still gated, by OWASP Dependency-Check
+      # below, and still reported, by the JSON step after this one.
       #
-      # It runs `npm audit` at high severity through scripts/check-audit.js,
-      # which accepts only advisories with no patched release, each named,
-      # tracked in an issue and expiring (none at present; braces
-      # GHSA-vfj7-8cjw-p6xm, #140, was withdrawn). Without that, one unfixable
-      # advisory leaves `npm audit --audit-level=high` red on every run, and
-      # red-on-every-run stops anyone reading it. It also fails on an expired or stale entry, and
-      # when the audit returns no report.
+      # This step carried `continue-on-error: true` until #109 closed: it
+      # reported green while the command it runs exited non-zero. Nothing here
+      # may be silenced (test/workflows.test.js).
       - name: Run npm audit
         run: npm run security:check
 
