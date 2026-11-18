@@ -20,6 +20,7 @@ const ROOT = path.join(__dirname, '..');
 const FIXTURES = path.join(__dirname, 'fixtures', 'audit');
 const load = name => JSON.parse(JSON.stringify(require(path.join(FIXTURES, name))));
 const BRACES = 'GHSA-vfj7-8cjw-p6xm';
+const PICOMATCH = 'GHSA-fc5q-39xc-vjpf';
 
 describe('audit-allowlist: npm audit of the production tree', () => {
   it('passes the real production tree, and says how much it audited', () => {
@@ -67,7 +68,8 @@ describe('check-audit.js: what the gate actually runs', () => {
 
   // Scoped to what ships (fleet ruling, 2026-11-17). An unscoped audit here
   // would gate the development tree again, where an advisory with no fix
-  // (picomatch GHSA-fc5q-39xc-vjpf) leaves the gate red with nothing to do.
+  // (as picomatch GHSA-fc5q-39xc-vjpf was, until withdrawn) leaves the gate
+  // red with nothing to do.
   it('audits the production tree, and only the production tree', () => {
     expect(audits).toEqual(["['--omit=dev']"]);
   });
@@ -78,6 +80,12 @@ describe('audit-allowlist: the live ACCEPTED list', () => {
   // longer reports it, so an entry for it is stale and fails the gate (#140).
   it('does not accept the withdrawn braces advisory', () => {
     expect(Object.keys(ACCEPTED)).not.toContain(BRACES);
+  });
+
+  // GHSA-fc5q-39xc-vjpf was withdrawn by GitHub on 2026-11-18T15:38:56Z, so
+  // its acceptance and Dependency-Check suppression (#154) went with it.
+  it('does not accept the withdrawn picomatch advisory', () => {
+    expect(Object.keys(ACCEPTED)).not.toContain(PICOMATCH);
   });
 });
 
