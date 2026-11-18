@@ -46,6 +46,10 @@ jobs:
       # production-scoped audit is green right now AND fails for real the day one
       # lands in a shipped path. That is the half of #109's item 1 that can be
       # answered without waiting on the dependency triage in item 3.
+      #
+      # `npm run security:check` below audits the same scope. This plain step
+      # stays as the first, dependency-free signal; the script adds the failure
+      # when npm returns no report at all.
       - name: Run npm audit (production dependencies)
         run: npm audit --omit=dev --audit-level=high
 
