@@ -166,7 +166,7 @@
     "markdownlint-cli": {
       "js-yaml": "5.4.2"
     },
-    "follow-redirects": "1.16.1"
+    "follow-redirects": "^1.16.2"
   },
   "babel": {
     "presets": [
