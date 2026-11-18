@@ -59,8 +59,9 @@ jobs:
       # named, expiring exceptions; under the 2026-11-17 fleet ruling the npm
       # audit gate covers production dependencies only (`--omit=dev`), because
       # an advisory with no patched release reached only through dev tooling
-      # (picomatch GHSA-fc5q-39xc-vjpf) left it red on every run with nothing
-      # to fix. The development tree is still gated, by OWASP Dependency-Check
+      # (picomatch GHSA-fc5q-39xc-vjpf, since withdrawn, 2026-11-18) left it red
+      # on every run with nothing to fix. The development tree is still gated,
+      # by OWASP Dependency-Check
       # below, and still reported, by the JSON step after this one.
       #
       # This step carried `continue-on-error: true` until #109 closed: it
