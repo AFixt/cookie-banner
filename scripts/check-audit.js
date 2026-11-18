@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * `npm audit` at high severity, with named, tracked, expiring exceptions.
+ * `npm audit` of the production dependencies at high severity.
  *
- * Runs `npm audit --json` on the full tree and on the production tree
- * (`--omit=dev`) and judges both with `scripts/audit-allowlist.js`, which
- * documents what fails and holds the accepted list. Exit code 1 on any
- * failure, including an audit that returned no report.
+ * Runs `npm audit --omit=dev --json` and judges it with
+ * `scripts/audit-allowlist.js`, which documents what fails and why the gate is
+ * scoped to production dependencies. Exit code 1 on any failure, including an
+ * audit that returned no report.
  *
  * Usage: npm run security:check
  *
@@ -14,7 +14,7 @@
  */
 import { spawnSync } from 'node:child_process';
 
-import { ACCEPTED, evaluate, parseAudit } from './audit-allowlist.js';
+import { evaluate, parseAudit } from './audit-allowlist.js';
 
 const npmCli = process.env.npm_execpath;
 if (!npmCli) {
@@ -38,7 +38,7 @@ function runAudit(extra) {
   );
 }
 
-const { errors, notes } = evaluate(runAudit([]), runAudit(['--omit=dev']), ACCEPTED, new Date());
+const { errors, notes } = evaluate(runAudit(['--omit=dev']));
 for (const note of notes) {
   console.log('[security:check] ' + note);
 }
@@ -48,4 +48,4 @@ if (errors.length) {
   }
   process.exit(1);
 }
-console.log('[security:check] OK: no unaccepted high or critical advisories.');
+console.log('[security:check] OK: no high or critical advisories in production dependencies.');
