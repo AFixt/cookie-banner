@@ -24,4 +24,13 @@
         <packageUrl regex="true">^pkg:npm/time-span@.*$</packageUrl>
         <cpe>cpe:/a:timespan_project:timespan</cpe>
     </suppress>
+
+    <!--
+        No fixed release, development dependency only.
+    -->
+    <suppress until="2026-12-02Z">
+        <notes>picomatch GHSA-fc5q-39xc-vjpf (ReDoS through single-branch repeated extglobs, CVSS 7.5) affects every release up to 4.0.7, the latest, so there is nothing to upgrade to. Every copy is a development dependency: glob matching inside rollup plugins, jest, and anymatch/micromatch/readdirp, on patterns written in this repository rather than supplied by a user, and none of it ships in dist/. The npm audit gate no longer covers the development tree (2026-11-17 fleet ruling), so this keeps Dependency-Check to the same scope for this one advisory, until the date below. Tracked in AFixt/cookie-banner#154. Reviewed by Claude Code for Karl Groves, 2026-11-18.</notes>
+        <packageUrl regex="true">^pkg:npm/picomatch@2\.3\.2$</packageUrl>
+        <vulnerabilityName>GHSA-fc5q-39xc-vjpf</vulnerabilityName>
+    </suppress>
 </suppressions>

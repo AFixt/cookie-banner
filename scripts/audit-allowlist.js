@@ -52,6 +52,15 @@
 export const ACCEPTED = {
   // braces GHSA-vfj7-8cjw-p6xm (#140) was accepted here until GitHub
   // withdrew the advisory on 2026-10-23.
+  'GHSA-fc5q-39xc-vjpf': {
+    package: 'picomatch',
+    issue: 154,
+    expires: '2026-12-02',
+    reason:
+      'No patched release (affects <=4.0.7, the latest). Dev-only: glob matching ' +
+      'for build and test tooling (rollup plugins, jest, chokidar via anymatch, ' +
+      'micromatch, readdirp), on patterns from this repository, not user input.',
+  },
 };
 
 const GATED = new Set(['high', 'critical']);
