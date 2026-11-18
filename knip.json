@@ -3,5 +3,6 @@
   "entry": ["index.js", "scripts/**/*.js"],
   "project": ["src/**/*.js", "scripts/**/*.js", "test/**/*.js", "*.js", "*.cjs", "*.mjs"],
   "ignore": ["dist/**"],
-  "ignoreDependencies": ["babel-jest"]
+  "ignoreDependencies": ["babel-jest"],
+  "ignoreBinaries": ["lychee"]
 }

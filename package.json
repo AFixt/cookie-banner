@@ -51,6 +51,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore CHANGELOG.md --ignore dist",
+    "links": "lychee --no-progress --offline --exclude-path node_modules --exclude-path dist --exclude-path CHANGELOG.md './**/*.md'",
+    "links:external": "lychee --no-progress --exclude-path node_modules --exclude-path dist --exclude-path CHANGELOG.md './**/*.md'",
     "lint:css": "stylelint 'src/**/*.css'",
     "lint:css:fix": "stylelint 'src/**/*.css' --fix",
     "lint:cpd": "jscpd . --config .jscpd.json",

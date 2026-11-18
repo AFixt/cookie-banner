@@ -431,6 +431,8 @@ live in [docs/templates/](docs/templates/).
 | `npm run lint`              | ESLint over the whole repo                                                             |
 | `npm run lint:css`          | Stylelint over `src/**/*.css`                                                          |
 | `npm run lint:md`           | markdownlint over the Markdown files                                                   |
+| `npm run links`             | lychee over the Markdown, offline (relative links and anchors), as on a pull request   |
+| `npm run links:external`    | The same lychee run including external URLs, as on a manual `link-check.yml` dispatch  |
 | `npm run lint:cpd`          | jscpd duplication report                                                               |
 | `npm run lint:licenses`     | Fail on a production dependency outside the licence allowlist                          |
 | `npm run knip`              | Find unused files, exports and dependencies                                            |
